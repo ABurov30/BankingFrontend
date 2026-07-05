@@ -1,7 +1,7 @@
 @reference '../../styles.css';
 
 .dashboard-style-1 {
-  @apply min-w-0 ;
+  @apply min-w-0;
 }
 
 .dashboard-style-2 {
