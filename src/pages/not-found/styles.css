@@ -1,0 +1,54 @@
+@reference '../../styles.css';
+
+.notfound-style-1 {
+  @apply grid min-h-svh place-items-center bg-background px-5 text-foreground;
+}
+
+.notfound-style-2 {
+  @apply flex max-w-md flex-col items-center text-center;
+}
+
+.notfound-style-3 {
+  @apply text-sm font-bold uppercase text-muted-foreground;
+}
+
+.notfound-style-4 {
+  @apply mt-3 text-4xl font-bold tracking-normal;
+}
+
+.notfound-style-5 {
+  @apply mt-4 text-base leading-7 text-muted-foreground;
+}
+
+.notfound-style-6 {
+  @apply mt-6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ui-enter {
+    animation: ui-enter 380ms ease-out both;
+  }
+
+  .ui-lift {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .ui-lift:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes ui-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

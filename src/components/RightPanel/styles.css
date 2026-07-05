@@ -1,0 +1,21 @@
+@reference '../../styles.css';
+
+.right-panel-style-1 {
+  @apply min-w-0 border-t border-ui-border bg-white px-[26px];
+}
+
+.right-panel-style-2 {
+  @apply hidden w-0 overflow-hidden p-0;
+}
+
+@media (width >= 64rem) and (width < 80rem) {
+  .right-panel-style-1 {
+    @apply col-start-2;
+  }
+}
+
+@media (width >= 80rem) {
+  .right-panel-style-1 {
+    @apply min-h-svh border-t-0 border-l;
+  }
+}

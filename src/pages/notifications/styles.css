@@ -1,0 +1,212 @@
+@reference '../../styles.css';
+
+.notifications-style-1 {
+  @apply min-w-0 px-5 py-7;
+}
+
+@media (width >= 64rem) {
+  .notifications-style-1 {
+    @apply px-7;
+  }
+}
+
+.notifications-style-2 {
+  @apply grid gap-6;
+}
+
+@media (width >= 80rem) {
+  .notifications-style-2 {
+    @apply grid-cols-[minmax(0,1fr)_320px];
+  }
+}
+
+.notifications-style-3 {
+  @apply min-w-0;
+}
+
+.notifications-style-4 {
+  @apply mb-5 flex items-center justify-between gap-4;
+}
+
+.notifications-style-5 {
+  @apply font-['Sora'] text-[26px] leading-none font-bold tracking-normal text-ui-ink;
+}
+
+.notifications-style-6 {
+  @apply text-[13px] font-bold whitespace-nowrap text-ui-primary;
+}
+
+.notifications-style-7 {
+  @apply space-y-3.5;
+}
+
+@media (width >= 80rem) {
+  .notifications-style-7 {
+    @apply pt-[37px];
+  }
+}
+
+.notifications-style-8 {
+  @apply mb-4;
+}
+
+.notifications-style-9 {
+  @apply mb-3 text-[11.5px] font-bold tracking-[1.15px] text-ui-muted uppercase;
+}
+
+.notifications-style-10 {
+  @apply rounded-[18px] border border-ui-border bg-white px-[23px] py-[5px];
+}
+
+.notifications-style-11 {
+  @apply size-[19px];
+}
+
+.notifications-style-12 {
+  @apply min-w-0 flex-1;
+}
+
+.notifications-style-13 {
+  @apply text-sm font-bold text-ui-ink;
+}
+
+.notifications-style-14 {
+  @apply mt-[3px] text-[12.5px] leading-[18.75px] font-medium text-ui-muted-strong;
+}
+
+.notifications-style-15 {
+  @apply flex shrink-0 items-start gap-3;
+}
+
+.notifications-style-16 {
+  @apply flex flex-col items-end gap-1.5;
+}
+
+.notifications-style-17 {
+  @apply text-[11.5px] font-semibold text-ui-muted;
+}
+
+.notifications-style-18 {
+  @apply flex h-3.5 w-2 items-start pt-1.5;
+}
+
+.notifications-style-19 {
+  @apply size-2 rounded-full bg-ui-primary;
+}
+
+.notifications-style-20 {
+  @apply flex items-center gap-1 text-ui-muted-light;
+}
+
+.notifications-style-21 {
+  @apply size-3.5;
+}
+
+.notifications-style-22 {
+  @apply rounded-[18px] border border-ui-border bg-white px-[21px] py-[19px];
+}
+
+.notifications-style-23 {
+  @apply font-['Sora'] text-[15px] font-bold text-ui-ink;
+}
+
+.notifications-style-24 {
+  @apply mt-1.5 pb-2 text-xs leading-[18px] font-medium text-ui-muted-strong;
+}
+
+.notifications-style-25 {
+  @apply flex items-center justify-between gap-4 border-t border-ui-surface-muted py-3.5;
+}
+
+.notifications-style-26 {
+  @apply flex items-center gap-[11px] text-[13.5px] font-bold text-ui-ink;
+}
+
+.notifications-style-27 {
+  @apply size-[19px] text-ui-text-muted;
+}
+
+.notifications-style-28 {
+  @apply pb-2 font-['Sora'] text-[15px] font-bold text-ui-ink;
+}
+
+.notifications-style-29 {
+  @apply text-[13.5px] font-bold text-ui-ink;
+}
+
+.notifications-style-30 {
+  @apply size-[18px] rounded-full bg-white;
+}
+
+.notifications-style-31 {
+  @apply bg-ui-primary-soft text-ui-primary;
+}
+
+.notifications-style-32 {
+  @apply bg-ui-warning-soft text-ui-warning;
+}
+
+.notifications-style-33 {
+  @apply bg-ui-danger-soft text-ui-danger;
+}
+
+.notifications-style-34 {
+  @apply bg-ui-info-soft text-ui-info;
+}
+
+.notifications-style-35 {
+  @apply flex gap-3.5 py-[15px];
+}
+
+.notifications-style-36 {
+  @apply border-b border-ui-surface-muted;
+}
+
+.notifications-style-37 {
+  @apply opacity-80;
+}
+
+.notifications-style-38 {
+  @apply grid size-[38px] shrink-0 place-items-center rounded-xl;
+}
+
+.notifications-style-39 {
+  @apply flex h-[22px] w-[38px] shrink-0 rounded-full p-0.5;
+}
+
+.notifications-style-40 {
+  @apply justify-end bg-ui-success;
+}
+
+.notifications-style-41 {
+  @apply justify-start bg-ui-control-off;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ui-enter {
+    animation: ui-enter 380ms ease-out both;
+  }
+
+  .ui-lift {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .ui-lift:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes ui-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

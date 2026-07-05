@@ -1,0 +1,9 @@
+@reference '../../styles.css';
+
+.typography-style-1 {
+  @apply font-['Sora'] text-[30px] leading-none font-bold tracking-normal text-ui-ink;
+}
+
+.typography-style-2 {
+  @apply text-sm leading-none font-medium text-ui-muted-strong;
+}
