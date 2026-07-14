@@ -10,5 +10,7 @@ export type SignupOperation = ApiOperation['Signup']
 export type LoginOperation = ApiOperation['Login']
 export type LogoutOperation = ApiOperation['Logout']
 
-export type SignupRequest = SignupOperation['requestBody']['content']['application/json']
-export type LoginRequest = LoginOperation['requestBody']['content']['application/json']
+export type SignupRequest =
+  SignupOperation['requestBody']['content']['application/json']
+export type LoginRequest =
+  LoginOperation['requestBody']['content']['application/json']

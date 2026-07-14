@@ -214,7 +214,9 @@ function ActionButton({
     <button
       className={cn(
         styles['dashboard__action-button'],
-        primary ? styles['dashboard__action-button--primary'] : styles['dashboard__action-button--secondary'],
+        primary
+          ? styles['dashboard__action-button--primary']
+          : styles['dashboard__action-button--secondary'],
       )}
       onClick={onClick}
       type="button"
@@ -233,7 +235,9 @@ function AccountsGrid() {
           <article className={styles['dashboard__account-card']} key={name}>
             <div className={styles['dashboard__card-header']}>
               <div className={styles['dashboard__inline-group']}>
-                <span className={cn(styles['dashboard__account-icon-wrap'], accent)}>
+                <span
+                  className={cn(styles['dashboard__account-icon-wrap'], accent)}
+                >
                   <Icon className={styles['dashboard__card-icon']} />
                 </span>
                 <div>
@@ -243,7 +247,9 @@ function AccountsGrid() {
                   </p>
                 </div>
               </div>
-              <span className={styles['dashboard__account-status']}>ACTIVE</span>
+              <span className={styles['dashboard__account-status']}>
+                ACTIVE
+              </span>
             </div>
             <p className={styles['dashboard__account-balance']}>{balance}</p>
           </article>
@@ -317,7 +323,10 @@ function ActivityCard() {
                 <p className={styles['dashboard__activity-meta']}>{meta}</p>
               </div>
               <span
-                className={cn(styles['dashboard__status-badge'], statusClassName)}
+                className={cn(
+                  styles['dashboard__status-badge'],
+                  statusClassName,
+                )}
               >
                 {status}
               </span>

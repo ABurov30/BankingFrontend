@@ -240,7 +240,9 @@ function TransactionRow({
 
       <span className={styles['transactions__cell']}>{source}</span>
       <span className={styles['transactions__cell']}>{date}</span>
-      <span className={cn(styles['transactions__status-badge'], statusClassName)}>
+      <span
+        className={cn(styles['transactions__status-badge'], statusClassName)}
+      >
         {status}
       </span>
       <span className={cn(styles['transactions__amount'], amountClassName)}>

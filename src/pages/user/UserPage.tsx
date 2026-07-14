@@ -100,7 +100,10 @@ function UserPage() {
           </div>
         </div>
 
-        <button className={`${styles['user__edit-button']} ui-lift`} type="button">
+        <button
+          className={`${styles['user__edit-button']} ui-lift`}
+          type="button"
+        >
           <Edit3 className={styles['user__button-icon']} />
           Edit profile
         </button>
@@ -157,7 +160,10 @@ function SecurityCard() {
               <Toggle enabled={enabled} />
             ) : (
               <button
-                className={cn(styles['user__setting-action--primary'], actionClassName)}
+                className={cn(
+                  styles['user__setting-action--primary'],
+                  actionClassName,
+                )}
                 type="button"
               >
                 {action}
@@ -212,7 +218,9 @@ function ActiveSessionsCard() {
       {sessions.map(
         ({ action, badge, icon: Icon, iconClassName, meta, title }) => (
           <div className={styles['user__session-row']} key={title}>
-            <span className={cn(styles['user__provider-action'], iconClassName)}>
+            <span
+              className={cn(styles['user__provider-action'], iconClassName)}
+            >
               <Icon className={styles['user__button-icon']} />
             </span>
             <div className={styles['user__session-copy']}>
@@ -249,7 +257,9 @@ function Toggle({ enabled }: { enabled: boolean }) {
     <span
       className={cn(
         styles['user__event-icon'],
-        enabled ? styles['user__event-icon--success'] : styles['user__event-icon--neutral'],
+        enabled
+          ? styles['user__event-icon--success']
+          : styles['user__event-icon--neutral'],
       )}
       aria-hidden="true"
     >

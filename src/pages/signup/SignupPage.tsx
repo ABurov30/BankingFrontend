@@ -139,7 +139,9 @@ function SignupPage() {
                 'Get your first card',
               ].map((step, index) => (
                 <li className={styles['signup__step']} key={step}>
-                  <span className={styles['signup__step-index']}>{index + 1}</span>
+                  <span className={styles['signup__step-index']}>
+                    {index + 1}
+                  </span>
                   {step}
                 </li>
               ))}

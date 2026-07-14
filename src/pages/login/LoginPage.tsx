@@ -144,7 +144,9 @@ function LoginPage() {
 
             <div className={styles['login__divider']}>
               <div className={styles['login__divider-line']} />
-              <span className={styles['login__divider-label']}>or continue with</span>
+              <span className={styles['login__divider-label']}>
+                or continue with
+              </span>
               <div className={styles['login__divider-line']} />
             </div>
 

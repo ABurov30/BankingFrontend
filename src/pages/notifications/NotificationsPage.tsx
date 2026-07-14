@@ -88,7 +88,10 @@ function NotificationsPage() {
         <div className={styles['notifications__main']}>
           <header className={styles['notifications__header']}>
             <h1 className={styles['notifications__title']}>Notifications</h1>
-            <button className={styles['notifications__mark-read']} type="button">
+            <button
+              className={styles['notifications__mark-read']}
+              type="button"
+            >
               Mark all as read
             </button>
           </header>
@@ -158,7 +161,9 @@ function NotificationRow({
 
       <div className={styles['notifications__item-body']}>
         <h3 className={styles['notifications__item-title']}>{title}</h3>
-        <p className={styles['notifications__item-description']}>{description}</p>
+        <p className={styles['notifications__item-description']}>
+          {description}
+        </p>
       </div>
 
       <div className={styles['notifications__item-meta']}>
@@ -188,7 +193,10 @@ function ChannelIcons({ channels }: { channels: string[] }) {
       {channels.map((channel) => {
         const Icon = icons[channel as keyof typeof icons]
         return (
-          <Icon className={styles['notifications__channel-icon']} key={channel} />
+          <Icon
+            className={styles['notifications__channel-icon']}
+            key={channel}
+          />
         )
       })}
     </span>

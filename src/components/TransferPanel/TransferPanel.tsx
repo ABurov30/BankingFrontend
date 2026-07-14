@@ -60,7 +60,9 @@ export function TransferPanel() {
                 <p className={styles['transfer-panel__account-name']}>
                   Main checking
                 </p>
-                <p className={styles['transfer-panel__account-meta']}>$12,480.50</p>
+                <p className={styles['transfer-panel__account-meta']}>
+                  $12,480.50
+                </p>
               </div>
             </div>
             <ChevronDown className={styles['transfer-panel__chevron']} />
@@ -69,7 +71,9 @@ export function TransferPanel() {
 
         <Field label="To">
           <div className={styles['transfer-panel__recipient']}>
-            <span className={styles['transfer-panel__recipient-avatar']}>NK</span>
+            <span className={styles['transfer-panel__recipient-avatar']}>
+              NK
+            </span>
             <div>
               <p className={styles['transfer-panel__account-name']}>Nadia K.</p>
               <p className={styles['transfer-panel__account-meta']}>
@@ -84,9 +88,13 @@ export function TransferPanel() {
             <div className={styles['transfer-panel__amount-row']}>
               <p className={styles['transfer-panel__amount']}>
                 $250
-                <span className={styles['transfer-panel__amount-cents']}>.00</span>
+                <span className={styles['transfer-panel__amount-cents']}>
+                  .00
+                </span>
               </p>
-              <span className={styles['transfer-panel__currency-badge']}>USD</span>
+              <span className={styles['transfer-panel__currency-badge']}>
+                USD
+              </span>
             </div>
           </div>
           <p className={styles['transfer-panel__fee-note']}>
@@ -95,9 +103,7 @@ export function TransferPanel() {
         </Field>
 
         <Field label="Note · optional">
-          <div className={styles['transfer-panel__memo']}>
-            Dinner split 🍜
-          </div>
+          <div className={styles['transfer-panel__memo']}>Dinner split 🍜</div>
         </Field>
       </div>
 

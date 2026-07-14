@@ -90,7 +90,9 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
         className={cn(
           styles['cards__card--frozen'],
           'ui-lift',
-          isPrimary ? styles['cards__card-state'] : styles['cards__card-state--active'],
+          isPrimary
+            ? styles['cards__card-state']
+            : styles['cards__card-state--active'],
         )}
       >
         {isPrimary ? (
@@ -111,7 +113,9 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
           <span
             className={cn(
               styles['cards__card-logo'],
-              isPrimary ? styles['cards__card-state--frozen'] : styles['cards__card-control'],
+              isPrimary
+                ? styles['cards__card-state--frozen']
+                : styles['cards__card-control'],
             )}
           >
             buro
@@ -119,7 +123,9 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
           <span
             className={cn(
               styles['cards__card-control--active'],
-              isPrimary ? styles['cards__card-control--frozen'] : styles['cards__status--active'],
+              isPrimary
+                ? styles['cards__card-control--frozen']
+                : styles['cards__status--active'],
             )}
           >
             {isPrimary ? 'DEBIT' : 'VIRTUAL'}
@@ -129,7 +135,9 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
         <p
           className={cn(
             styles['cards__status--online'],
-            isPrimary ? styles['cards__card-state--frozen'] : styles['cards__status--active'],
+            isPrimary
+              ? styles['cards__card-state--frozen']
+              : styles['cards__status--active'],
           )}
         >
           •••• •••• •••• {isPrimary ? '4823' : '7710'}
@@ -154,12 +162,16 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
           <h2 className={styles['cards__card-title']}>
             {isPrimary ? 'Buro Debit · physical' : 'Buro Virtual · online'}
           </h2>
-          <p className={styles['cards__card-subtitle']}>Linked to Main checking</p>
+          <p className={styles['cards__card-subtitle']}>
+            Linked to Main checking
+          </p>
         </div>
         <span
           className={cn(
             styles['cards__status--blocked'],
-            isPrimary ? styles['cards__action-danger'] : styles['cards__action-default'],
+            isPrimary
+              ? styles['cards__action-danger']
+              : styles['cards__action-default'],
           )}
         >
           {isPrimary ? 'ACTIVE' : 'FROZEN'}
@@ -172,7 +184,9 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
 function LimitsPanel() {
   return (
     <section className={`${styles['cards__limits-card']} ui-lift`}>
-      <h2 className={styles['cards__section-title']}>Limits — Buro Debit •• 4823</h2>
+      <h2 className={styles['cards__section-title']}>
+        Limits — Buro Debit •• 4823
+      </h2>
 
       <div className={styles['cards__limit-list']}>
         {limits.map(({ colorClassName, label, value, width }) => (
@@ -231,13 +245,17 @@ function ActionsPanel() {
           <span
             className={cn(
               styles['cards__toggle--on'],
-              danger ? styles['cards__toggle--off'] : styles['cards__setting-row'],
+              danger
+                ? styles['cards__toggle--off']
+                : styles['cards__setting-row'],
             )}
           >
             <Icon
               className={cn(
                 styles['cards__setting-title'],
-                danger ? styles['cards__toggle--off'] : styles['cards__setting-meta'],
+                danger
+                  ? styles['cards__toggle--off']
+                  : styles['cards__setting-meta'],
               )}
             />
             {label}
@@ -254,7 +272,9 @@ function Toggle({ enabled }: { enabled: boolean }) {
     <span
       className={cn(
         styles['cards__setting-action'],
-        enabled ? styles['cards__setting-action--muted'] : styles['cards__empty-card'],
+        enabled
+          ? styles['cards__setting-action--muted']
+          : styles['cards__empty-card'],
       )}
       aria-hidden="true"
     >

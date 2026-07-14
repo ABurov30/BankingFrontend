@@ -108,7 +108,9 @@ function AccountsPage() {
       </div>
 
       <footer className={styles['accounts__footer']}>
-        <p className={styles['accounts__footer-text']}>Showing 3 of 3 accounts</p>
+        <p className={styles['accounts__footer-text']}>
+          Showing 3 of 3 accounts
+        </p>
         <button
           className={`${styles['accounts__page-button']} ui-lift`}
           type="button"
@@ -125,7 +127,9 @@ function FilterButton({ active, label }: { active?: boolean; label: string }) {
     <button
       className={cn(
         styles['accounts__icon-savings'],
-        active ? styles['accounts__status'] : styles['accounts__status--active'],
+        active
+          ? styles['accounts__status']
+          : styles['accounts__status--active'],
       )}
       type="button"
     >
@@ -182,7 +186,9 @@ function AccountRow({
         <span
           className={cn(
             styles['accounts__status-badge--active'],
-            enabled ? styles['accounts__status-badge--review'] : styles['accounts__status-badge--muted'],
+            enabled
+              ? styles['accounts__status-badge--review']
+              : styles['accounts__status-badge--muted'],
           )}
           aria-hidden="true"
         >
