@@ -543,6 +543,11 @@
   font-weight: var(--font-weight-medium, 500);
   color: var(--ui-shell-text-muted);
 }
+.signup__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
 @media not all and (min-width: 64rem) {
   .signup {
     padding: 0;

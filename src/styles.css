@@ -242,12 +242,15 @@ button,
 input,
 select,
 textarea {
+  appearance: none;
   font: inherit;
+  color: inherit;
 }
 
 button {
   cursor: pointer;
   border: 0;
+  background: transparent;
 }
 
 a {

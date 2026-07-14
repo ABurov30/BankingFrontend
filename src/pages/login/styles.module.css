@@ -505,6 +505,11 @@
   font-weight: var(--font-weight-medium, 500);
   color: var(--ui-shell-text-muted);
 }
+.login__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
 @media not all and (min-width: 64rem) {
   .login {
     padding: 0;

@@ -1,9 +1,9 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
+import { PageLoader } from './components/PageLoader'
 import { AuthenticatedLayout } from './layouts/AuthenticatedLayout'
 import { GuestLayout } from './layouts/GuestLayout'
-import styles from './App.module.css'
 
 const AccountsPage = lazy(() => import('./pages/accounts/AccountsPage'))
 const CardsPage = lazy(() => import('./pages/cards/CardsPage'))
@@ -40,14 +40,6 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
-  )
-}
-
-function PageLoader() {
-  return (
-    <main className={styles['app__page-loader']}>
-      <div className={styles['app__page-loader-spinner']} />
-    </main>
   )
 }
 

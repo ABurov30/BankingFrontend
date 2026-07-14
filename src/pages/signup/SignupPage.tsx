@@ -1,16 +1,17 @@
 import { Check, Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
+import { useAppDispatch } from '@/app/hooks'
+import { showToast } from '@/features/toast/toastSlice'
 import { cn } from '@/lib/utils'
+import { useSignupMutation } from '@/shared/api/authApi'
+import { getApiErrorMessage } from '@/shared/api/error'
+import type { SignupRequest } from '@/shared/api/types'
 import styles from './styles.module.css'
 
-type SignupFormValues = {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
+type SignupFormValues = SignupRequest & {
   termsAccepted: boolean
 }
 
@@ -70,20 +71,44 @@ function getPasswordStrength(password: string): PasswordStrength {
 }
 
 function SignupPage() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-  const { handleSubmit, register, watch } = useForm<SignupFormValues>({
+  const [signup, { isLoading }] = useSignupMutation()
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+    register,
+    watch,
+  } = useForm<SignupFormValues>({
     defaultValues: {
-      firstName: 'Alex',
-      lastName: 'Rivera',
-      email: 'alex@company.com',
-      password: 'Password123!',
-      termsAccepted: true,
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      termsAccepted: false,
     },
   })
 
-  const onSubmit = (values: SignupFormValues) => {
-    console.log('signup submit', values)
+  const onSubmit = async ({ termsAccepted, ...values }: SignupFormValues) => {
+    if (!termsAccepted) {
+      return
+    }
+
+    try {
+      await signup(values).unwrap()
+      navigate('/')
+    } catch (error) {
+      dispatch(
+        showToast({
+          message: getApiErrorMessage(error),
+          title: 'Account creation failed',
+          variant: 'error',
+        }),
+      )
+    }
   }
+
   const passwordStrength = getPasswordStrength(watch('password'))
 
   return (
@@ -229,7 +254,7 @@ function SignupPage() {
               <input
                 className={styles['signup__terms-input']}
                 type="checkbox"
-                {...register('termsAccepted')}
+                {...register('termsAccepted', { required: true })}
               />
               <span className={styles['signup__terms-box']}>
                 <Check
@@ -245,9 +270,10 @@ function SignupPage() {
 
             <button
               className={`${styles['signup__submit']} ui-lift`}
+              disabled={isSubmitting || isLoading}
               type="submit"
             >
-              Create account
+              {isLoading ? 'Creating account...' : 'Create account'}
             </button>
 
             <p className={styles['signup__login-copy']}>

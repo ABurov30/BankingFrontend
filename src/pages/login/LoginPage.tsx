@@ -1,26 +1,46 @@
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
+import { useAppDispatch } from '@/app/hooks'
+import { showToast } from '@/features/toast/toastSlice'
+import { useLoginMutation } from '@/shared/api/authApi'
+import { getApiErrorMessage } from '@/shared/api/error'
+import type { LoginRequest } from '@/shared/api/types'
 import styles from './styles.module.css'
 
-type LoginFormValues = {
-  email: string
-  password: string
-}
+type LoginFormValues = LoginRequest
 
 function LoginPage() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-  const { handleSubmit, register } = useForm<LoginFormValues>({
+  const [login, { isLoading }] = useLoginMutation()
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+    register,
+  } = useForm<LoginFormValues>({
     defaultValues: {
-      email: 'alex@company.com',
-      password: 'password12',
+      email: '',
+      password: '',
     },
   })
 
-  const onSubmit = (values: LoginFormValues) => {
-    console.log('login submit', values)
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      await login(values).unwrap()
+      navigate('/')
+    } catch (error) {
+      dispatch(
+        showToast({
+          message: getApiErrorMessage(error),
+          title: 'Sign in failed',
+          variant: 'error',
+        }),
+      )
+    }
   }
 
   return (
@@ -116,9 +136,10 @@ function LoginPage() {
 
             <button
               className={`${styles['login__submit']} ui-lift`}
+              disabled={isSubmitting || isLoading}
               type="submit"
             >
-              Sign in
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
 
             <div className={styles['login__divider']}>

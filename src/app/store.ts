@@ -3,6 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import appReducer from '../features/app/appSlice'
 import counterReducer from '../features/counter/counterSlice'
 import rightPanelReducer from '../features/rightPanel/rightPanelSlice'
+import toastReducer from '../features/toast/toastSlice'
 import { baseApi } from '../shared/api/baseApi'
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     app: appReducer,
     counter: counterReducer,
     rightPanel: rightPanelReducer,
+    toast: toastReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware),
