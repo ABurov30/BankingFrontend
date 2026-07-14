@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { AuthenticatedLayout } from './layouts/AuthenticatedLayout'
 import { GuestLayout } from './layouts/GuestLayout'
+import styles from './App.module.css'
 
 const AccountsPage = lazy(() => import('./pages/accounts/AccountsPage'))
 const CardsPage = lazy(() => import('./pages/cards/CardsPage'))
@@ -44,8 +45,8 @@ function App() {
 
 function PageLoader() {
   return (
-    <main className="grid min-h-svh place-items-center bg-background px-5 text-foreground">
-      <div className="h-10 w-10 animate-spin rounded-full border-2 border-muted border-t-primary" />
+    <main className={styles['app__page-loader']}>
+      <div className={styles['app__page-loader-spinner']} />
     </main>
   )
 }

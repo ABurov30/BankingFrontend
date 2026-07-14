@@ -1,0 +1,23 @@
+.app__page-loader {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding-inline: calc(var(--spacing) * 5);
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.app__page-loader-spinner {
+  width: calc(var(--spacing) * 10);
+  height: calc(var(--spacing) * 10);
+  border: 2px solid var(--muted);
+  border-top-color: var(--primary);
+  border-radius: 999px;
+  animation: app-spin 1s linear infinite;
+}
+
+@keyframes app-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

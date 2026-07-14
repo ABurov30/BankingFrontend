@@ -1,7 +1,7 @@
 import { type ComponentPropsWithoutRef, type ElementType } from 'react'
 
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 type TypographyMode = 'title' | 'subtitle'
 
@@ -11,8 +11,8 @@ type TypographyProps<T extends ElementType> = {
 } & Omit<ComponentPropsWithoutRef<T>, 'as'>
 
 const typographyClassNameByMode: Record<TypographyMode, string> = {
-  title: 'typography-style-1',
-  subtitle: 'typography-style-2',
+  title: styles['typography__title'],
+  subtitle: styles['typography__subtitle'],
 }
 
 function Typography<T extends ElementType = 'p'>({

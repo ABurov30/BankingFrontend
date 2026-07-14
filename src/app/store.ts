@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
+import appReducer from '../features/app/appSlice'
 import counterReducer from '../features/counter/counterSlice'
 import rightPanelReducer from '../features/rightPanel/rightPanelSlice'
 import { baseApi } from '../shared/api/baseApi'
@@ -7,6 +8,7 @@ import { baseApi } from '../shared/api/baseApi'
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
+    app: appReducer,
     counter: counterReducer,
     rightPanel: rightPanelReducer,
   },

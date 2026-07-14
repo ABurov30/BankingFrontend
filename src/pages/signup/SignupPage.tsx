@@ -3,9 +3,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
-import { Typography } from '@/components/Typography'
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 type SignupFormValues = {
   firstName: string
@@ -24,7 +23,7 @@ type PasswordStrength = {
 function getPasswordStrength(password: string): PasswordStrength {
   if (!password) {
     return {
-      colorClassName: 'signup-style-33',
+      colorClassName: styles['signup__rule--muted'],
       label: 'Enter password',
       score: 0,
     }
@@ -41,7 +40,7 @@ function getPasswordStrength(password: string): PasswordStrength {
 
   if (points <= 1) {
     return {
-      colorClassName: 'signup-style-34',
+      colorClassName: styles['signup__rule--danger'],
       label: 'Weak password',
       score: 1,
     }
@@ -49,7 +48,7 @@ function getPasswordStrength(password: string): PasswordStrength {
 
   if (points <= 2) {
     return {
-      colorClassName: 'signup-style-35',
+      colorClassName: styles['signup__rule--warning'],
       label: 'Fair password',
       score: 2,
     }
@@ -57,14 +56,14 @@ function getPasswordStrength(password: string): PasswordStrength {
 
   if (points <= 3) {
     return {
-      colorClassName: 'signup-style-36',
+      colorClassName: styles['signup__rule--success'],
       label: 'Good password',
       score: 3,
     }
   }
 
   return {
-    colorClassName: 'signup-style-37',
+    colorClassName: styles['signup__rule--default'],
     label: 'Strong password',
     score: 4,
   }
@@ -77,7 +76,7 @@ function SignupPage() {
       firstName: 'Alex',
       lastName: 'Rivera',
       email: 'alex@company.com',
-      password: '',
+      password: 'Password123!',
       termsAccepted: true,
     },
   })
@@ -88,19 +87,19 @@ function SignupPage() {
   const passwordStrength = getPasswordStrength(watch('password'))
 
   return (
-    <main className="signup-style-1 ui-enter">
-      <section className="signup-style-2">
-        <aside className="signup-style-3">
-          <div className="signup-style-4" />
-          <div className="signup-style-5" />
+    <main className={`${styles['signup']} ui-enter`}>
+      <section className={styles['signup__shell']}>
+        <aside className={styles['signup__hero']}>
+          <div className={styles['signup__hero-orb-primary']} />
+          <div className={styles['signup__hero-orb-secondary']} />
 
-          <div className="signup-style-6">
-            <span className="signup-style-7" />
-            <span className="signup-style-8">beam</span>
+          <div className={styles['signup__brand']}>
+            <span className={styles['signup__brand-mark']} />
+            <span className={styles['signup__brand-name']}>buro</span>
           </div>
 
-          <div className="signup-style-9">
-            <h2 className="signup-style-10">
+          <div className={styles['signup__hero-copy']}>
+            <h2 className={styles['signup__hero-title']}>
               Open your
               <br />
               account in 3
@@ -108,14 +107,14 @@ function SignupPage() {
               minutes.
             </h2>
 
-            <ol className="signup-style-11">
+            <ol className={styles['signup__steps']}>
               {[
                 'Create your profile',
                 'Confirm your e-mail',
                 'Get your first card',
               ].map((step, index) => (
-                <li className="signup-style-12" key={step}>
-                  <span className="signup-style-13">{index + 1}</span>
+                <li className={styles['signup__step']} key={step}>
+                  <span className={styles['signup__step-index']}>{index + 1}</span>
                   {step}
                 </li>
               ))}
@@ -123,51 +122,52 @@ function SignupPage() {
           </div>
         </aside>
 
-        <div className="signup-style-14">
-          <form className="signup-style-15" onSubmit={handleSubmit(onSubmit)}>
-            <header className="signup-style-16">
-              <Typography as="h1" mode="title">
-                Create account
-              </Typography>
-              <Typography mode="subtitle">
+        <div className={styles['signup__form-panel']}>
+          <form
+            className={styles['signup__form']}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <header className={styles['signup__form-header']}>
+              <h1 className={styles['signup__title']}>Create account</h1>
+              <p className={styles['signup__subtitle']}>
                 We'll send a confirmation link to your e-mail
-              </Typography>
+              </p>
             </header>
 
-            <div className="signup-style-17">
-              <label className="signup-style-18">
-                <span className="signup-style-19">First name</span>
+            <div className={styles['signup__name-grid']}>
+              <label className={styles['signup__field']}>
+                <span className={styles['signup__input']}>First name</span>
                 <input
-                  className="signup-style-20"
+                  className={styles['signup__field-full']}
                   type="text"
                   {...register('firstName')}
                 />
               </label>
 
-              <label className="signup-style-18">
-                <span className="signup-style-19">Last name</span>
+              <label className={styles['signup__field']}>
+                <span className={styles['signup__input']}>Last name</span>
                 <input
-                  className="signup-style-20"
+                  className={styles['signup__field-full']}
                   type="text"
                   {...register('lastName')}
                 />
               </label>
             </div>
 
-            <label className="signup-style-21">
-              <span className="signup-style-19">Email</span>
+            <label className={styles['signup__label']}>
+              <span className={styles['signup__input']}>Email</span>
               <input
-                className="signup-style-22"
+                className={styles['signup__email-input']}
                 type="email"
                 {...register('email')}
               />
             </label>
 
-            <label className="signup-style-21">
-              <span className="signup-style-19">Password</span>
-              <span className="signup-style-23">
+            <label className={styles['signup__label']}>
+              <span className={styles['signup__input']}>Password</span>
+              <span className={styles['signup__password-control']}>
                 <input
-                  className="signup-style-24"
+                  className={styles['signup__password-input']}
                   type={isPasswordVisible ? 'text' : 'password'}
                   {...register('password')}
                 />
@@ -175,20 +175,20 @@ function SignupPage() {
                   aria-label={
                     isPasswordVisible ? 'Hide password' : 'Show password'
                   }
-                  className="signup-style-25"
+                  className={styles['signup__password-toggle']}
                   onClick={() => setIsPasswordVisible((value) => !value)}
                   type="button"
                 >
                   {isPasswordVisible ? (
                     <Eye
                       aria-hidden="true"
-                      className="signup-style-26"
+                      className={styles['signup__password-icon']}
                       strokeWidth={2}
                     />
                   ) : (
                     <EyeOff
                       aria-hidden="true"
-                      className="signup-style-26"
+                      className={styles['signup__password-icon']}
                       strokeWidth={2}
                     />
                   )}
@@ -197,7 +197,7 @@ function SignupPage() {
 
               <span
                 className={cn(
-                  'signup-style-38',
+                  styles['signup__strength-track'],
                   passwordStrength.colorClassName,
                 )}
                 aria-hidden="true"
@@ -205,10 +205,10 @@ function SignupPage() {
                 {Array.from({ length: 4 }, (_, index) => (
                   <span
                     className={cn(
-                      'signup-style-39',
+                      styles['signup__strength-bar'],
                       index < passwordStrength.score
-                        ? 'signup-style-40'
-                        : 'signup-style-41',
+                        ? styles['signup__strength-label']
+                        : styles['signup__checkbox--checked'],
                     )}
                     key={index}
                   />
@@ -216,7 +216,7 @@ function SignupPage() {
               </span>
               <span
                 className={cn(
-                  'signup-style-42',
+                  styles['signup__checkbox--empty'],
                   passwordStrength.colorClassName,
                 )}
                 aria-live="polite"
@@ -225,31 +225,34 @@ function SignupPage() {
               </span>
             </label>
 
-            <label className="signup-style-27">
+            <label className={styles['signup__terms-field']}>
               <input
-                className="signup-style-43"
+                className={styles['signup__terms-input']}
                 type="checkbox"
                 {...register('termsAccepted')}
               />
-              <span className="signup-style-44">
+              <span className={styles['signup__terms-box']}>
                 <Check
                   aria-hidden="true"
-                  className="signup-style-28"
+                  className={styles['signup__checkbox']}
                   strokeWidth={3}
                 />
               </span>
-              <span className="signup-style-29">
+              <span className={styles['signup__terms-copy']}>
                 I agree to the Terms of Service and Privacy Policy
               </span>
             </label>
 
-            <button className="signup-style-30 ui-lift" type="submit">
+            <button
+              className={`${styles['signup__submit']} ui-lift`}
+              type="submit"
+            >
               Create account
             </button>
 
-            <p className="signup-style-31">
+            <p className={styles['signup__login-copy']}>
               Already have an account?{' '}
-              <Link className="signup-style-32" to="/login">
+              <Link className={styles['signup__login-link']} to="/login">
                 Sign in
               </Link>
             </p>

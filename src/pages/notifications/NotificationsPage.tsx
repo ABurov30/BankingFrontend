@@ -10,7 +10,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 type NotificationItem = {
   channels: Array<'email' | 'push' | 'sms'>
@@ -27,9 +27,9 @@ const todayNotifications: NotificationItem[] = [
   {
     channels: ['push', 'email'],
     description:
-      'Online payments on Beam Debit •• 4823 hit $1,240 of $1,500. Raise the limit or track spend in Cards.',
+      'Online payments on Buro Debit •• 4823 hit $1,240 of $1,500. Raise the limit or track spend in Cards.',
     icon: Gauge,
-    iconClassName: 'notifications-style-31',
+    iconClassName: styles['notifications__icon--limit'],
     time: '10:04',
     title: 'Card limit 80% reached',
     unread: true,
@@ -39,9 +39,9 @@ const todayNotifications: NotificationItem[] = [
     description:
       '$500.00 to Savings (TX-93395) was authorized and will complete shortly.',
     icon: Clock3,
-    iconClassName: 'notifications-style-32',
+    iconClassName: styles['notifications__icon--warning'],
     time: '09:31',
-    title: 'Transfer authorized - awaiting completion',
+    title: 'Transfer authorized — awaiting completion',
     unread: true,
   },
 ]
@@ -50,19 +50,19 @@ const yesterdayNotifications: NotificationItem[] = [
   {
     channels: ['push', 'email', 'sms'],
     description:
-      'StreamFlix $12.99 on Beam Virtual •• 7710 was declined. The card is frozen.',
+      'StreamFlix $12.99 on Buro Virtual •• 7710 was declined. The card is frozen.',
     icon: CreditCard,
-    iconClassName: 'notifications-style-33',
+    iconClassName: styles['notifications__icon--danger'],
     muted: true,
     time: '12:00',
-    title: 'Payment declined - insufficient limit',
+    title: 'Payment declined — insufficient limit',
   },
   {
     channels: ['email'],
     description:
       "Chrome on macOS · Berlin, DE. If this wasn't you, secure your account now.",
     icon: Laptop,
-    iconClassName: 'notifications-style-34',
+    iconClassName: styles['notifications__icon--info'],
     muted: true,
     time: '22:41',
     title: 'New login to your account',
@@ -83,12 +83,12 @@ const alertTypes = [
 
 function NotificationsPage() {
   return (
-    <section className="notifications-style-1 ui-enter">
-      <div className="notifications-style-2">
-        <div className="notifications-style-3">
-          <header className="notifications-style-4">
-            <h1 className="notifications-style-5">Notifications</h1>
-            <button className="notifications-style-6" type="button">
+    <section className={`${styles['notifications']} ui-enter`}>
+      <div className={styles['notifications__layout']}>
+        <div className={styles['notifications__main']}>
+          <header className={styles['notifications__header']}>
+            <h1 className={styles['notifications__title']}>Notifications</h1>
+            <button className={styles['notifications__mark-read']} type="button">
               Mark all as read
             </button>
           </header>
@@ -100,7 +100,7 @@ function NotificationsPage() {
           />
         </div>
 
-        <aside className="notifications-style-7">
+        <aside className={styles['notifications__aside']}>
           <ChannelsCard />
           <AlertTypesCard />
         </aside>
@@ -117,10 +117,10 @@ function NotificationGroup({
   notifications: NotificationItem[]
 }) {
   return (
-    <section className="notifications-style-8">
-      <h2 className="notifications-style-9">{label}</h2>
+    <section className={styles['notifications__group']}>
+      <h2 className={styles['notifications__group-title']}>{label}</h2>
 
-      <div className="notifications-style-10 ui-lift">
+      <div className={`${styles['notifications__item']} ui-lift`}>
         {notifications.map((notification, index) => (
           <NotificationRow
             border={index < notifications.length - 1}
@@ -147,27 +147,29 @@ function NotificationRow({
   return (
     <article
       className={cn(
-        'notifications-style-35',
-        border && 'notifications-style-36',
-        muted && 'notifications-style-37',
+        styles['notifications__toggle'],
+        border && styles['notifications__toggle--on'],
+        muted && styles['notifications__toggle--off'],
       )}
     >
-      <span className={cn('notifications-style-38', iconClassName)}>
-        <Icon className="notifications-style-11" />
+      <span className={cn(styles['notifications__icon-wrap'], iconClassName)}>
+        <Icon className={styles['notifications__item-icon']} />
       </span>
 
-      <div className="notifications-style-12">
-        <h3 className="notifications-style-13">{title}</h3>
-        <p className="notifications-style-14">{description}</p>
+      <div className={styles['notifications__item-body']}>
+        <h3 className={styles['notifications__item-title']}>{title}</h3>
+        <p className={styles['notifications__item-description']}>{description}</p>
       </div>
 
-      <div className="notifications-style-15">
-        <div className="notifications-style-16">
-          <span className="notifications-style-17">{time}</span>
+      <div className={styles['notifications__item-meta']}>
+        <div className={styles['notifications__time-row']}>
+          <span className={styles['notifications__time']}>{time}</span>
           <ChannelIcons channels={channels} />
         </div>
-        <span className="notifications-style-18">
-          {unread ? <span className="notifications-style-19" /> : null}
+        <span className={styles['notifications__unread-slot']}>
+          {unread ? (
+            <span className={styles['notifications__unread-dot']} />
+          ) : null}
         </span>
       </div>
     </article>
@@ -182,10 +184,12 @@ function ChannelIcons({ channels }: { channels: string[] }) {
   }
 
   return (
-    <span className="notifications-style-20">
+    <span className={styles['notifications__channels']}>
       {channels.map((channel) => {
         const Icon = icons[channel as keyof typeof icons]
-        return <Icon className="notifications-style-21" key={channel} />
+        return (
+          <Icon className={styles['notifications__channel-icon']} key={channel} />
+        )
       })}
     </span>
   )
@@ -193,16 +197,16 @@ function ChannelIcons({ channels }: { channels: string[] }) {
 
 function ChannelsCard() {
   return (
-    <section className="notifications-style-22 ui-lift">
-      <h2 className="notifications-style-23">Channels</h2>
-      <p className="notifications-style-24">
+    <section className={`${styles['notifications__card']} ui-lift`}>
+      <h2 className={styles['notifications__card-title']}>Channels</h2>
+      <p className={styles['notifications__card-text']}>
         Where you receive alerts about transactions and security.
       </p>
 
       {channels.map(({ enabled, icon: Icon, label }) => (
-        <div className="notifications-style-25" key={label}>
-          <span className="notifications-style-26">
-            <Icon className="notifications-style-27" />
+        <div className={styles['notifications__setting-row']} key={label}>
+          <span className={styles['notifications__setting-label']}>
+            <Icon className={styles['notifications__setting-icon']} />
             {label}
           </span>
           <Toggle enabled={enabled} />
@@ -214,12 +218,12 @@ function ChannelsCard() {
 
 function AlertTypesCard() {
   return (
-    <section className="notifications-style-22 ui-lift">
-      <h2 className="notifications-style-28">Alert types</h2>
+    <section className={`${styles['notifications__card']} ui-lift`}>
+      <h2 className={styles['notifications__section-title']}>Alert types</h2>
 
       {alertTypes.map(({ enabled, label }) => (
-        <div className="notifications-style-25" key={label}>
-          <span className="notifications-style-29">{label}</span>
+        <div className={styles['notifications__setting-row']} key={label}>
+          <span className={styles['notifications__alert-label']}>{label}</span>
           <Toggle enabled={enabled} />
         </div>
       ))}
@@ -231,12 +235,14 @@ function Toggle({ enabled }: { enabled: boolean }) {
   return (
     <span
       className={cn(
-        'notifications-style-39',
-        enabled ? 'notifications-style-40' : 'notifications-style-41',
+        styles['notifications__setting-meta'],
+        enabled
+          ? styles['notifications__setting-action']
+          : styles['notifications__setting-action--muted'],
       )}
       aria-hidden="true"
     >
-      <span className="notifications-style-30" />
+      <span className={styles['notifications__toggle-knob']} />
     </span>
   )
 }

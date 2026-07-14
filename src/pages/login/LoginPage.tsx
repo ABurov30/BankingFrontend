@@ -3,8 +3,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
-import { Typography } from '@/components/Typography'
-import './styles.css'
+import styles from './styles.module.css'
 
 type LoginFormValues = {
   email: string
@@ -25,63 +24,67 @@ function LoginPage() {
   }
 
   return (
-    <main className="login-style-1 ui-enter">
-      <section className="login-style-2">
-        <aside className="login-style-3">
-          <div className="login-style-4" />
-          <div className="login-style-5" />
+    <main className={`${styles['login']} ui-enter`}>
+      <section className={styles['login__shell']}>
+        <aside className={styles['login__hero']}>
+          <div className={styles['login__hero-orb-primary']} />
+          <div className={styles['login__hero-orb-secondary']} />
 
-          <div className="login-style-6">
-            <span className="login-style-7" />
-            <span className="login-style-8">beam</span>
+          <div className={styles['login__brand']}>
+            <span className={styles['login__brand-mark']} />
+            <span className={styles['login__brand-name']}>buro</span>
           </div>
 
-          <div className="login-style-9">
-            <h2 className="login-style-10">
+          <div className={styles['login__hero-copy']}>
+            <h2 className={styles['login__hero-title']}>
               Money that
               <br />
               moves at your
               <br />
               speed.
             </h2>
-            <p className="login-style-11">
+            <p className={styles['login__hero-text']}>
               Accounts, cards and instant transfers - processed in real time,
               secured end to end.
             </p>
           </div>
         </aside>
 
-        <div className="login-style-12">
-          <form className="login-style-13" onSubmit={handleSubmit(onSubmit)}>
-            <header className="login-style-14">
-              <Typography as="h1" mode="title">
-                Welcome back
-              </Typography>
-              <Typography mode="subtitle">
-                Sign in to your Beam account
-              </Typography>
+        <div className={styles['login__form-panel']}>
+          <form
+            className={styles['login__form']}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <header className={styles['login__form-header']}>
+              <h1 className={styles['login__title']}>Welcome back</h1>
+              <p className={styles['login__subtitle']}>
+                Sign in to your Buro account
+              </p>
             </header>
 
-            <div className="login-style-15">
-              <label className="login-style-16">
-                <span className="login-style-17">Email</span>
+            <div className={styles['login__fields']}>
+              <label className={styles['login__field']}>
+                <span className={styles['login__label']}>Email</span>
                 <input
-                  className="login-style-34"
+                  className={styles['login__input']}
                   type="email"
                   {...register('email')}
                 />
               </label>
 
-              <label className="login-style-16">
-                <span className="login-style-18">
-                  <span className="login-style-17">Password</span>
-                  <Link className="login-style-19" to="/forgot-password">
+              <label className={styles['login__field']}>
+                <span className={styles['login__label-row']}>
+                  <span className={styles['login__label']}>Password</span>
+                  <Link
+                    className={styles['login__forgot-link']}
+                    to="/forgot-password"
+                  >
                     Forgot?
                   </Link>
                 </span>
-                <span className="login-style-20">
+                <span className={styles['login__password-control']}>
                   <input
-                    className="login-style-21"
+                    className={styles['login__password-input']}
                     type={isPasswordVisible ? 'text' : 'password'}
                     {...register('password')}
                   />
@@ -89,20 +92,20 @@ function LoginPage() {
                     aria-label={
                       isPasswordVisible ? 'Hide password' : 'Show password'
                     }
-                    className="login-style-22"
+                    className={styles['login__password-toggle']}
                     onClick={() => setIsPasswordVisible((value) => !value)}
                     type="button"
                   >
                     {isPasswordVisible ? (
                       <Eye
                         aria-hidden="true"
-                        className="login-style-23"
+                        className={styles['login__password-icon']}
                         strokeWidth={2}
                       />
                     ) : (
                       <EyeOff
                         aria-hidden="true"
-                        className="login-style-23"
+                        className={styles['login__password-icon']}
                         strokeWidth={2}
                       />
                     )}
@@ -111,30 +114,33 @@ function LoginPage() {
               </label>
             </div>
 
-            <button className="login-style-24 ui-lift" type="submit">
+            <button
+              className={`${styles['login__submit']} ui-lift`}
+              type="submit"
+            >
               Sign in
             </button>
 
-            <div className="login-style-25">
-              <div className="login-style-26" />
-              <span className="login-style-27">or continue with</span>
-              <div className="login-style-26" />
+            <div className={styles['login__divider']}>
+              <div className={styles['login__divider-line']} />
+              <span className={styles['login__divider-label']}>or continue with</span>
+              <div className={styles['login__divider-line']} />
             </div>
 
-            <div className="login-style-28">
-              <button className="login-style-29" type="button">
-                <span className="login-style-30">G</span>
+            <div className={styles['login__social-list']}>
+              <button className={styles['login__social-button']} type="button">
+                <span className={styles['login__google-icon']}>G</span>
                 Google
               </button>
-              <button className="login-style-29" type="button">
-                <span className="login-style-31" />
+              <button className={styles['login__social-button']} type="button">
+                <span className={styles['login__apple-icon']} />
                 GitHub
               </button>
             </div>
 
-            <p className="login-style-32">
-              New to Beam?{' '}
-              <Link className="login-style-33" to="/signup">
+            <p className={styles['login__signup-copy']}>
+              New to Buro?{' '}
+              <Link className={styles['login__signup-link']} to="/signup">
                 Create an account
               </Link>
             </p>

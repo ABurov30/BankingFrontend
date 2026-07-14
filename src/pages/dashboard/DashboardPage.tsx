@@ -13,12 +13,14 @@ import {
   WalletCards,
 } from 'lucide-react'
 
+import { useAppDispatch } from '@/app/hooks'
+import { openRightPanel } from '@/features/rightPanel/rightPanelSlice'
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 const accounts = [
   {
-    accent: 'dashboard-style-69',
+    accent: styles['dashboard__account-accent--checking'],
     balance: '$12,480.50',
     currency: 'USD',
     icon: WalletCards,
@@ -26,7 +28,7 @@ const accounts = [
     suffix: '4823',
   },
   {
-    accent: 'dashboard-style-70',
+    accent: styles['dashboard__account-accent--savings'],
     balance: '€8,940.00',
     currency: 'EUR',
     icon: Landmark,
@@ -36,13 +38,18 @@ const accounts = [
 ]
 
 const spending = [
-  { day: 'Mon', height: 'dashboard-style-71' },
-  { day: 'Tue', height: 'dashboard-style-72' },
-  { day: 'Wed', height: 'dashboard-style-73' },
-  { day: 'Thu', height: 'dashboard-style-74', active: true, value: '$412' },
-  { day: 'Fri', height: 'dashboard-style-75' },
-  { day: 'Sat', height: 'dashboard-style-76' },
-  { day: 'Sun', height: 'dashboard-style-77' },
+  { day: 'Mon', height: styles['dashboard__chart-bar--mon'] },
+  { day: 'Tue', height: styles['dashboard__chart-bar--tue'] },
+  { day: 'Wed', height: styles['dashboard__chart-bar--wed'] },
+  {
+    day: 'Thu',
+    height: styles['dashboard__chart-bar--thu'],
+    active: true,
+    value: '$412',
+  },
+  { day: 'Fri', height: styles['dashboard__chart-bar--fri'] },
+  { day: 'Sat', height: styles['dashboard__chart-bar--sat'] },
+  { day: 'Sun', height: styles['dashboard__chart-bar--sun'] },
 ]
 
 const transactions = [
@@ -52,16 +59,16 @@ const transactions = [
     meta: 'Card •• 4823 · Jul 4, 18:22',
     name: 'Grocery Market',
     status: 'COMPLETED',
-    statusClassName: 'dashboard-style-78',
+    statusClassName: styles['dashboard__status--completed'],
   },
   {
     amount: '+$4,200.00',
-    amountClassName: 'dashboard-style-79',
+    amountClassName: styles['dashboard__amount--positive'],
     icon: BriefcaseBusiness,
     meta: 'Main checking · Jul 4, 09:00',
     name: 'Salary - ACME Corp',
     status: 'COMPLETED',
-    statusClassName: 'dashboard-style-78',
+    statusClassName: styles['dashboard__status--completed'],
   },
   {
     amount: '-$500.00',
@@ -69,16 +76,16 @@ const transactions = [
     meta: 'Main -> Savings · Jul 3, 21:14',
     name: 'Transfer to Savings',
     status: 'AUTHORIZED',
-    statusClassName: 'dashboard-style-80',
+    statusClassName: styles['dashboard__status--authorized'],
   },
   {
     amount: '-$12.99',
-    amountClassName: 'dashboard-style-81',
+    amountClassName: styles['dashboard__amount--declined'],
     icon: Subtitles,
     meta: 'Card •• 7710 · Jul 3, 12:00',
     name: 'StreamFlix subscription',
     status: 'DECLINED',
-    statusClassName: 'dashboard-style-82',
+    statusClassName: styles['dashboard__status--declined'],
   },
 ]
 
@@ -101,18 +108,18 @@ const notifications = [
 
 function DashboardPage() {
   return (
-    <section className="dashboard-style-1 ui-enter">
+    <section className={`${styles['dashboard']} ui-enter`}>
       <Topbar />
 
-      <div className="dashboard-style-2">
-        <div className="dashboard-style-3">
+      <div className={styles['dashboard__layout']}>
+        <div className={styles['dashboard__main']}>
           <BalanceHero />
           <AccountsGrid />
           <SpendingCard />
           <ActivityCard />
         </div>
 
-        <aside className="dashboard-style-4">
+        <aside className={styles['dashboard__aside']}>
           <DebitCard />
           <LimitsCard />
           <NotificationsCard />
@@ -124,25 +131,31 @@ function DashboardPage() {
 
 function Topbar() {
   return (
-    <header className="dashboard-style-5">
-      <label className="dashboard-style-6">
-        <Search className="dashboard-style-7" />
+    <header className={styles['dashboard__topbar']}>
+      <label className={styles['dashboard__search']}>
+        <Search className={styles['dashboard__icon']} />
         <input
-          className="dashboard-style-98"
+          className={styles['dashboard__search-input']}
           placeholder="Search transactions, accounts..."
           type="search"
         />
       </label>
 
-      <div className="dashboard-style-8">
-        <button className="dashboard-style-9 ui-lift" type="button">
-          <Bell className="dashboard-style-10" />
-          <span className="dashboard-style-11" />
+      <div className={styles['dashboard__inline-group']}>
+        <button
+          className={`${styles['dashboard__notification-button']} ui-lift`}
+          type="button"
+        >
+          <Bell className={styles['dashboard__notification-icon']} />
+          <span className={styles['dashboard__notification-dot']} />
         </button>
-        <button className="dashboard-style-12 ui-lift" type="button">
-          <span className="dashboard-style-13">AR</span>
-          <span className="dashboard-style-14">Alex Rivera</span>
-          <ChevronDown className="dashboard-style-7" />
+        <button
+          className={`${styles['dashboard__profile-button']} ui-lift`}
+          type="button"
+        >
+          <span className={styles['dashboard__profile-avatar']}>AR</span>
+          <span className={styles['dashboard__profile-name']}>Alex Rivera</span>
+          <ChevronDown className={styles['dashboard__icon']} />
         </button>
       </div>
     </header>
@@ -150,23 +163,37 @@ function Topbar() {
 }
 
 function BalanceHero() {
+  const dispatch = useAppDispatch()
+  const openTransferPanel = () => dispatch(openRightPanel('transfer'))
+
   return (
-    <section className="dashboard-style-15">
+    <section className={styles['dashboard__balance-hero']}>
       <div>
-        <p className="dashboard-style-16">Total balance · 2 accounts</p>
-        <h1 className="dashboard-style-17">
-          $21,420<span className="dashboard-style-18">.50</span>
+        <p className={styles['dashboard__balance-label']}>
+          Total balance · 2 accounts
+        </p>
+        <h1 className={styles['dashboard__balance-value']}>
+          $21,420<span className={styles['dashboard__balance-cents']}>.50</span>
         </h1>
-        <p className="dashboard-style-19">
-          <ArrowUpRight className="dashboard-style-20" />
+        <p className={styles['dashboard__balance-change']}>
+          <ArrowUpRight className={styles['dashboard__trend-icon']} />
           +4.2% this month
         </p>
       </div>
 
-      <div className="dashboard-style-21">
-        <ActionButton icon={ArrowUpRight} label="Transfer" primary />
-        <ActionButton icon={Plus} label="Top up" />
-        <ActionButton icon={ArrowDownLeft} label="Request" />
+      <div className={styles['dashboard__quick-actions']}>
+        <ActionButton
+          icon={ArrowUpRight}
+          label="Transfer"
+          onClick={openTransferPanel}
+          primary
+        />
+        <ActionButton icon={Plus} label="Top up" onClick={openTransferPanel} />
+        <ActionButton
+          icon={ArrowDownLeft}
+          label="Request"
+          onClick={openTransferPanel}
+        />
       </div>
     </section>
   )
@@ -175,21 +202,24 @@ function BalanceHero() {
 function ActionButton({
   icon: Icon,
   label,
+  onClick,
   primary,
 }: {
   icon: typeof ArrowUpRight
   label: string
+  onClick: () => void
   primary?: boolean
 }) {
   return (
     <button
       className={cn(
-        'dashboard-style-83',
-        primary ? 'dashboard-style-84' : 'dashboard-style-85',
+        styles['dashboard__action-button'],
+        primary ? styles['dashboard__action-button--primary'] : styles['dashboard__action-button--secondary'],
       )}
+      onClick={onClick}
       type="button"
     >
-      <Icon className="dashboard-style-22" />
+      <Icon className={styles['dashboard__action-icon']} />
       {label}
     </button>
   )
@@ -197,25 +227,25 @@ function ActionButton({
 
 function AccountsGrid() {
   return (
-    <div className="dashboard-style-23">
+    <div className={styles['dashboard__accounts-grid']}>
       {accounts.map(
         ({ accent, balance, currency, icon: Icon, name, suffix }) => (
-          <article className="dashboard-style-24" key={name}>
-            <div className="dashboard-style-25">
-              <div className="dashboard-style-8">
-                <span className={cn('dashboard-style-86', accent)}>
-                  <Icon className="dashboard-style-26" />
+          <article className={styles['dashboard__account-card']} key={name}>
+            <div className={styles['dashboard__card-header']}>
+              <div className={styles['dashboard__inline-group']}>
+                <span className={cn(styles['dashboard__account-icon-wrap'], accent)}>
+                  <Icon className={styles['dashboard__card-icon']} />
                 </span>
                 <div>
-                  <h2 className="dashboard-style-27">{name}</h2>
-                  <p className="dashboard-style-28">
+                  <h2 className={styles['dashboard__account-name']}>{name}</h2>
+                  <p className={styles['dashboard__account-meta']}>
                     {currency} · •• {suffix}
                   </p>
                 </div>
               </div>
-              <span className="dashboard-style-29">ACTIVE</span>
+              <span className={styles['dashboard__account-status']}>ACTIVE</span>
             </div>
-            <p className="dashboard-style-30">{balance}</p>
+            <p className={styles['dashboard__account-balance']}>{balance}</p>
           </article>
         ),
       )}
@@ -225,27 +255,31 @@ function AccountsGrid() {
 
 function SpendingCard() {
   return (
-    <section className="dashboard-style-31">
-      <div className="dashboard-style-32">
-        <h2 className="dashboard-style-33">Spending this week</h2>
-        <div className="dashboard-style-34">
-          <span className="dashboard-style-35">Week</span>
-          <span className="dashboard-style-36">Month</span>
+    <section className={styles['dashboard__panel-card']}>
+      <div className={styles['dashboard__panel-header']}>
+        <h2 className={styles['dashboard__panel-title']}>Spending this week</h2>
+        <div className={styles['dashboard__period-tabs']}>
+          <span className={styles['dashboard__period-tab--active']}>Week</span>
+          <span className={styles['dashboard__period-tab']}>Month</span>
         </div>
       </div>
 
-      <div className="dashboard-style-37">
+      <div className={styles['dashboard__chart']}>
         {spending.map(({ active, day, height, value }) => (
-          <div className="dashboard-style-38" key={day}>
-            {value ? <span className="dashboard-style-39">{value}</span> : null}
+          <div className={styles['dashboard__chart-column']} key={day}>
+            {value ? (
+              <span className={styles['dashboard__chart-value']}>{value}</span>
+            ) : null}
             <span
               className={cn(
-                'dashboard-style-87',
+                styles['dashboard__chart-bar'],
                 height,
-                active ? 'dashboard-style-88' : 'dashboard-style-89',
+                active
+                  ? styles['dashboard__bar--active']
+                  : styles['dashboard__bar--idle'],
               )}
             />
-            <span className="dashboard-style-40">{day}</span>
+            <span className={styles['dashboard__chart-label']}>{day}</span>
           </div>
         ))}
       </div>
@@ -255,10 +289,10 @@ function SpendingCard() {
 
 function ActivityCard() {
   return (
-    <section className="dashboard-style-31">
-      <div className="dashboard-style-25">
-        <h2 className="dashboard-style-33">Recent activity</h2>
-        <button className="dashboard-style-41" type="button">
+    <section className={styles['dashboard__panel-card']}>
+      <div className={styles['dashboard__card-header']}>
+        <h2 className={styles['dashboard__panel-title']}>Recent activity</h2>
+        <button className={styles['dashboard__link-button']} type="button">
           View all
         </button>
       </div>
@@ -274,18 +308,22 @@ function ActivityCard() {
             status,
             statusClassName,
           }) => (
-            <div className="dashboard-style-42" key={name}>
-              <span className="dashboard-style-43">
-                <Icon className="dashboard-style-26" />
+            <div className={styles['dashboard__activity-item']} key={name}>
+              <span className={styles['dashboard__activity-icon-wrap']}>
+                <Icon className={styles['dashboard__card-icon']} />
               </span>
-              <div className="dashboard-style-44">
-                <p className="dashboard-style-45">{name}</p>
-                <p className="dashboard-style-46">{meta}</p>
+              <div className={styles['dashboard__activity-copy']}>
+                <p className={styles['dashboard__activity-title']}>{name}</p>
+                <p className={styles['dashboard__activity-meta']}>{meta}</p>
               </div>
-              <span className={cn('dashboard-style-90', statusClassName)}>
+              <span
+                className={cn(styles['dashboard__status-badge'], statusClassName)}
+              >
                 {status}
               </span>
-              <span className={cn('dashboard-style-91', amountClassName)}>
+              <span
+                className={cn(styles['dashboard__amount'], amountClassName)}
+              >
                 {amount}
               </span>
             </div>
@@ -298,28 +336,28 @@ function ActivityCard() {
 
 function DebitCard() {
   return (
-    <section className="dashboard-style-47">
-      <div className="dashboard-style-48" />
-      <div className="dashboard-style-49" />
+    <section className={styles['dashboard__debit-card']}>
+      <div className={styles['dashboard__debit-orb-primary']} />
+      <div className={styles['dashboard__debit-orb-secondary']} />
 
-      <div className="dashboard-style-50">
-        <div className="dashboard-style-51">
-          <span className="dashboard-style-52">beam</span>
-          <span className="dashboard-style-53">DEBIT</span>
+      <div className={styles['dashboard__debit-content']}>
+        <div className={styles['dashboard__debit-header']}>
+          <span className={styles['dashboard__debit-brand']}>buro</span>
+          <span className={styles['dashboard__debit-type']}>DEBIT</span>
         </div>
-        <p className="dashboard-style-54">•••• •••• •••• 4823</p>
-        <div className="dashboard-style-55">
+        <p className={styles['dashboard__debit-number']}>•••• •••• •••• 4823</p>
+        <div className={styles['dashboard__debit-footer']}>
           <div>
-            <p className="dashboard-style-56">CARD HOLDER</p>
-            <p className="dashboard-style-57">ALEX RIVERA</p>
+            <p className={styles['dashboard__debit-label']}>CARD HOLDER</p>
+            <p className={styles['dashboard__debit-value']}>ALEX RIVERA</p>
           </div>
           <div>
-            <p className="dashboard-style-56">EXPIRES</p>
-            <p className="dashboard-style-57">09/28</p>
+            <p className={styles['dashboard__debit-label']}>EXPIRES</p>
+            <p className={styles['dashboard__debit-value']}>09/28</p>
           </div>
-          <div className="dashboard-style-58">
-            <span className="dashboard-style-59" />
-            <span className="dashboard-style-60" />
+          <div className={styles['dashboard__card-network']}>
+            <span className={styles['dashboard__card-network-dot--red']} />
+            <span className={styles['dashboard__card-network-dot--orange']} />
           </div>
         </div>
       </div>
@@ -329,37 +367,47 @@ function DebitCard() {
 
 function LimitsCard() {
   return (
-    <section className="dashboard-style-61">
-      <LimitRow label="Daily limit" value="$640 / $2,000" width="w-[32%]" />
+    <section className={styles['dashboard__limits-card']}>
       <LimitRow
-        barClassName="bg-ui-gold"
+        label="Daily limit"
+        value="$640 / $2,000"
+        widthClassName={styles['dashboard__limit-fill--daily']}
+      />
+      <LimitRow
+        barClassName={styles['dashboard__limit-fill--warning']}
         label="Online payments"
         value="$1,240 / $1,500"
-        width="w-[83%]"
+        widthClassName={styles['dashboard__limit-fill--online']}
       />
     </section>
   )
 }
 
 function LimitRow({
-  barClassName = 'dashboard-style-88',
+  barClassName = styles['dashboard__bar--active'],
   label,
   value,
-  width,
+  widthClassName,
 }: {
   barClassName?: string
   label: string
   value: string
-  width: string
+  widthClassName: string
 }) {
   return (
     <div>
-      <div className="dashboard-style-62">
-        <h2 className="dashboard-style-33">{label}</h2>
-        <span className="dashboard-style-63">{value}</span>
+      <div className={styles['dashboard__limit-header']}>
+        <h2 className={styles['dashboard__panel-title']}>{label}</h2>
+        <span className={styles['dashboard__limit-value']}>{value}</span>
       </div>
-      <div className="dashboard-style-64">
-        <div className={cn('dashboard-style-92', width, barClassName)} />
+      <div className={styles['dashboard__limit-track']}>
+        <div
+          className={cn(
+            styles['dashboard__limit-fill'],
+            widthClassName,
+            barClassName,
+          )}
+        />
       </div>
     </div>
   )
@@ -367,31 +415,35 @@ function LimitRow({
 
 function NotificationsCard() {
   return (
-    <section className="dashboard-style-65">
-      <div className="dashboard-style-66">
-        <h2 className="dashboard-style-33">Notifications</h2>
-        <button className="dashboard-style-41" type="button">
+    <section className={styles['dashboard__notifications-card']}>
+      <div className={styles['dashboard__notifications-header']}>
+        <h2 className={styles['dashboard__panel-title']}>Notifications</h2>
+        <button className={styles['dashboard__link-button']} type="button">
           All
         </button>
       </div>
       {notifications.map(({ meta, title, unread }) => (
-        <div className="dashboard-style-67" key={title}>
+        <div className={styles['dashboard__notification-item']} key={title}>
           <span
             className={cn(
-              'dashboard-style-93',
-              unread ? 'dashboard-style-88' : 'dashboard-style-94',
+              styles['dashboard__notification-dot-small'],
+              unread
+                ? styles['dashboard__bar--active']
+                : styles['dashboard__notification-dot-small--read'],
             )}
           />
           <div>
             <p
               className={cn(
-                'dashboard-style-95',
-                unread ? 'dashboard-style-96' : 'dashboard-style-97',
+                styles['dashboard__notification-title'],
+                unread
+                  ? styles['dashboard__notification-title--unread']
+                  : styles['dashboard__notification-title--read'],
               )}
             >
               {title}
             </p>
-            <p className="dashboard-style-68">{meta}</p>
+            <p className={styles['dashboard__notification-meta']}>{meta}</p>
           </div>
         </div>
       ))}

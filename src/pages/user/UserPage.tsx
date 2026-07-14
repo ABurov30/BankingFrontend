@@ -10,7 +10,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 const personalInfo = [
   { label: 'FULL NAME', value: 'Alex Rivera' },
@@ -33,7 +33,7 @@ const securityItems = [
   },
   {
     action: 'Revoke all',
-    actionClassName: 'user-style-42',
+    actionClassName: styles['user__badge--danger'],
     icon: History,
     label: 'Refresh tokens',
     meta: '· 2 active',
@@ -57,7 +57,7 @@ const signInMethods: SignInMethod[] = [
   },
   {
     action: 'Link account',
-    actionClassName: 'user-style-43',
+    actionClassName: styles['user__status--success'],
     icon: null,
     label: 'GitHub',
   },
@@ -67,52 +67,52 @@ const sessions = [
   {
     badge: 'THIS DEVICE',
     icon: Laptop,
-    iconClassName: 'user-style-44',
+    iconClassName: styles['user__status--danger'],
     meta: 'Berlin, DE · now',
     title: 'Chrome · macOS',
   },
   {
     action: 'End',
     icon: Smartphone,
-    iconClassName: 'user-style-45',
+    iconClassName: styles['user__setting-action--danger'],
     meta: 'Berlin, DE · 3h ago',
-    title: 'Beam App · iPhone 15',
+    title: 'Buro App · iPhone 15',
   },
 ]
 
 function UserPage() {
   return (
-    <section className="user-style-1 ui-enter">
-      <header className="user-style-2">
-        <div className="user-style-3">
-          <div className="user-style-4">AR</div>
+    <section className={`${styles['user']} ui-enter`}>
+      <header className={styles['user__header']}>
+        <div className={styles['user__identity']}>
+          <div className={styles['user__avatar']}>AR</div>
 
-          <div className="user-style-5">
-            <h1 className="user-style-6">Alex Rivera</h1>
-            <div className="user-style-7">
-              <span className="user-style-8">alex@company.com</span>
-              <span className="user-style-9">ROLE_USER</span>
-              <span className="user-style-10">
-                <MailCheck className="user-style-11" />
+          <div className={styles['user__identity-copy']}>
+            <h1 className={styles['user__name']}>Alex Rivera</h1>
+            <div className={styles['user__badges']}>
+              <span className={styles['user__email']}>alex@company.com</span>
+              <span className={styles['user__role']}>ROLE_USER</span>
+              <span className={styles['user__verified']}>
+                <MailCheck className={styles['user__verified-icon']} />
                 E-mail confirmed
               </span>
             </div>
           </div>
         </div>
 
-        <button className="user-style-12 ui-lift" type="button">
-          <Edit3 className="user-style-13" />
+        <button className={`${styles['user__edit-button']} ui-lift`} type="button">
+          <Edit3 className={styles['user__button-icon']} />
           Edit profile
         </button>
       </header>
 
-      <div className="user-style-14">
-        <div className="user-style-15">
+      <div className={styles['user__stats']}>
+        <div className={styles['user__stat-card']}>
           <PersonalInformationCard />
           <SecurityCard />
         </div>
 
-        <div className="user-style-15">
+        <div className={styles['user__stat-card']}>
           <SignInMethodsCard />
           <ActiveSessionsCard />
         </div>
@@ -123,14 +123,14 @@ function UserPage() {
 
 function PersonalInformationCard() {
   return (
-    <section className="user-style-16 ui-lift">
-      <h2 className="user-style-17">Personal information</h2>
+    <section className={`${styles['user__info-card']} ui-lift`}>
+      <h2 className={styles['user__section-title']}>Personal information</h2>
 
-      <div className="user-style-18">
+      <div className={styles['user__info-grid']}>
         {personalInfo.map(({ label, value }) => (
-          <div className="user-style-5" key={label}>
-            <p className="user-style-19">{label}</p>
-            <p className="user-style-20">{value}</p>
+          <div className={styles['user__identity-copy']} key={label}>
+            <p className={styles['user__field-label']}>{label}</p>
+            <p className={styles['user__field-value']}>{value}</p>
           </div>
         ))}
       </div>
@@ -140,22 +140,24 @@ function PersonalInformationCard() {
 
 function SecurityCard() {
   return (
-    <section className="user-style-21 ui-lift">
+    <section className={`${styles['user__settings-card']} ui-lift`}>
       <CardTitle>Security</CardTitle>
 
       {securityItems.map(
         ({ action, actionClassName, enabled, icon: Icon, label, meta }) => (
-          <div className="user-style-22" key={label}>
-            <div className="user-style-23">
-              <Icon className="user-style-24" />
-              <span className="user-style-25">{label}</span>
-              {meta ? <span className="user-style-26">{meta}</span> : null}
+          <div className={styles['user__setting-row']} key={label}>
+            <div className={styles['user__setting-main']}>
+              <Icon className={styles['user__setting-icon']} />
+              <span className={styles['user__setting-title']}>{label}</span>
+              {meta ? (
+                <span className={styles['user__setting-meta']}>{meta}</span>
+              ) : null}
             </div>
             {typeof enabled === 'boolean' ? (
               <Toggle enabled={enabled} />
             ) : (
               <button
-                className={cn('user-style-46', actionClassName)}
+                className={cn(styles['user__setting-action--primary'], actionClassName)}
                 type="button"
               >
                 {action}
@@ -170,25 +172,27 @@ function SecurityCard() {
 
 function SignInMethodsCard() {
   return (
-    <section className="user-style-21 ui-lift">
+    <section className={`${styles['user__settings-card']} ui-lift`}>
       <CardTitle>Linked sign-in methods</CardTitle>
 
       {signInMethods.map(
         ({ action, actionClassName, icon: Icon, label, meta }) => (
-          <div className="user-style-22" key={label}>
-            <div className="user-style-23">
+          <div className={styles['user__setting-row']} key={label}>
+            <div className={styles['user__setting-main']}>
               {Icon ? (
-                <Icon className="user-style-27" />
+                <Icon className={styles['user__device-icon']} />
               ) : label === 'GitHub' ? (
-                <span className="user-style-28" />
+                <span className={styles['user__device-dot']} />
               ) : (
-                <span className="user-style-29">G</span>
+                <span className={styles['user__provider-icon']}>G</span>
               )}
-              <span className="user-style-30">{label}</span>
-              {meta ? <span className="user-style-31">{meta}</span> : null}
+              <span className={styles['user__provider-name']}>{label}</span>
+              {meta ? (
+                <span className={styles['user__provider-meta']}>{meta}</span>
+              ) : null}
             </div>
             <button
-              className={cn('user-style-47', actionClassName)}
+              className={cn(styles['user__setting-action'], actionClassName)}
               type="button"
             >
               {action}
@@ -202,24 +206,26 @@ function SignInMethodsCard() {
 
 function ActiveSessionsCard() {
   return (
-    <section className="user-style-32 ui-lift">
+    <section className={`${styles['user__sessions-card']} ui-lift`}>
       <CardTitle>Active sessions</CardTitle>
 
       {sessions.map(
         ({ action, badge, icon: Icon, iconClassName, meta, title }) => (
-          <div className="user-style-33" key={title}>
-            <span className={cn('user-style-48', iconClassName)}>
-              <Icon className="user-style-13" />
+          <div className={styles['user__session-row']} key={title}>
+            <span className={cn(styles['user__provider-action'], iconClassName)}>
+              <Icon className={styles['user__button-icon']} />
             </span>
-            <div className="user-style-34">
-              <div className="user-style-35">
-                <p className="user-style-36">{title}</p>
-                {badge ? <span className="user-style-37">{badge}</span> : null}
+            <div className={styles['user__session-copy']}>
+              <div className={styles['user__session-header']}>
+                <p className={styles['user__session-title']}>{title}</p>
+                {badge ? (
+                  <span className={styles['user__session-badge']}>{badge}</span>
+                ) : null}
               </div>
-              <p className="user-style-38">{meta}</p>
+              <p className={styles['user__session-meta']}>{meta}</p>
             </div>
             {action ? (
-              <button className="user-style-39" type="button">
+              <button className={styles['user__session-action']} type="button">
                 {action}
               </button>
             ) : null}
@@ -232,8 +238,8 @@ function ActiveSessionsCard() {
 
 function CardTitle({ children }: { children: string }) {
   return (
-    <div className="user-style-40">
-      <h2 className="user-style-17">{children}</h2>
+    <div className={styles['user__section-header']}>
+      <h2 className={styles['user__section-title']}>{children}</h2>
     </div>
   )
 }
@@ -242,12 +248,12 @@ function Toggle({ enabled }: { enabled: boolean }) {
   return (
     <span
       className={cn(
-        'user-style-49',
-        enabled ? 'user-style-50' : 'user-style-51',
+        styles['user__event-icon'],
+        enabled ? styles['user__event-icon--success'] : styles['user__event-icon--neutral'],
       )}
       aria-hidden="true"
     >
-      <span className="user-style-41" />
+      <span className={styles['user__toggle-knob']} />
     </span>
   )
 }

@@ -1,0 +1,15 @@
+.typography__title {
+  font-family: Sora, sans-serif;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--ui-ink);
+}
+
+.typography__subtitle {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--ui-muted-strong);
+}

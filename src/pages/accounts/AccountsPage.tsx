@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 const accounts = [
   {
@@ -17,10 +17,10 @@ const accounts = [
     balance: '$12,480.50',
     currency: 'USD',
     icon: WalletCards,
-    iconClassName: 'accounts-style-30',
+    iconClassName: styles['accounts__filter-button'],
     number: 'DE21 1001 •• 4823',
     status: 'ACTIVE',
-    statusClassName: 'accounts-style-31',
+    statusClassName: styles['accounts__filter-button--active'],
     type: 'Checking',
     enabled: true,
   },
@@ -29,10 +29,10 @@ const accounts = [
     balance: '€8,940.00',
     currency: 'EUR',
     icon: PiggyBank,
-    iconClassName: 'accounts-style-32',
+    iconClassName: styles['accounts__filter-button--idle'],
     number: 'DE21 1001 •• 9017',
     status: 'ACTIVE',
-    statusClassName: 'accounts-style-31',
+    statusClassName: styles['accounts__filter-button--active'],
     type: 'Savings',
     enabled: true,
   },
@@ -41,10 +41,10 @@ const accounts = [
     balance: '$46,120.75',
     currency: 'USD',
     icon: Store,
-    iconClassName: 'accounts-style-33',
+    iconClassName: styles['accounts__icon-banking'],
     number: 'DE21 1001 •• 2231',
     status: 'INACTIVE',
-    statusClassName: 'accounts-style-34',
+    statusClassName: styles['accounts__icon-card'],
     type: 'Business',
     enabled: false,
     muted: true,
@@ -53,46 +53,51 @@ const accounts = [
 
 function AccountsPage() {
   return (
-    <section className="accounts-style-1 ui-enter">
-      <header className="accounts-style-2">
+    <section className={`${styles['accounts']} ui-enter`}>
+      <header className={styles['accounts__header']}>
         <div>
-          <h1 className="accounts-style-3">Accounts</h1>
-          <p className="accounts-style-4">3 accounts · $67,541.25 total</p>
+          <h1 className={styles['accounts__title']}>Accounts</h1>
+          <p className={styles['accounts__subtitle']}>
+            3 accounts · $67,541.25 total
+          </p>
         </div>
 
-        <button className="accounts-style-5 ui-lift" type="button">
-          <Plus className="accounts-style-6" />
+        <button
+          className={`${styles['accounts__add-button']} ui-lift`}
+          type="button"
+        >
+          <Plus className={styles['accounts__button-icon']} />
           New account
         </button>
       </header>
 
-      <div className="accounts-style-7">
-        <label className="accounts-style-8">
-          <Search className="accounts-style-9" />
+      <div className={styles['accounts__toolbar']}>
+        <label className={styles['accounts__search']}>
+          <Search className={styles['accounts__search-icon']} />
           <input
-            className="accounts-style-47"
+            className={styles['accounts__search-input']}
             placeholder="Search by name or number..."
             type="search"
           />
         </label>
 
-        <div className="accounts-style-10">
+        <div className={styles['accounts__filters']}>
           <FilterButton active label="Status: All" />
           <FilterButton label="Type: Any" />
           <FilterButton label="Currency: Any" />
         </div>
       </div>
 
-      <div className="accounts-style-11 ui-lift">
-        <div className="accounts-style-12">
-          <div className="accounts-style-13">
-            <div className="accounts-style-14">
+      <div className={`${styles['accounts__table-card']} ui-lift`}>
+        <div className={styles['accounts__table-scroll']}>
+          <div className={styles['accounts__table-head']}>
+            <div className={styles['accounts__account-head']}>
               <span>Account</span>
               <span>Type</span>
               <span>Currency</span>
-              <span className="accounts-style-15">Balance</span>
+              <span className={styles['accounts__head-cell']}>Balance</span>
               <span>Status</span>
-              <span className="accounts-style-15">Actions</span>
+              <span className={styles['accounts__head-cell']}>Actions</span>
             </div>
 
             {accounts.map((account) => (
@@ -102,9 +107,12 @@ function AccountsPage() {
         </div>
       </div>
 
-      <footer className="accounts-style-16">
-        <p className="accounts-style-17">Showing 3 of 3 accounts</p>
-        <button className="accounts-style-18 ui-lift" type="button">
+      <footer className={styles['accounts__footer']}>
+        <p className={styles['accounts__footer-text']}>Showing 3 of 3 accounts</p>
+        <button
+          className={`${styles['accounts__page-button']} ui-lift`}
+          type="button"
+        >
           1
         </button>
       </footer>
@@ -116,16 +124,16 @@ function FilterButton({ active, label }: { active?: boolean; label: string }) {
   return (
     <button
       className={cn(
-        'accounts-style-35',
-        active ? 'accounts-style-36' : 'accounts-style-37',
+        styles['accounts__icon-savings'],
+        active ? styles['accounts__status'] : styles['accounts__status--active'],
       )}
       type="button"
     >
       {label}
       <ChevronDown
         className={cn(
-          'accounts-style-38',
-          active ? 'accounts-style-39' : 'accounts-style-40',
+          styles['accounts__status--review'],
+          active ? styles['accounts__toggle'] : styles['accounts__toggle--on'],
         )}
       />
     </button>
@@ -148,37 +156,44 @@ function AccountRow({
   type,
 }: AccountRowProps) {
   return (
-    <div className={cn('accounts-style-48', muted && 'accounts-style-41')}>
-      <div className="accounts-style-19">
-        <span className={cn('accounts-style-42', iconClassName)}>
-          <Icon className="accounts-style-20" />
+    <div
+      className={cn(
+        styles['accounts__table-row'],
+        muted && styles['accounts__toggle--off'],
+      )}
+    >
+      <div className={styles['accounts__account-cell']}>
+        <span className={cn(styles['accounts__account-icon'], iconClassName)}>
+          <Icon className={styles['accounts__icon']} />
         </span>
-        <div className="accounts-style-21">
-          <p className="accounts-style-22">{account}</p>
-          <p className="accounts-style-23">{number}</p>
+        <div className={styles['accounts__account-copy']}>
+          <p className={styles['accounts__account-name']}>{account}</p>
+          <p className={styles['accounts__account-number']}>{number}</p>
         </div>
       </div>
 
-      <span className="accounts-style-24">{type}</span>
-      <span className="accounts-style-25">{currency}</span>
-      <span className="accounts-style-26">{balance}</span>
-      <span className={cn('accounts-style-43', statusClassName)}>{status}</span>
-      <div className="accounts-style-27">
+      <span className={styles['accounts__type']}>{type}</span>
+      <span className={styles['accounts__currency']}>{currency}</span>
+      <span className={styles['accounts__balance']}>{balance}</span>
+      <span className={cn(styles['accounts__status-badge'], statusClassName)}>
+        {status}
+      </span>
+      <div className={styles['accounts__actions']}>
         <span
           className={cn(
-            'accounts-style-44',
-            enabled ? 'accounts-style-45' : 'accounts-style-46',
+            styles['accounts__status-badge--active'],
+            enabled ? styles['accounts__status-badge--review'] : styles['accounts__status-badge--muted'],
           )}
           aria-hidden="true"
         >
-          <span className="accounts-style-28" />
+          <span className={styles['accounts__toggle-knob']} />
         </span>
         <button
           aria-label={`Open actions for ${account}`}
-          className="accounts-style-29 ui-lift"
+          className={`${styles['accounts__more-button']} ui-lift`}
           type="button"
         >
-          <MoreHorizontal className="accounts-style-20" />
+          <MoreHorizontal className={styles['accounts__icon']} />
         </button>
       </div>
     </div>

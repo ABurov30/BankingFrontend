@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import './styles.css'
+import styles from './styles.module.css'
 
 const cardControls = [
   { enabled: false, icon: Snowflake, label: 'Freeze card' },
@@ -28,19 +28,19 @@ const cardActions = [
 
 const limits = [
   {
-    colorClassName: 'cards-style-35',
+    colorClassName: styles['cards__card--primary'],
     label: 'Daily spend',
     value: '$640 / $2,000',
     width: '32%',
   },
   {
-    colorClassName: 'cards-style-36',
+    colorClassName: styles['cards__card--secondary'],
     label: 'Online payments',
     value: '$1,240 / $1,500',
     width: '83%',
   },
   {
-    colorClassName: 'cards-style-35',
+    colorClassName: styles['cards__card--primary'],
     label: 'ATM withdrawal',
     value: '$0 / $800',
     width: '2%',
@@ -49,19 +49,22 @@ const limits = [
 
 function CardsPage() {
   return (
-    <section className="cards-style-1 ui-enter">
-      <div className="cards-style-2">
-        <div className="cards-style-3">
-          <header className="cards-style-4">
-            <h1 className="cards-style-5">Cards</h1>
+    <section className={`${styles['cards']} ui-enter`}>
+      <div className={styles['cards__layout']}>
+        <div className={styles['cards__main']}>
+          <header className={styles['cards__stack']}>
+            <h1 className={styles['cards__header']}>Cards</h1>
 
-            <button className="cards-style-6 ui-lift" type="button">
-              <Plus className="cards-style-7" />
+            <button
+              className={`${styles['cards__title']} ui-lift`}
+              type="button"
+            >
+              <Plus className={styles['cards__add-button']} />
               Issue card
             </button>
           </header>
 
-          <div className="cards-style-8">
+          <div className={styles['cards__button-icon']}>
             <PaymentCard variant="primary" />
             <PaymentCard variant="virtual" />
           </div>
@@ -69,7 +72,7 @@ function CardsPage() {
           <LimitsPanel />
         </div>
 
-        <aside className="cards-style-9">
+        <aside className={styles['cards__cards-list']}>
           <SettingsPanel />
           <ActionsPanel />
         </aside>
@@ -82,38 +85,41 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
   const isPrimary = variant === 'primary'
 
   return (
-    <article className="cards-style-3">
+    <article className={styles['cards__main']}>
       <div
         className={cn(
-          'cards-style-37',
+          styles['cards__card--frozen'],
           'ui-lift',
-          isPrimary ? 'cards-style-38' : 'cards-style-39',
+          isPrimary ? styles['cards__card-state'] : styles['cards__card-state--active'],
         )}
       >
         {isPrimary ? (
           <>
-            <div className="cards-style-10" />
-            <div className="cards-style-11" />
+            <div className={styles['cards__aside']} />
+            <div className={styles['cards__card-orb-primary']} />
           </>
         ) : (
-          <div className="cards-style-12">
-            <span className="cards-style-13">Frozen</span>
+          <div className={styles['cards__card-orb-secondary']}>
+            <span className={styles['cards__card-overlay']}>
+              <Snowflake className={styles['cards__freeze-icon']} />
+              Frozen
+            </span>
           </div>
         )}
 
-        <div className="cards-style-14">
+        <div className={styles['cards__freeze-badge']}>
           <span
             className={cn(
-              'cards-style-61',
-              isPrimary ? 'cards-style-40' : 'cards-style-41',
+              styles['cards__card-logo'],
+              isPrimary ? styles['cards__card-state--frozen'] : styles['cards__card-control'],
             )}
           >
-            beam
+            buro
           </span>
           <span
             className={cn(
-              'cards-style-42',
-              isPrimary ? 'cards-style-43' : 'cards-style-44',
+              styles['cards__card-control--active'],
+              isPrimary ? styles['cards__card-control--frozen'] : styles['cards__status--active'],
             )}
           >
             {isPrimary ? 'DEBIT' : 'VIRTUAL'}
@@ -122,38 +128,38 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
 
         <p
           className={cn(
-            'cards-style-45',
-            isPrimary ? 'cards-style-40' : 'cards-style-44',
+            styles['cards__status--online'],
+            isPrimary ? styles['cards__card-state--frozen'] : styles['cards__status--active'],
           )}
         >
           •••• •••• •••• {isPrimary ? '4823' : '7710'}
         </p>
 
-        <div className="cards-style-15">
-          <span className="cards-style-16">ALEX RIVERA</span>
-          <span className="cards-style-16">
+        <div className={styles['cards__card-content']}>
+          <span className={styles['cards__card-meta']}>ALEX RIVERA</span>
+          <span className={styles['cards__card-meta']}>
             {isPrimary ? '09/28' : '03/27'}
           </span>
           {isPrimary ? (
-            <span className="cards-style-17">
-              <span className="cards-style-18" />
-              <span className="cards-style-19" />
+            <span className={styles['cards__network']}>
+              <span className={styles['cards__network-dot--red']} />
+              <span className={styles['cards__network-dot--orange']} />
             </span>
           ) : null}
         </div>
       </div>
 
-      <div className="cards-style-20">
-        <div className="cards-style-3">
-          <h2 className="cards-style-21">
-            {isPrimary ? 'Beam Debit · physical' : 'Beam Virtual · online'}
+      <div className={styles['cards__card-summary']}>
+        <div className={styles['cards__main']}>
+          <h2 className={styles['cards__card-title']}>
+            {isPrimary ? 'Buro Debit · physical' : 'Buro Virtual · online'}
           </h2>
-          <p className="cards-style-22">Linked to Main checking</p>
+          <p className={styles['cards__card-subtitle']}>Linked to Main checking</p>
         </div>
         <span
           className={cn(
-            'cards-style-46',
-            isPrimary ? 'cards-style-47' : 'cards-style-48',
+            styles['cards__status--blocked'],
+            isPrimary ? styles['cards__action-danger'] : styles['cards__action-default'],
           )}
         >
           {isPrimary ? 'ACTIVE' : 'FROZEN'}
@@ -165,19 +171,19 @@ function PaymentCard({ variant }: { variant: 'primary' | 'virtual' }) {
 
 function LimitsPanel() {
   return (
-    <section className="cards-style-23 ui-lift">
-      <h2 className="cards-style-24">Limits - Beam Debit •• 4823</h2>
+    <section className={`${styles['cards__limits-card']} ui-lift`}>
+      <h2 className={styles['cards__section-title']}>Limits — Buro Debit •• 4823</h2>
 
-      <div className="cards-style-25">
+      <div className={styles['cards__limit-list']}>
         {limits.map(({ colorClassName, label, value, width }) => (
-          <div className="cards-style-3" key={label}>
-            <div className="cards-style-26">
-              <span className="cards-style-27">{label}</span>
-              <span className="cards-style-28">{value}</span>
+          <div className={styles['cards__main']} key={label}>
+            <div className={styles['cards__limit-row']}>
+              <span className={styles['cards__limit-label']}>{label}</span>
+              <span className={styles['cards__limit-value']}>{value}</span>
             </div>
-            <div className="cards-style-29">
+            <div className={styles['cards__limit-track']}>
               <div
-                className={cn('cards-style-49', colorClassName)}
+                className={cn(styles['cards__limit-fill'], colorClassName)}
                 style={{ width }}
               />
             </div>
@@ -190,17 +196,17 @@ function LimitsPanel() {
 
 function SettingsPanel() {
   return (
-    <section className="cards-style-30 ui-lift">
+    <section className={`${styles['cards__panel-card']} ui-lift`}>
       {cardControls.map(({ enabled, icon: Icon, label }, index) => (
         <div
           className={cn(
-            'cards-style-50',
-            index < cardControls.length - 1 && 'cards-style-51',
+            styles['cards__limit-fill--spend'],
+            index < cardControls.length - 1 && styles['cards__limit-fill--atm'],
           )}
           key={label}
         >
-          <span className="cards-style-31">
-            <Icon className="cards-style-32" />
+          <span className={styles['cards__action-row']}>
+            <Icon className={styles['cards__action-icon']} />
             {label}
           </span>
           <Toggle enabled={enabled} />
@@ -212,31 +218,31 @@ function SettingsPanel() {
 
 function ActionsPanel() {
   return (
-    <section className="cards-style-30 ui-lift">
+    <section className={`${styles['cards__panel-card']} ui-lift`}>
       {cardActions.map(({ danger, icon: Icon, label }, index) => (
         <button
           className={cn(
-            'cards-style-52',
-            index < cardActions.length - 1 && 'cards-style-51',
+            styles['cards__toggle'],
+            index < cardActions.length - 1 && styles['cards__limit-fill--atm'],
           )}
           key={label}
           type="button"
         >
           <span
             className={cn(
-              'cards-style-53',
-              danger ? 'cards-style-54' : 'cards-style-55',
+              styles['cards__toggle--on'],
+              danger ? styles['cards__toggle--off'] : styles['cards__setting-row'],
             )}
           >
             <Icon
               className={cn(
-                'cards-style-56',
-                danger ? 'cards-style-54' : 'cards-style-57',
+                styles['cards__setting-title'],
+                danger ? styles['cards__toggle--off'] : styles['cards__setting-meta'],
               )}
             />
             {label}
           </span>
-          <ChevronRight className="cards-style-33" />
+          <ChevronRight className={styles['cards__chevron']} />
         </button>
       ))}
     </section>
@@ -247,12 +253,12 @@ function Toggle({ enabled }: { enabled: boolean }) {
   return (
     <span
       className={cn(
-        'cards-style-58',
-        enabled ? 'cards-style-59' : 'cards-style-60',
+        styles['cards__setting-action'],
+        enabled ? styles['cards__setting-action--muted'] : styles['cards__empty-card'],
       )}
       aria-hidden="true"
     >
-      <span className="cards-style-34" />
+      <span className={styles['cards__toggle-knob']} />
     </span>
   )
 }

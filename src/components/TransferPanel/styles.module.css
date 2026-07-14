@@ -1,0 +1,290 @@
+.transfer-panel__header {
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 4);
+  margin-bottom: 18px;
+  display: flex;
+}
+.transfer-panel__title {
+  font-family: Sora;
+  font-size: var(--text-lg, 1.125rem);
+  line-height: var(
+    --tw-leading,
+    var(--text-lg--line-height, calc(1.75 / 1.125))
+  );
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text);
+}
+.transfer-panel__close-button {
+  width: calc(var(--spacing, 0.25rem) * 8);
+  height: calc(var(--spacing, 0.25rem) * 8);
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--ui-shell-text-subtle);
+  place-items: center;
+  display: grid;
+}
+.transfer-panel__close-button:hover {
+  background-color: var(--ui-shell-border-soft);
+  color: var(--ui-shell-text-secondary);
+}
+.transfer-panel__close-icon {
+  width: calc(var(--spacing, 0.25rem) * 5);
+  height: calc(var(--spacing, 0.25rem) * 5);
+}
+:where(.transfer-panel__form > :not(:last-child)) {
+  --tw-space-y-reverse: 0;
+  margin-block-start: calc(18px * var(--tw-space-y-reverse));
+  margin-block-end: calc(18px * calc(1 - var(--tw-space-y-reverse)));
+}
+.transfer-panel__account-select {
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 4);
+  border-radius: calc(var(--radius) + 4px);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border-strong);
+  background-color: var(--ui-panel-strong);
+  padding-block: 14.5px;
+  padding-inline: 17.5px;
+  display: flex;
+}
+.transfer-panel__account-summary {
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2.5);
+  display: flex;
+}
+.transfer-panel__account-icon {
+  width: calc(var(--spacing, 0.25rem) * 8);
+  height: calc(var(--spacing, 0.25rem) * 8);
+  background-color: var(--ui-brand-soft);
+  color: var(--ui-brand);
+  border-radius: 10px;
+  place-items: center;
+  display: grid;
+}
+.transfer-panel__icon {
+  width: 17px;
+  height: 17px;
+}
+.transfer-panel__account-name {
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text);
+}
+.transfer-panel__account-meta {
+  margin-top: var(--spacing, 0.25rem);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-size: 11.5px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-subtle);
+}
+.transfer-panel__chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--ui-shell-text-subtle);
+}
+.transfer-panel__recipient {
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2.5);
+  border-radius: calc(var(--radius) + 4px);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-brand);
+  background-color: var(--ui-panel);
+  --tw-shadow: 0 0 0 3px var(--tw-shadow-color, #ff54801f);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  padding-block: 14.5px;
+  padding-inline: 17.5px;
+  display: flex;
+}
+.transfer-panel__recipient-avatar {
+  width: calc(var(--spacing, 0.25rem) * 8);
+  height: calc(var(--spacing, 0.25rem) * 8);
+  font-family: Sora;
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-white, #fff);
+  background-color: #a79eff;
+  border-radius: 3.40282e38px;
+  place-items: center;
+  display: grid;
+}
+.transfer-panel__amount-card {
+  border-radius: calc(var(--radius) + 4px);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border-strong);
+  background-color: var(--ui-panel-strong);
+  padding-inline: calc(var(--spacing, 0.25rem) * 4);
+  padding-block: calc(var(--spacing, 0.25rem) * 4);
+}
+.transfer-panel__amount-row {
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 4);
+  display: flex;
+}
+.transfer-panel__amount {
+  --tw-leading: 1;
+  --tw-font-weight: var(--font-weight-extrabold, 800);
+  font-family: Sora;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: var(--font-weight-extrabold, 800);
+  --tw-tracking: var(--tracking-normal, 0em);
+  letter-spacing: var(--tracking-normal, 0em);
+  color: var(--ui-shell-text);
+}
+.transfer-panel__amount-cents {
+  font-size: var(--text-base, 1rem);
+  line-height: var(--tw-leading, var(--text-base--line-height, 1.5));
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text-faint);
+}
+.transfer-panel__currency-badge {
+  border-radius: var(--radius);
+  background-color: var(--ui-shell-border-soft);
+  padding-inline: calc(var(--spacing, 0.25rem) * 2.5);
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text-muted);
+  padding-block: 5px;
+}
+.transfer-panel__fee-note {
+  margin-top: calc(var(--spacing, 0.25rem) * 2);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-size: 11.5px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-muted);
+}
+.transfer-panel__memo {
+  border-radius: calc(var(--radius) + 4px);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border-strong);
+  background-color: var(--ui-panel-strong);
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-subtle);
+  padding-block: 14.5px;
+  padding-inline: 17.5px;
+}
+.transfer-panel__security {
+  margin-top: calc(var(--spacing, 0.25rem) * 8);
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  flex-direction: column;
+  display: flex;
+}
+@media (min-width: 80rem) {
+  .transfer-panel__security {
+    margin-top: 170px;
+  }
+}
+.transfer-panel__security-icon {
+  color: #34c27b;
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+}
+.transfer-panel__security-copy {
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
+  --tw-leading: 18px;
+  --tw-font-weight: var(--font-weight-semibold, 600);
+  line-height: 18px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-muted);
+}
+.transfer-panel__submit {
+  background-color: var(--ui-brand);
+  --tw-font-weight: var(--font-weight-bold, 700);
+  height: 50px;
+  font-size: 15px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-white, #fff);
+  --tw-shadow: 0 6px 8px var(--tw-shadow-color, #ff548052);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  transition-property:
+    color, background-color, border-color, outline-color, text-decoration-color,
+    fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+  transition-timing-function: var(
+    --tw-ease,
+    var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1))
+  );
+  transition-duration: var(
+    --tw-duration,
+    var(--default-transition-duration, 0.15s)
+  );
+  border-radius: 3.40282e38px;
+}
+.transfer-panel__submit:hover {
+  background-color: var(--ui-brand-hover);
+}
+.transfer-panel__field {
+  display: block;
+}
+.transfer-panel__label {
+  font-size: var(--text-xs, 0.75rem);
+  line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  display: block;
+}
+.transfer-panel__tabs {
+  gap: var(--spacing, 0.25rem);
+  border-radius: calc(var(--radius) + 4px);
+  background-color: var(--ui-shell-border-soft);
+  padding: var(--spacing, 0.25rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
+  display: grid;
+}
+.transfer-panel__tab {
+  height: calc(var(--spacing, 0.25rem) * 9);
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-size: 12.5px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-nav);
+  border-radius: 9px;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  display: flex;
+}
+.transfer-panel__tab-icon {
+  width: calc(var(--spacing, 0.25rem) * 4);
+  height: calc(var(--spacing, 0.25rem) * 4);
+}
+.transfer-panel__tab--inactive {
+  height: calc(var(--spacing, 0.25rem) * 9);
+  background-color: var(--ui-panel);
+  --tw-font-weight: var(--font-weight-bold, 700);
+  font-size: 12.5px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text);
+  --tw-shadow: 0 2px 3px var(--tw-shadow-color, #08051214);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  border-radius: 9px;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  display: flex;
+}

@@ -56,7 +56,7 @@ Serves the production build locally.
 npm run docker:build
 ```
 
-Builds the Docker image as `bank-frontend`.
+Builds the Docker image as `buro-frontend`.
 
 ```bash
 npm run docker:run
@@ -73,7 +73,7 @@ Builds the Docker image and starts the container on `http://localhost:5173`.
 To build the image with a different API endpoint:
 
 ```bash
-docker build --build-arg VITE_API_URL=http://localhost:8080/api -t bank-frontend .
+docker build --build-arg VITE_API_URL=http://localhost:8080/api -t buro-frontend .
 ```
 
 ## Routing

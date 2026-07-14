@@ -1,0 +1,29 @@
+.right-panel {
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+  border-color: var(--ui-shell-border);
+  background-color: var(--ui-panel);
+  min-width: 0;
+  padding-inline: 26px;
+  padding-block: calc(var(--spacing, 0.25rem) * 7);
+}
+.right-panel--hidden {
+  width: 0;
+  padding: 0;
+  display: none;
+  overflow: hidden;
+}
+@media (min-width: 64rem) and (not (min-width: 80rem)) {
+  .right-panel {
+    grid-column-start: 2;
+  }
+}
+@media (min-width: 80rem) {
+  .right-panel {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 0;
+    border-left-style: var(--tw-border-style);
+    border-left-width: 1px;
+    min-height: 100%;
+  }
+}
