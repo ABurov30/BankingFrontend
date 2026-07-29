@@ -4,664 +4,1043 @@
  */
 
 export interface paths {
-  '/auth/signup': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['Signup']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/auth/login': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['Login']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/user': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getUser']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/transaction': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getTransaction']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/card': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getCard']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/auth': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getAuth']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/account': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getAccount']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/auth/logout': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post?: never
-    delete: operations['Logout']
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
+    "/card/update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateCard"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/verify-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["VerifyUser"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/manager/verify-user/{authUserId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["VerifyUserByManager"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/manager/unlock-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UnlockUserByManager"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/manager/block-user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["BlockUserByManager"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ChangePassword"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/admin/change-auth-user-role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ChangeAuthUserRole"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/freeze/{accountId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["freezeAccount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/card/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createCard"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["Signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["Refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["Login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["postCreateAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user/userInfo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getUserInfo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user/manager/all-userinfo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllUserInfo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getUserHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/transaction/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getTransactionHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notification/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getNotificationHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/card/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getCardHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAuthHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/manager/all-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllAccountsWithCards"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAccountHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/accounts/{ownerUserId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAccountsWithCardsByOwnerId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["Logout"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
-export type webhooks = Record<string, never>
+export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    SignupRequestDto: {
-      /** Format: email */
-      email: string
-      password: string
-      firstName: string
-      lastName: string
-    }
-    LoginRequestDto: {
-      /** Format: email */
-      email: string
-      password: string
-    }
-    Accessor: unknown
-    AsyncContext: {
-      /** Format: int64 */
-      timeout?: number
-      response?: components['schemas']['ServletResponse']
-      request?: components['schemas']['ServletRequest']
-    }
-    Cookie: {
-      name?: string
-      value?: string
-      attributes?: {
-        [key: string]: string
-      }
-      /**
-       * Format: int32
-       * @deprecated
-       */
-      version?: number
-      domain?: string
-      path?: string
-      /** @deprecated */
-      comment?: string
-      httpOnly?: boolean
-      /** Format: int32 */
-      maxAge?: number
-      secure?: boolean
-    }
-    FilterRegistration: {
-      servletNameMappings?: string[]
-      urlPatternMappings?: string[]
-      name?: string
-      className?: string
-      initParameters?: {
-        [key: string]: string
-      }
-    }
-    HttpServletMapping: {
-      servletName?: string
-      matchValue?: string
-      /** @enum {string} */
-      mappingMatch?: 'CONTEXT_ROOT' | 'DEFAULT' | 'EXACT' | 'EXTENSION' | 'PATH'
-      pattern?: string
-    }
-    HttpServletRequest: {
-      method?: string
-      requestedSessionIdFromCookie?: boolean
-      requestedSessionIdFromURL?: boolean
-      contextPath?: string
-      userPrincipal?: {
-        name?: string
-      }
-      requestURI?: string
-      queryString?: string
-      headerNames?: unknown
-      httpServletMapping?: components['schemas']['HttpServletMapping']
-      pathInfo?: string
-      pathTranslated?: string
-      requestedSessionId?: string
-      requestURL?: {
-        /** Format: int32 */
-        length?: number
-        empty?: boolean
-      }
-      servletPath?: string
-      requestedSessionIdValid?: boolean
-      trailerFieldsReady?: boolean
-      trailerFields?: {
-        [key: string]: string
-      }
-      remoteUser?: string
-      authType?: string
-      cookies?: components['schemas']['Cookie'][]
-      parts?: components['schemas']['Part'][]
-      session?: components['schemas']['HttpSession']
-      /** Format: int32 */
-      localPort?: number
-      /** Format: int64 */
-      contentLengthLong?: number
-      contentType?: string
-      scheme?: string
-      inputStream?: components['schemas']['ServletInputStream']
-      protocol?: string
-      /** Format: int32 */
-      contentLength?: number
-      locale?: string
-      attributeNames?: unknown
-      parameterNames?: unknown
-      servletContext?: components['schemas']['ServletContext']
-      remoteAddr?: string
-      asyncStarted?: boolean
-      asyncContext?: components['schemas']['AsyncContext']
-      /** @enum {string} */
-      dispatcherType?: 'FORWARD' | 'INCLUDE' | 'REQUEST' | 'ASYNC' | 'ERROR'
-      parameterMap?: {
-        [key: string]: string[]
-      }
-      characterEncoding?: string
-      serverName?: string
-      /** Format: int32 */
-      serverPort?: number
-      remoteHost?: string
-      /** Format: int32 */
-      remotePort?: number
-      localName?: string
-      localAddr?: string
-      asyncSupported?: boolean
-      requestId?: string
-      protocolRequestId?: string
-      servletConnection?: components['schemas']['ServletConnection']
-      reader?: unknown
-      locales?: unknown
-      secure?: boolean
-    }
-    HttpSession: {
-      id?: string
-      accessor?: components['schemas']['Accessor']
-      /** Format: int64 */
-      creationTime?: number
-      attributeNames?: unknown
-      servletContext?: components['schemas']['ServletContext']
-      /** Format: int64 */
-      lastAccessedTime?: number
-      /** Format: int32 */
-      maxInactiveInterval?: number
-      new?: boolean
-    }
-    JspConfigDescriptor: {
-      jspPropertyGroups?: components['schemas']['JspPropertyGroupDescriptor'][]
-      taglibs?: components['schemas']['TaglibDescriptor'][]
-    }
-    JspPropertyGroupDescriptor: {
-      buffer?: string
-      deferredSyntaxAllowedAsLiteral?: string
-      trimDirectiveWhitespaces?: string
-      errorOnUndeclaredNamespace?: string
-      urlPatterns?: string[]
-      defaultContentType?: string
-      elIgnored?: string
-      errorOnELNotFound?: string
-      pageEncoding?: string
-      scriptingInvalid?: string
-      includePreludes?: string[]
-      includeCodas?: string[]
-      isXml?: string
-    }
-    Part: {
-      contentType?: string
-      name?: string
-      /** Format: int64 */
-      size?: number
-      inputStream?: unknown
-      headerNames?: string[]
-      submittedFileName?: string
-    }
-    ReadListener: unknown
-    ServletConnection: {
-      protocol?: string
-      connectionId?: string
-      protocolConnectionId?: string
-      secure?: boolean
-    }
-    ServletContext: {
-      classLoader?: {
-        name?: string
-        registeredAsParallelCapable?: boolean
-        parent?: {
-          name?: string
-          registeredAsParallelCapable?: boolean
-          unnamedModule?: {
-            name?: string
-            descriptor?: {
-              open?: boolean
-              automatic?: boolean
-            }
-            named?: boolean
-            annotations?: unknown[]
-            declaredAnnotations?: unknown[]
-            packages?: string[]
-            layer?: unknown
-          }
-          definedPackages?: {
-            name?: string
-            annotations?: unknown[]
-            declaredAnnotations?: unknown[]
-            sealed?: boolean
-            specificationTitle?: string
-            specificationVersion?: string
-            specificationVendor?: string
-            implementationTitle?: string
-            implementationVersion?: string
-            implementationVendor?: string
-          }[]
-          defaultAssertionStatus?: boolean
-        }
-        unnamedModule?: {
-          name?: string
-          descriptor?: {
-            open?: boolean
-            automatic?: boolean
-          }
-          named?: boolean
-          annotations?: unknown[]
-          declaredAnnotations?: unknown[]
-          packages?: string[]
-          layer?: unknown
-        }
-        definedPackages?: {
-          name?: string
-          annotations?: unknown[]
-          declaredAnnotations?: unknown[]
-          sealed?: boolean
-          specificationTitle?: string
-          specificationVersion?: string
-          specificationVendor?: string
-          implementationTitle?: string
-          implementationVersion?: string
-          implementationVendor?: string
-        }[]
-        defaultAssertionStatus?: boolean
-      }
-      /** Format: int32 */
-      majorVersion?: number
-      /** Format: int32 */
-      minorVersion?: number
-      requestCharacterEncoding?: string
-      responseCharacterEncoding?: string
-      defaultSessionTrackingModes?: ('COOKIE' | 'URL' | 'SSL')[]
-      effectiveSessionTrackingModes?: ('COOKIE' | 'URL' | 'SSL')[]
-      attributeNames?: unknown
-      contextPath?: string
-      initParameterNames?: unknown
-      /** Format: int32 */
-      effectiveMajorVersion?: number
-      /** Format: int32 */
-      effectiveMinorVersion?: number
-      serverInfo?: string
-      servletContextName?: string
-      servletRegistrations?: {
-        [key: string]: components['schemas']['ServletRegistration']
-      }
-      filterRegistrations?: {
-        [key: string]: components['schemas']['FilterRegistration']
-      }
-      sessionCookieConfig?: components['schemas']['SessionCookieConfig']
-      sessionTrackingModes?: ('COOKIE' | 'URL' | 'SSL')[]
-      jspConfigDescriptor?: components['schemas']['JspConfigDescriptor']
-      virtualServerName?: string
-      /** Format: int32 */
-      sessionTimeout?: number
-    }
-    ServletInputStream: {
-      readListener?: components['schemas']['ReadListener']
-      finished?: boolean
-      ready?: boolean
-    }
-    ServletOutputStream: {
-      writeListener?: components['schemas']['WriteListener']
-      ready?: boolean
-    }
-    ServletRegistration: {
-      mappings?: string[]
-      runAsRole?: string
-      name?: string
-      className?: string
-      initParameters?: {
-        [key: string]: string
-      }
-    }
-    ServletRequest: {
-      /** Format: int32 */
-      localPort?: number
-      /** Format: int64 */
-      contentLengthLong?: number
-      contentType?: string
-      scheme?: string
-      inputStream?: components['schemas']['ServletInputStream']
-      protocol?: string
-      /** Format: int32 */
-      contentLength?: number
-      locale?: string
-      attributeNames?: unknown
-      parameterNames?: unknown
-      servletContext?: components['schemas']['ServletContext']
-      remoteAddr?: string
-      asyncStarted?: boolean
-      asyncContext?: unknown
-      /** @enum {string} */
-      dispatcherType?: 'FORWARD' | 'INCLUDE' | 'REQUEST' | 'ASYNC' | 'ERROR'
-      parameterMap?: {
-        [key: string]: string[]
-      }
-      characterEncoding?: string
-      serverName?: string
-      /** Format: int32 */
-      serverPort?: number
-      remoteHost?: string
-      /** Format: int32 */
-      remotePort?: number
-      localName?: string
-      localAddr?: string
-      asyncSupported?: boolean
-      requestId?: string
-      protocolRequestId?: string
-      servletConnection?: components['schemas']['ServletConnection']
-      reader?: unknown
-      locales?: unknown
-      secure?: boolean
-    }
-    ServletResponse: {
-      outputStream?: components['schemas']['ServletOutputStream']
-      contentType?: string
-      /** Format: int32 */
-      contentLength?: number
-      locale?: string
-      /** Format: int32 */
-      bufferSize?: number
-      characterEncoding?: string
-      /** Format: int64 */
-      contentLengthLong?: number
-      committed?: boolean
-      writer?: unknown
-    }
-    SessionCookieConfig: {
-      domain?: string
-      name?: string
-      path?: string
-      attributes?: {
-        [key: string]: string
-      }
-      /** @deprecated */
-      comment?: string
-      httpOnly?: boolean
-      /** Format: int32 */
-      maxAge?: number
-      secure?: boolean
-    }
-    TaglibDescriptor: {
-      taglibLocation?: string
-      taglibURI?: string
-    }
-    WriteListener: unknown
-  }
-  responses: never
-  parameters: never
-  requestBodies: never
-  headers: never
-  pathItems: never
+    schemas: {
+        UpdateCardRequestDto: {
+            /** Format: uuid */
+            cardId: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "FROZEN" | "EXPIRED";
+            dailyLimit?: number;
+            monthlyLimit?: number;
+        };
+        UpdateCardResponseDto: {
+            /** Format: uuid */
+            cardId?: string;
+            /** Format: uuid */
+            accountId?: string;
+            pan?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "FROZEN" | "EXPIRED";
+            dailyLimit?: number;
+            monthlyLimit?: number;
+            /** Format: date-time */
+            expiresAt?: string;
+        };
+        VerifyAuthUserByCodeRequestDto: {
+            /** Format: uuid */
+            authUserId: string;
+            verificationCode: string;
+        };
+        UnlockAuthUserRequestDto: {
+            /** Format: uuid */
+            authUserId: string;
+        };
+        BlockAuthUserRequestDto: {
+            /** Format: uuid */
+            authUserId?: string;
+        };
+        ChangePasswordRequestDto: {
+            authUserId: string;
+            oldPassword: string;
+            newPassword: string;
+        };
+        ChangeAuthUserRoleRequestDto: {
+            /** Format: uuid */
+            authUserId: string;
+            /** @enum {string} */
+            role: "USER" | "MANAGER" | "ADMIN";
+        };
+        CreateCardRequestDto: {
+            /** Format: uuid */
+            accountId: string;
+        };
+        CreateCardResponseDto: {
+            /** Format: uuid */
+            cardId?: string;
+            /** Format: uuid */
+            accountId?: string;
+            pan?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "FROZEN" | "EXPIRED";
+            dailyLimit?: number;
+            monthlyLimit?: number;
+            /** Format: date-time */
+            expiresAt?: string;
+        };
+        SignupRequestDto: {
+            /** Format: email */
+            email: string;
+            password: string;
+            firstName: string;
+            lastName: string;
+        };
+        LoginRequestDto: {
+            /** Format: email */
+            email: string;
+            password: string;
+        };
+        CreateAccountRequestDto: {
+            /** Format: uuid */
+            ownerUserId: string;
+            /** @enum {string} */
+            type: "CHECKING" | "SAVINGS" | "CREDIT";
+            /** @enum {string} */
+            currency: "RUB" | "USD" | "EUR" | "CNY" | "GBP";
+        };
+        CreateAccountResponseDto: {
+            /** Format: uuid */
+            accountId?: string;
+            /** Format: uuid */
+            ownerUserId?: string;
+            accountNumber?: string;
+            /** @enum {string} */
+            type?: "CHECKING" | "SAVINGS" | "CREDIT";
+            /** @enum {string} */
+            status?: "ACTIVE" | "FROZEN" | "CLOSED";
+            availableBalance?: number;
+            reservedBalance?: number;
+            /** @enum {string} */
+            currency?: "RUB" | "USD" | "EUR" | "CNY" | "GBP";
+        };
+        GetUserInfoResponseDto: {
+            /** Format: uuid */
+            userProfileId?: string;
+            email?: string;
+            firstName?: string;
+            lastName?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "PENDING";
+        };
+        GetAccountResponseDto: {
+            /** Format: uuid */
+            accountId?: string;
+            /** Format: uuid */
+            ownerUserId?: string;
+            accountNumber?: string;
+            /** @enum {string} */
+            type?: "CHECKING" | "SAVINGS" | "CREDIT";
+            /** @enum {string} */
+            status?: "ACTIVE" | "FROZEN" | "CLOSED";
+            availableBalance?: number;
+            reservedBalance?: number;
+            /** @enum {string} */
+            currency?: "RUB" | "USD" | "EUR" | "CNY" | "GBP";
+        };
+        GetAccountWithCardsResponseDto: {
+            account?: components["schemas"]["GetAccountResponseDto"];
+            cards?: components["schemas"]["GetCardByAccountIdResponseDto"][];
+        };
+        GetCardByAccountIdResponseDto: {
+            /** Format: uuid */
+            cardId?: string;
+            /** Format: uuid */
+            accountId?: string;
+            pan?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "FROZEN" | "EXPIRED";
+            dailyLimit?: number;
+            monthlyLimit?: number;
+            /** Format: date-time */
+            expiresAt?: string;
+        };
+    };
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
-export type $defs = Record<string, never>
+export type $defs = Record<string, never>;
 export interface operations {
-  Signup: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['SignupRequestDto']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  Login: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['LoginRequestDto']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
-  getUser: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': string
-        }
-      }
-    }
-  }
-  getTransaction: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': string
-        }
-      }
-    }
-  }
-  getCard: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': string
-        }
-      }
-    }
-  }
-  getAuth: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': string
-        }
-      }
-    }
-  }
-  getAccount: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': string
-        }
-      }
-    }
-  }
-  Logout: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['HttpServletRequest']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
+    updateCard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCardRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateCardResponseDto"];
+                };
+            };
+        };
+    };
+    VerifyUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyAuthUserByCodeRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    VerifyUserByManager: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                authUserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UnlockUserByManager: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UnlockAuthUserRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BlockUserByManager: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BlockAuthUserRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChangePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ChangeAuthUserRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeAuthUserRoleRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    freezeAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createCard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCardRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateCardResponseDto"];
+                };
+            };
+        };
+    };
+    Signup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Refresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Login: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postCreateAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAccountRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateAccountResponseDto"];
+                };
+            };
+        };
+    };
+    getUserInfo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetUserInfoResponseDto"];
+                };
+            };
+        };
+    };
+    getAllUserInfo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetUserInfoResponseDto"][];
+                };
+            };
+        };
+    };
+    getUserHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getTransactionHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getNotificationHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getCardHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getAuthHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getAllAccountsWithCards: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetAccountWithCardsResponseDto"][];
+                };
+            };
+        };
+    };
+    getAccountHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getAccountsWithCardsByOwnerId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ownerUserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetAccountWithCardsResponseDto"][];
+                };
+            };
+        };
+    };
+    Logout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
 }

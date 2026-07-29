@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 
 import { useAppSelector } from '@/app/hooks'
+import { BottomNavigation } from '@/components/BottomNavigation'
 import { RightPanel } from '@/components/RightPanel'
 import { Sidebar } from '@/components/Sidebar'
 import { TransferPanel } from '@/components/TransferPanel'
@@ -23,6 +24,7 @@ export function AuthenticatedLayout() {
         <div className={styles['auth-layout__content']}>
           <Outlet />
         </div>
+        <BottomNavigation />
         <RightPanel>{rightPanelChildren}</RightPanel>
       </div>
     </main>

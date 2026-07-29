@@ -32,7 +32,7 @@
 .transactions__title {
   --tw-leading: 1;
   --tw-font-weight: var(--font-weight-bold, 700);
-  font-family: Sora;
+  font-family: var(--font-display);
   font-size: 26px;
   line-height: 1;
   font-weight: var(--font-weight-bold, 700);
@@ -133,6 +133,12 @@
 }
 .transactions__table-head {
   min-width: 760px;
+}
+.transactions__empty-state {
+  padding: 22px;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-subtle);
 }
 .transactions__merchant-head {
   align-items: center;

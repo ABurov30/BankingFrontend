@@ -1,44 +1,46 @@
-import {
-  Bell,
-  CreditCard,
-  Grid2X2,
-  type LucideIcon,
-  Repeat2,
-  User,
-  WalletCards,
-} from 'lucide-react'
+import { X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
+import { navItems } from '@/components/navigation'
+import { useI18n } from '@/shared/i18n/useI18n'
 import styles from './styles.module.css'
 
-type NavItem = {
-  badge?: string
-  icon: LucideIcon
-  label: string
-  to: string
-}
+export function Sidebar({
+  isOpen = false,
+  onClose,
+}: {
+  isOpen?: boolean
+  onClose?: () => void
+}) {
+  const { t } = useI18n()
 
-const navItems: NavItem[] = [
-  { icon: Grid2X2, label: 'Dashboard', to: '/' },
-  { icon: WalletCards, label: 'Accounts', to: '/accounts' },
-  { icon: CreditCard, label: 'Cards', to: '/cards' },
-  { icon: Repeat2, label: 'Transactions', to: '/transactions' },
-  { icon: Bell, label: 'Notifications', to: '/notifications' },
-  { icon: User, label: 'Profile', to: '/profile' },
-]
-
-export function Sidebar() {
   return (
-    <aside className={`${styles['sidebar']} ui-enter`}>
+    <aside
+      className={cn(
+        styles['sidebar'],
+        isOpen && styles['sidebar--open'],
+        'ui-enter',
+      )}
+    >
       <div>
         <div className={styles['sidebar__brand']}>
-          <span className={styles['sidebar__brand-mark']} />
-          <span className={styles['sidebar__brand-name']}>buro</span>
+          <div className={styles['sidebar__brand-copy']}>
+            <span className={styles['sidebar__brand-mark']} />
+            <span className={styles['sidebar__brand-name']}>buro</span>
+          </div>
+          <button
+            aria-label={t('closeNavigation')}
+            className={styles['sidebar__close']}
+            onClick={onClose}
+            type="button"
+          >
+            <X className={styles['sidebar__close-icon']} />
+          </button>
         </div>
 
         <nav className={styles['sidebar__nav']}>
-          {navItems.map(({ badge, icon: Icon, label, to }) => (
+          {navItems.map(({ badge, icon: Icon, labelKey, to }) => (
             <NavLink
               className={({ isActive }) =>
                 cn(
@@ -49,11 +51,12 @@ export function Sidebar() {
                 )
               }
               end={to === '/'}
-              key={label}
+              key={labelKey}
+              onClick={onClose}
               to={to}
             >
               <Icon className={styles['sidebar__nav-icon']} strokeWidth={2} />
-              <span>{label}</span>
+              <span>{t(labelKey)}</span>
               {badge ? (
                 <span className={styles['sidebar__nav-badge']}>{badge}</span>
               ) : null}

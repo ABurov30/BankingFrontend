@@ -86,7 +86,7 @@
 .signup__brand-name {
   --tw-leading: 1;
   --tw-font-weight: var(--font-weight-extrabold, 800);
-  font-family: Sora;
+  font-family: var(--font-display);
   font-size: 22px;
   line-height: 1;
   font-weight: var(--font-weight-extrabold, 800);
@@ -105,7 +105,7 @@
   --tw-leading: 48.3px;
   --tw-font-weight: var(--font-weight-bold, 700);
   width: 380px;
-  font-family: Sora;
+  font-family: var(--font-display);
   font-size: 42px;
   line-height: 48.3px;
   font-weight: var(--font-weight-bold, 700);
@@ -152,7 +152,7 @@
   }
 }
 .signup__step-index {
-  font-family: Sora;
+  font-family: var(--font-display);
   font-size: var(--text-xs, 0.75rem);
   line-height: var(--tw-leading, var(--text-xs--line-height, calc(1 / 0.75)));
   --tw-leading: 1;
@@ -523,7 +523,7 @@
 .signup__title {
   --tw-leading: 1;
   --tw-font-weight: var(--font-weight-bold, 700);
-  font-family: Sora;
+  font-family: var(--font-display);
   font-size: 30px;
   line-height: 1;
   font-weight: var(--font-weight-bold, 700);

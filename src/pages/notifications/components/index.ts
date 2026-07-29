@@ -1,0 +1,1 @@
+export { NotificationsEmptyCard } from './NotificationsEmptyCard'

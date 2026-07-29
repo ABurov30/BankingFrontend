@@ -39,8 +39,17 @@
     calc(var(--spacing, 0.25rem) * 5) * calc(1 - var(--tw-space-y-reverse))
   );
 }
+:where(.dashboard__card-stack > :not(:last-child)) {
+  --tw-space-y-reverse: 0;
+  margin-block-start: calc(
+    calc(var(--spacing, 0.25rem) * 3) * var(--tw-space-y-reverse)
+  );
+  margin-block-end: calc(
+    calc(var(--spacing, 0.25rem) * 3) * calc(1 - var(--tw-space-y-reverse))
+  );
+}
 .dashboard__topbar {
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   gap: calc(var(--spacing, 0.25rem) * 4);
   padding-inline: calc(var(--spacing, 0.25rem) * 5);
@@ -52,20 +61,6 @@
     padding-inline: calc(var(--spacing, 0.25rem) * 7);
   }
 }
-.dashboard__search {
-  height: calc(var(--spacing, 0.25rem) * 11);
-  align-items: center;
-  gap: calc(var(--spacing, 0.25rem) * 2.5);
-  border-style: var(--tw-border-style);
-  border-width: 1px;
-  border-color: var(--ui-shell-border);
-  background-color: var(--ui-panel);
-  border-radius: 3.40282e38px;
-  width: 100%;
-  max-width: 394px;
-  padding-inline: 17px;
-  display: flex;
-}
 .dashboard__icon {
   width: 18px;
   height: 18px;
@@ -76,39 +71,8 @@
   gap: calc(var(--spacing, 0.25rem) * 3);
   display: flex;
 }
-.dashboard__notification-button {
-  width: calc(var(--spacing, 0.25rem) * 11);
-  height: calc(var(--spacing, 0.25rem) * 11);
-  border-style: var(--tw-border-style);
-  border-width: 1px;
-  border-color: var(--ui-shell-border);
-  background-color: var(--color-white, #fff);
-  color: var(--ui-shell-text-secondary);
-  border-radius: 3.40282e38px;
-  place-items: center;
-  display: none;
+.dashboard__profile-menu {
   position: relative;
-}
-@media (min-width: 40rem) {
-  .dashboard__notification-button {
-    display: grid;
-  }
-}
-.dashboard__notification-icon {
-  width: calc(var(--spacing, 0.25rem) * 5);
-  height: calc(var(--spacing, 0.25rem) * 5);
-}
-.dashboard__notification-dot {
-  top: 9px;
-  right: calc(var(--spacing, 0.25rem) * 2.5);
-  width: calc(var(--spacing, 0.25rem) * 3);
-  height: calc(var(--spacing, 0.25rem) * 3);
-  border-style: var(--tw-border-style);
-  border-width: 2px;
-  border-color: var(--ui-panel);
-  background-color: var(--ui-brand);
-  border-radius: 3.40282e38px;
-  position: absolute;
 }
 .dashboard__profile-button {
   height: calc(var(--spacing, 0.25rem) * 11);
@@ -123,6 +87,44 @@
   border-radius: 3.40282e38px;
   padding-left: 7px;
   display: flex;
+}
+.dashboard__profile-dropdown {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 170px;
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border);
+  background-color: var(--ui-panel);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.18);
+}
+.dashboard__profile-dropdown-button {
+  width: 100%;
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2);
+  border-radius: 10px;
+  padding-inline: calc(var(--spacing, 0.25rem) * 3);
+  padding-block: calc(var(--spacing, 0.25rem) * 2.5);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-danger-alt);
+  display: flex;
+}
+.dashboard__profile-dropdown-button:hover,
+.dashboard__profile-dropdown-button:focus-visible {
+  background-color: var(--ui-shell-border-soft);
+}
+.dashboard__profile-dropdown-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.dashboard__profile-dropdown-icon {
+  width: 17px;
+  height: 17px;
 }
 .dashboard__profile-avatar {
   width: calc(var(--spacing, 0.25rem) * 8);
@@ -184,20 +186,6 @@
 .dashboard__balance-cents {
   color: var(--ui-shell-text-faint);
 }
-.dashboard__balance-change {
-  margin-top: calc(var(--spacing, 0.25rem) * 2);
-  align-items: center;
-  gap: calc(var(--spacing, 0.25rem) * 1.5);
-  --tw-font-weight: var(--font-weight-bold, 700);
-  font-size: 12.5px;
-  font-weight: var(--font-weight-bold, 700);
-  color: #34c27b;
-  display: flex;
-}
-.dashboard__trend-icon {
-  width: calc(var(--spacing, 0.25rem) * 4);
-  height: calc(var(--spacing, 0.25rem) * 4);
-}
 .dashboard__quick-actions {
   gap: calc(var(--spacing, 0.25rem) * 2.5);
   flex-wrap: wrap;
@@ -254,8 +242,8 @@
   font-weight: var(--font-weight-bold, 700);
   --tw-tracking: 0.525px;
   letter-spacing: 0.525px;
-  color: #34c27b;
-  background-color: #1d563d;
+  color: var(--ui-success-text);
+  background-color: var(--ui-success-soft);
   border-radius: 3.40282e38px;
 }
 .dashboard__account-balance {
@@ -386,113 +374,14 @@
   color: var(--ui-shell-text-subtle);
   overflow: hidden;
 }
-.dashboard__debit-card {
-  height: 184px;
-  color: var(--ui-shell-text);
-  background-image: linear-gradient(135deg, #3b2a8c, #6c4cf1 55%, #9d4cf1);
-  border-radius: 20px;
-  padding: 22px;
-  position: relative;
-  overflow: hidden;
-}
-.dashboard__debit-orb-primary {
-  background-color: var(--ui-brand);
-  opacity: 0.9;
-  border-radius: 3.40282e38px;
-  width: 200px;
-  height: 200px;
-  position: absolute;
-  top: -70px;
-  right: -70px;
-}
-.dashboard__debit-orb-secondary {
-  top: 60px;
-  right: calc(var(--spacing, 0.25rem) * 5);
-  background-color: var(--ui-shell-text);
-  opacity: 0.14;
-  border-radius: 3.40282e38px;
-  width: 90px;
-  height: 90px;
-  position: absolute;
-}
-.dashboard__debit-content {
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  display: flex;
-  position: relative;
-}
-.dashboard__debit-header {
-  justify-content: space-between;
-  display: flex;
-}
-.dashboard__debit-brand {
-  font-family: Sora;
-  font-size: var(--text-base, 1rem);
-  line-height: var(--tw-leading, var(--text-base--line-height, 1.5));
-  --tw-font-weight: var(--font-weight-extrabold, 800);
-  font-weight: var(--font-weight-extrabold, 800);
-}
-.dashboard__debit-type {
-  --tw-font-weight: var(--font-weight-bold, 700);
-  font-size: 11px;
-  font-weight: var(--font-weight-bold, 700);
-  --tw-tracking: 1.1px;
-  letter-spacing: 1.1px;
-  color: var(--ui-shell-text);
-}
-@supports (color: color-mix(in lab, red, red)) {
-  .dashboard__debit-type {
-    color: color-mix(in oklab, var(--ui-shell-text) 70%, transparent);
-  }
-}
-.dashboard__debit-number {
-  --tw-font-weight: var(--font-weight-semibold, 600);
-  font-size: 17px;
-  font-weight: var(--font-weight-semibold, 600);
-  --tw-tracking: 2.38px;
-  letter-spacing: 2.38px;
-}
-.dashboard__debit-footer {
-  justify-content: space-between;
-  align-items: flex-end;
-  display: flex;
-}
-.dashboard__debit-label {
-  --tw-font-weight: var(--font-weight-semibold, 600);
-  font-size: 9.5px;
-  font-weight: var(--font-weight-semibold, 600);
-  --tw-tracking: 0.95px;
-  letter-spacing: 0.95px;
-  color: var(--ui-shell-text);
-}
-@supports (color: color-mix(in lab, red, red)) {
-  .dashboard__debit-label {
-    color: color-mix(in oklab, var(--ui-shell-text) 55%, transparent);
-  }
-}
-.dashboard__debit-value {
-  --tw-font-weight: var(--font-weight-bold, 700);
+.dashboard__empty-state {
+  border-top-style: var(--tw-border-style);
+  border-top-width: 1px;
+  border-color: var(--ui-shell-border-soft);
+  padding-block: calc(var(--spacing, 0.25rem) * 4);
   font-size: 13px;
-  font-weight: var(--font-weight-bold, 700);
-}
-.dashboard__card-network {
-  display: flex;
-}
-.dashboard__card-network-dot--red {
-  background-color: var(--ui-card-red);
-  opacity: 0.9;
-  border-radius: 3.40282e38px;
-  width: 26px;
-  height: 26px;
-}
-.dashboard__card-network-dot--orange {
-  margin-left: calc(var(--spacing, 0.25rem) * -2.5);
-  background-color: var(--ui-card-orange);
-  opacity: 0.9;
-  border-radius: 3.40282e38px;
-  width: 26px;
-  height: 26px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-subtle);
 }
 :where(.dashboard__limits-card > :not(:last-child)) {
   --tw-space-y-reverse: 0;
@@ -565,7 +454,7 @@
 }
 .dashboard__account-accent--checking {
   color: var(--ui-brand);
-  background-color: #41202c;
+  background-color: var(--ui-brand-soft);
 }
 .dashboard__account-accent--savings {
   background-color: var(--ui-shell-border-soft);
@@ -593,22 +482,22 @@
   height: 19px;
 }
 .dashboard__status--completed {
-  color: #34c27b;
-  background-color: #1d563d;
+  color: var(--ui-success-text);
+  background-color: var(--ui-success-soft);
 }
 .dashboard__amount--positive {
-  color: #34c27b;
+  color: var(--ui-success-text);
 }
 .dashboard__status--authorized {
-  color: #ffc44a;
-  background-color: #42341d;
+  color: var(--ui-warning);
+  background-color: var(--ui-warning-soft);
 }
 .dashboard__amount--declined {
   color: var(--ui-danger-alt);
 }
 .dashboard__status--declined {
   color: var(--ui-danger-alt);
-  background-color: #41202c;
+  background-color: var(--ui-danger-soft);
 }
 .dashboard__action-button {
   height: calc(var(--spacing, 0.25rem) * 11);
@@ -710,21 +599,6 @@
   font-weight: var(--font-weight-semibold, 600);
   color: var(--ui-shell-text-secondary);
 }
-.dashboard__search-input {
-  --tw-font-weight: var(--font-weight-medium, 500);
-  min-width: 0;
-  font-size: 13.5px;
-  font-weight: var(--font-weight-medium, 500);
-  color: var(--ui-shell-text);
-  --tw-outline-style: none;
-  background-color: #0000;
-  outline-style: none;
-  flex: 1;
-}
-.dashboard__search-input::placeholder {
-  color: var(--ui-shell-text-subtle);
-}
-
 .dashboard__limit-fill--daily {
 }
 

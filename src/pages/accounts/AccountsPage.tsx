@@ -1,208 +1,232 @@
-import {
-  ChevronDown,
-  MoreHorizontal,
-  PiggyBank,
-  Plus,
-  Search,
-  Store,
-  WalletCards,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { skipToken } from '@reduxjs/toolkit/query'
+import { useEffect, useState } from 'react'
 
-import { cn } from '@/lib/utils'
+import { useAppDispatch, useAppSelector } from '@/app/hooks'
+import { Skeleton } from '@/components/Skeleton'
+import { selectAccounts } from '@/features/accounts/accountsSlice'
+import { showToast } from '@/features/toast/toastSlice'
+import { selectCurrentUser } from '@/features/user/userSlice'
+import { formatMoney } from '@/lib/formatMoney'
+import {
+  useCreateAccountMutation,
+  useFreezeAccountMutation,
+  useGetAccountsWithCardsByOwnerIdQuery,
+} from '@/shared/api/accountApi'
+import { getApiErrorMessage } from '@/shared/api/error'
+import { useI18n } from '@/shared/i18n/useI18n'
+import {
+  AccountsTable,
+  AccountsToolbar,
+  CreateAccountDialog,
+  isAccountRowModel,
+  mapAccountRow,
+  type AccountFilters,
+  type CreateAccountFormValues,
+} from './components'
 import styles from './styles.module.css'
 
-const accounts = [
-  {
-    account: 'Main checking',
-    balance: '$12,480.50',
-    currency: 'USD',
-    icon: WalletCards,
-    iconClassName: styles['accounts__filter-button'],
-    number: 'DE21 1001 •• 4823',
-    status: 'ACTIVE',
-    statusClassName: styles['accounts__filter-button--active'],
-    type: 'Checking',
-    enabled: true,
-  },
-  {
-    account: 'Savings',
-    balance: '€8,940.00',
-    currency: 'EUR',
-    icon: PiggyBank,
-    iconClassName: styles['accounts__filter-button--idle'],
-    number: 'DE21 1001 •• 9017',
-    status: 'ACTIVE',
-    statusClassName: styles['accounts__filter-button--active'],
-    type: 'Savings',
-    enabled: true,
-  },
-  {
-    account: 'Business',
-    balance: '$46,120.75',
-    currency: 'USD',
-    icon: Store,
-    iconClassName: styles['accounts__icon-banking'],
-    number: 'DE21 1001 •• 2231',
-    status: 'INACTIVE',
-    statusClassName: styles['accounts__icon-card'],
-    type: 'Business',
-    enabled: false,
-    muted: true,
-  },
-]
+const initialFilters: AccountFilters = {
+  currency: 'ALL',
+  status: 'ALL',
+  type: 'ALL',
+}
+
+const accountsPerPage = 10
 
 function AccountsPage() {
+  const dispatch = useAppDispatch()
+  const { t } = useI18n()
+  const user = useAppSelector(selectCurrentUser)
+  const accountsWithCards = useAppSelector(selectAccounts)
+  const ownerUserId = user?.userProfileId
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false)
+  const [filters, setFilters] = useState<AccountFilters>(initialFilters)
+  const [currentPage, setCurrentPage] = useState(1)
+  const { isFetching } = useGetAccountsWithCardsByOwnerIdQuery(
+    ownerUserId ?? skipToken,
+  )
+  const [createAccount, { isLoading: isCreatingAccount }] =
+    useCreateAccountMutation()
+  const [freezeAccount] = useFreezeAccountMutation()
+  const accounts = accountsWithCards
+    .map(mapAccountRow)
+    .filter(isAccountRowModel)
+    .filter((account) => {
+      return (
+        (filters.status === 'ALL' || account.status === filters.status) &&
+        (filters.type === 'ALL' || account.type === filters.type) &&
+        (filters.currency === 'ALL' || account.currency === filters.currency)
+      )
+    })
+  const totalAccounts = accounts.length
+  const totalPages = Math.ceil(totalAccounts / accountsPerPage)
+  const shouldShowPagination = totalPages > 1
+  const firstVisibleAccountIndex = (currentPage - 1) * accountsPerPage
+  const paginatedAccounts = accounts.slice(
+    firstVisibleAccountIndex,
+    firstVisibleAccountIndex + accountsPerPage,
+  )
+  const visibleAccountsStart =
+    totalAccounts === 0 ? 0 : firstVisibleAccountIndex + 1
+  const visibleAccountsEnd = firstVisibleAccountIndex + paginatedAccounts.length
+  const totalBalance = accountsWithCards.reduce((sum, item) => {
+    return sum + (item.account?.availableBalance ?? 0)
+  }, 0)
+  const isInitialLoading = isFetching && accountsWithCards.length === 0
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filters])
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
+
+  const handleCreateAccount = async (values: CreateAccountFormValues) => {
+    if (!ownerUserId) {
+      return
+    }
+
+    try {
+      await createAccount({
+        currency: values.currency,
+        ownerUserId,
+        type: values.type,
+      }).unwrap()
+      setIsCreateFormOpen(false)
+      dispatch(
+        showToast({
+          message: t('accountCreated'),
+          variant: 'success',
+        }),
+      )
+    } catch (error) {
+      dispatch(
+        showToast({
+          message: getApiErrorMessage(error),
+          title: t('accountCreationFailed'),
+          variant: 'error',
+        }),
+      )
+    }
+  }
+
+  const handleFreezeAccount = async (accountId: string) => {
+    try {
+      await freezeAccount(accountId).unwrap()
+      dispatch(
+        showToast({
+          message: t('accountStatusUpdated'),
+          variant: 'success',
+        }),
+      )
+    } catch (error) {
+      dispatch(
+        showToast({
+          message: getApiErrorMessage(error),
+          title: t('accountUpdateFailed'),
+          variant: 'error',
+        }),
+      )
+    }
+  }
+
   return (
     <section className={`${styles['accounts']} ui-enter`}>
       <header className={styles['accounts__header']}>
         <div>
-          <h1 className={styles['accounts__title']}>Accounts</h1>
+          <h1 className={styles['accounts__title']}>{t('accounts')}</h1>
           <p className={styles['accounts__subtitle']}>
-            3 accounts · $67,541.25 total
+            {isInitialLoading ? (
+              <Skeleton height={14} width={190} />
+            ) : (
+              `${accounts.length} ${t('totalAccounts')} · ${formatMoney(totalBalance)} ${t('totalBalance')}`
+            )}
           </p>
         </div>
 
         <button
           className={`${styles['accounts__add-button']} ui-lift`}
+          disabled={!ownerUserId || isCreatingAccount}
+          onClick={() => setIsCreateFormOpen(true)}
           type="button"
         >
           <Plus className={styles['accounts__button-icon']} />
-          New account
+          {t('newAccount')}
         </button>
       </header>
 
-      <div className={styles['accounts__toolbar']}>
-        <label className={styles['accounts__search']}>
-          <Search className={styles['accounts__search-icon']} />
-          <input
-            className={styles['accounts__search-input']}
-            placeholder="Search by name or number..."
-            type="search"
-          />
-        </label>
+      {isCreateFormOpen ? (
+        <CreateAccountDialog
+          isCreatingAccount={isCreatingAccount}
+          onClose={() => setIsCreateFormOpen(false)}
+          onSubmit={handleCreateAccount}
+        />
+      ) : null}
 
-        <div className={styles['accounts__filters']}>
-          <FilterButton active label="Status: All" />
-          <FilterButton label="Type: Any" />
-          <FilterButton label="Currency: Any" />
-        </div>
-      </div>
-
-      <div className={`${styles['accounts__table-card']} ui-lift`}>
-        <div className={styles['accounts__table-scroll']}>
-          <div className={styles['accounts__table-head']}>
-            <div className={styles['accounts__account-head']}>
-              <span>Account</span>
-              <span>Type</span>
-              <span>Currency</span>
-              <span className={styles['accounts__head-cell']}>Balance</span>
-              <span>Status</span>
-              <span className={styles['accounts__head-cell']}>Actions</span>
-            </div>
-
-            {accounts.map((account) => (
-              <AccountRow key={account.account} {...account} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <footer className={styles['accounts__footer']}>
-        <p className={styles['accounts__footer-text']}>
-          Showing 3 of 3 accounts
-        </p>
-        <button
-          className={`${styles['accounts__page-button']} ui-lift`}
-          type="button"
-        >
-          1
-        </button>
-      </footer>
-    </section>
-  )
-}
-
-function FilterButton({ active, label }: { active?: boolean; label: string }) {
-  return (
-    <button
-      className={cn(
-        styles['accounts__icon-savings'],
-        active
-          ? styles['accounts__status']
-          : styles['accounts__status--active'],
-      )}
-      type="button"
-    >
-      {label}
-      <ChevronDown
-        className={cn(
-          styles['accounts__status--review'],
-          active ? styles['accounts__toggle'] : styles['accounts__toggle--on'],
-        )}
+      <AccountsToolbar filters={filters} onFiltersChange={setFilters} />
+      <AccountsTable
+        accounts={paginatedAccounts}
+        isLoading={isInitialLoading}
+        onFreeze={handleFreezeAccount}
       />
-    </button>
-  )
-}
 
-type AccountRowProps = (typeof accounts)[number]
+      {shouldShowPagination ? (
+        <footer className={styles['accounts__footer']}>
+          <p className={styles['accounts__footer-text']}>
+            {t('showing')} {visibleAccountsStart}-{visibleAccountsEnd}{' '}
+            {t('of')} {totalAccounts} {t('totalAccounts')}
+          </p>
 
-function AccountRow({
-  account,
-  balance,
-  currency,
-  enabled,
-  icon: Icon,
-  iconClassName,
-  muted,
-  number,
-  status,
-  statusClassName,
-  type,
-}: AccountRowProps) {
-  return (
-    <div
-      className={cn(
-        styles['accounts__table-row'],
-        muted && styles['accounts__toggle--off'],
-      )}
-    >
-      <div className={styles['accounts__account-cell']}>
-        <span className={cn(styles['accounts__account-icon'], iconClassName)}>
-          <Icon className={styles['accounts__icon']} />
-        </span>
-        <div className={styles['accounts__account-copy']}>
-          <p className={styles['accounts__account-name']}>{account}</p>
-          <p className={styles['accounts__account-number']}>{number}</p>
-        </div>
-      </div>
+          <div className={styles['accounts__pagination']}>
+            <button
+              aria-label={t('previousPage')}
+              className={`${styles['accounts__page-button']} ui-lift`}
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              type="button"
+            >
+              <ChevronLeft className={styles['accounts__page-icon']} />
+            </button>
 
-      <span className={styles['accounts__type']}>{type}</span>
-      <span className={styles['accounts__currency']}>{currency}</span>
-      <span className={styles['accounts__balance']}>{balance}</span>
-      <span className={cn(styles['accounts__status-badge'], statusClassName)}>
-        {status}
-      </span>
-      <div className={styles['accounts__actions']}>
-        <span
-          className={cn(
-            styles['accounts__status-badge--active'],
-            enabled
-              ? styles['accounts__status-badge--review']
-              : styles['accounts__status-badge--muted'],
-          )}
-          aria-hidden="true"
-        >
-          <span className={styles['accounts__toggle-knob']} />
-        </span>
-        <button
-          aria-label={`Open actions for ${account}`}
-          className={`${styles['accounts__more-button']} ui-lift`}
-          type="button"
-        >
-          <MoreHorizontal className={styles['accounts__icon']} />
-        </button>
-      </div>
-    </div>
+            {Array.from({ length: totalPages }, (_, index) => {
+              const page = index + 1
+
+              return (
+                <button
+                  aria-current={currentPage === page ? 'page' : undefined}
+                  className={`${styles['accounts__page-button']} ${
+                    currentPage === page
+                      ? styles['accounts__page-button--active']
+                      : ''
+                  } ui-lift`}
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  type="button"
+                >
+                  {page}
+                </button>
+              )
+            })}
+
+            <button
+              aria-label={t('nextPage')}
+              className={`${styles['accounts__page-button']} ui-lift`}
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setCurrentPage((page) => Math.min(totalPages, page + 1))
+              }
+              type="button"
+            >
+              <ChevronRight className={styles['accounts__page-icon']} />
+            </button>
+          </div>
+        </footer>
+      ) : null}
+    </section>
   )
 }
 
