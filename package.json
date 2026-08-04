@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "api:types": "openapi-typescript http://localhost:8080/v3/api-docs -o src/shared/api/schema.ts",
+    "api:types": "openapi-typescript http://localhost:8080/v3/api-docs -o src/shared/api/schema.ts && prettier --write src/shared/api/schema.ts",
     "dev": "vite",
     "dev:domain": "VITE_DEV_PROXY=true vite",
     "dev:cert": "mkdir -p .certs && openssl req -x509 -newkey rsa:2048 -nodes -keyout .certs/buro-bank.ru.key -out .certs/buro-bank.ru.crt -days 365 -subj \"/CN=buro-bank.ru\" -addext \"subjectAltName=DNS:buro-bank.ru\"",

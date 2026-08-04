@@ -1,6 +1,7 @@
 import { Snowflake } from 'lucide-react'
 
 import { AccountStatus } from '@/shared/api/enums'
+import { useI18n } from '@/shared/i18n/useI18n'
 import { cn } from '@/lib/utils'
 import styles from '../styles.module.css'
 import type { AccountRowModel } from './types'
@@ -25,6 +26,10 @@ export function AccountRow({
   onFreeze,
   onUnfreeze,
 }: AccountRowProps) {
+  const { t } = useI18n()
+  const isFrozen = status === AccountStatus.FROZEN
+  const freezeActionLabel = isFrozen ? t('unfreeze') : t('freeze')
+
   return (
     <div
       className={cn(
@@ -42,31 +47,35 @@ export function AccountRow({
         </div>
       </div>
 
-      <span className={styles['accounts__type']}>{type}</span>
-      <span className={styles['accounts__currency']}>{currency}</span>
-      <span className={styles['accounts__balance']}>{balance}</span>
-      <span className={cn(styles['accounts__status-badge'], statusClassName)}>
+      <span className={styles['accounts__type']} data-label={t('type')}>
+        {type}
+      </span>
+      <span className={styles['accounts__currency']} data-label={t('currency')}>
+        {currency}
+      </span>
+      <span className={styles['accounts__balance']} data-label={t('balance')}>
+        {balance}
+      </span>
+      <span
+        className={cn(styles['accounts__status-badge'], statusClassName)}
+        data-label={t('status')}
+      >
         {status}
       </span>
       <button
-        aria-label={
-          status === AccountStatus.FROZEN
-            ? 'Unfreeze account'
-            : 'Freeze account'
-        }
+        aria-label={freezeActionLabel}
         className={cn(
           styles['accounts__freeze-toggle'],
           status === AccountStatus.FROZEN &&
             styles['accounts__freeze-toggle--frozen'],
         )}
-        onClick={() =>
-          status === AccountStatus.FROZEN
-            ? onUnfreeze(accountId)
-            : onFreeze(accountId)
-        }
+        onClick={() => (isFrozen ? onUnfreeze(accountId) : onFreeze(accountId))}
         type="button"
       >
         <Snowflake />
+        <span className={styles['accounts__freeze-label']}>
+          {freezeActionLabel}
+        </span>
       </button>
     </div>
   )

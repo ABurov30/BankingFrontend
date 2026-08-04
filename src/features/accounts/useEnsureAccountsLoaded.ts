@@ -2,12 +2,10 @@ import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { setAccounts, selectAccountsInitialized } from './accountsSlice'
-import {
-  selectCardsInitialized,
-  setCardsFromAccounts,
-} from '@/features/cards/cardsSlice'
+import { selectAccountsInitialized } from './accountsSlice'
+import { selectCardsInitialized } from '@/features/cards/cardsSlice'
 import { useGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
+import { syncAccountsSnapshot } from './syncAccounts'
 
 /** Loads the shared accounts/cards snapshot once per authenticated session. */
 export function useEnsureAccountsLoaded(ownerUserId?: string) {
@@ -24,8 +22,7 @@ export function useEnsureAccountsLoaded(ownerUserId?: string) {
   // Synchronize it explicitly so the slices remain the page data source.
   useEffect(() => {
     if (shouldLoad && query.data) {
-      dispatch(setAccounts(query.data))
-      dispatch(setCardsFromAccounts(query.data))
+      syncAccountsSnapshot(dispatch, query.data)
     }
   }, [dispatch, query.data, shouldLoad])
 

@@ -42,6 +42,13 @@
   font-weight: var(--font-weight-semibold, 600);
   color: var(--ui-shell-text-muted);
 }
+.accounts__header-actions {
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 2.5);
+  flex-wrap: wrap;
+  display: flex;
+}
+.accounts__transfer-button,
 .accounts__add-button {
   height: calc(var(--spacing, 0.25rem) * 11);
   align-items: center;
@@ -77,6 +84,17 @@
 }
 .accounts__add-button:hover {
   background-color: var(--ui-brand-hover);
+}
+.accounts__transfer-button {
+  border: 1px solid var(--ui-shell-border);
+  background-color: var(--ui-panel);
+  color: var(--ui-shell-text-secondary);
+  box-shadow: none;
+}
+.accounts__transfer-button:hover {
+  border-color: var(--ui-brand);
+  background-color: var(--ui-brand-soft);
+  color: var(--ui-brand);
 }
 .accounts__button-icon {
   width: 18px;
@@ -248,6 +266,9 @@
   gap: calc(var(--spacing, 0.25rem) * 2.5);
   flex-wrap: wrap;
   display: flex;
+}
+.accounts__freeze-label {
+  display: none;
 }
 .accounts__filter-menu {
   position: relative;
@@ -586,4 +607,138 @@
 .accounts__table-row:focus-within {
   position: relative;
   z-index: 2;
+}
+
+@media (width < 40rem) {
+  .accounts {
+    padding-inline: 14px;
+    padding-block: 20px 28px;
+  }
+  .accounts__toolbar {
+    margin-bottom: 14px;
+  }
+  .accounts__filters {
+    width: 100%;
+    gap: 8px;
+    flex-direction: column;
+  }
+  .accounts__filter-menu {
+    width: 100%;
+  }
+  .accounts__icon-savings {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .accounts__filter-menu-list {
+    right: 0;
+    left: 0;
+  }
+  .accounts__table-card {
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .accounts__table-scroll {
+    overflow: visible;
+  }
+  .accounts__table-head {
+    min-width: 0;
+  }
+  .accounts__account-head {
+    display: none;
+  }
+  .accounts__account-row,
+  .accounts__table-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px 12px;
+    min-height: 0;
+    height: auto;
+    padding: 16px;
+  }
+  .accounts__account-row {
+    grid-template-columns: 1fr;
+  }
+  .accounts__table-row {
+    grid-template-areas:
+      'account account'
+      'type currency'
+      'balance balance'
+      'status action';
+  }
+  .accounts__table-row:last-child {
+    min-height: 0;
+    height: auto;
+  }
+  .accounts__account-cell {
+    grid-area: account;
+  }
+  .accounts__type,
+  .accounts__currency,
+  .accounts__balance,
+  .accounts__status-badge {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+  .accounts__type::before,
+  .accounts__currency::before,
+  .accounts__balance::before,
+  .accounts__status-badge::before {
+    content: attr(data-label);
+    color: var(--ui-shell-text-subtle);
+    font-size: 10px;
+    font-weight: var(--font-weight-bold, 700);
+    letter-spacing: 0.06em;
+  }
+  .accounts__type {
+    grid-area: type;
+  }
+  .accounts__currency {
+    grid-area: currency;
+  }
+  .accounts__balance {
+    grid-area: balance;
+    text-align: left;
+    font-size: 17px;
+  }
+  .accounts__status-badge {
+    grid-area: status;
+    width: auto;
+    padding: 0;
+    background: transparent;
+    letter-spacing: 0.04em;
+  }
+  .accounts__freeze-toggle {
+    grid-area: action;
+    width: auto;
+    min-width: 104px;
+    height: 36px;
+    justify-self: end;
+    justify-content: center;
+    gap: 7px;
+    padding-inline: 12px;
+  }
+  .accounts__freeze-toggle--frozen {
+    justify-content: center;
+  }
+  .accounts__freeze-label {
+    display: inline;
+    color: var(--ui-shell-text-secondary);
+    font-size: 12px;
+    font-weight: var(--font-weight-bold, 700);
+  }
+  .accounts__freeze-toggle--frozen .accounts__freeze-label {
+    color: var(--color-white, #fff);
+  }
+  .accounts__footer {
+    gap: 14px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .accounts__footer-text {
+    text-align: center;
+  }
+  .accounts__pagination {
+    justify-content: center;
+  }
 }

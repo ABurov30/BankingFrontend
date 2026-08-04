@@ -1,6 +1,6 @@
 import { Client } from '@stomp/stompjs'
 import { skipToken } from '@reduxjs/toolkit/query'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { showToast } from '@/features/toast/toastSlice'
@@ -9,53 +9,45 @@ import {
   addLiveNotificationToCache,
   useGetNotificationsQuery,
 } from '@/shared/api/notificationApi'
-import type { NotificationResponseDto } from '@/shared/api/types'
+import { parseNotificationEvent } from './notificationEvent'
 
 const brokerURL =
   import.meta.env.VITE_NOTIFICATIONS_WS_URL ??
   `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/api/ws`
 
-function asText(value: unknown) {
-  return typeof value === 'string' && value.trim() ? value : undefined
-}
-
-function normalizeNotification(payload: unknown): NotificationResponseDto {
-  const source =
-    payload && typeof payload === 'object'
-      ? (payload as Record<string, unknown>)
-      : {}
-  const fallbackMessage =
-    typeof payload === 'string' ? payload : JSON.stringify(payload)
-
-  return {
-    body:
-      asText(source.body) ??
-      asText(source.message) ??
-      asText(source.content) ??
-      asText(source.description) ??
-      fallbackMessage,
-    title:
-      asText(source.title) ??
-      asText(source.subject) ??
-      asText(source.type) ??
-      'Notification',
-  }
-}
-
 export function useNotificationsWebSocket() {
   const dispatch = useAppDispatch()
   const currentUser = useAppSelector(selectCurrentUser)
-  useGetNotificationsQuery(currentUser?.authUserId ? undefined : skipToken, {
-    refetchOnMountOrArgChange: true,
-  })
+  const { refetch } = useGetNotificationsQuery(
+    currentUser?.authUserId ? undefined : skipToken,
+    { refetchOnMountOrArgChange: true },
+  )
+  const hasConnectedRef = useRef(false)
+  const refetchNotificationsRef = useRef(refetch)
+  const receivedEventIdsRef = useRef(new Set<string>())
+
+  useEffect(() => {
+    refetchNotificationsRef.current = refetch
+  }, [refetch])
 
   useEffect(() => {
     if (!currentUser?.authUserId) return
 
+    hasConnectedRef.current = false
+    receivedEventIdsRef.current.clear()
+
     const client = new Client({
       brokerURL,
+      connectionTimeout: 10_000,
+      heartbeatIncoming: 10_000,
+      heartbeatOutgoing: 10_000,
       reconnectDelay: 5_000,
       onConnect: () => {
+        if (hasConnectedRef.current) {
+          void refetchNotificationsRef.current()
+        }
+
+        hasConnectedRef.current = true
         client.subscribe('/user/queue/notifications', (message) => {
           let payload: unknown = message.body
 
@@ -65,7 +57,16 @@ export function useNotificationsWebSocket() {
             // Plain-text notifications are valid too.
           }
 
-          const notification = normalizeNotification(payload)
+          const { eventId, notification } = parseNotificationEvent(payload)
+
+          if (eventId && receivedEventIdsRef.current.has(eventId)) {
+            return
+          }
+
+          if (eventId) {
+            receivedEventIdsRef.current.add(eventId)
+          }
+
           dispatch(addLiveNotificationToCache(notification))
           dispatch(
             showToast({

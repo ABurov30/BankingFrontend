@@ -1,6 +1,7 @@
 import {
   createApi,
   fetchBaseQuery,
+  type BaseQueryApi,
   type BaseQueryFn,
   type FetchArgs,
   type FetchBaseQueryError,
@@ -25,7 +26,11 @@ function shouldTryRefresh(args: string | FetchArgs) {
   return !['/auth/login', '/auth/logout', '/auth/refresh'].includes(url)
 }
 
-function redirectToLogin(api: Parameters<typeof rawBaseQuery>[1]) {
+type ApiRequest = string | FetchArgs
+type ApiBaseQuery = BaseQueryFn<ApiRequest, unknown, FetchBaseQueryError>
+type SessionExpiredHandler = (api: BaseQueryApi) => void
+
+function redirectToLogin(api: BaseQueryApi) {
   api.dispatch({ type: 'accounts/clearAccounts' })
   api.dispatch({ type: 'cards/clearCards' })
   api.dispatch({ type: 'user/clearCurrentUser' })
@@ -35,34 +40,80 @@ function redirectToLogin(api: Parameters<typeof rawBaseQuery>[1]) {
   }
 }
 
-const baseQueryWithUnauthorizedRedirect: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
-  let result = await rawBaseQuery(args, api, extraOptions)
+/**
+ * Creates a query wrapper that lets concurrent 401 responses share one refresh
+ * request. Each original request is retried once after a successful refresh.
+ */
+export function createBaseQueryWithAuthRecovery(
+  query: ApiBaseQuery,
+  onSessionExpired: SessionExpiredHandler = redirectToLogin,
+): ApiBaseQuery {
+  let refreshPromise: Promise<boolean> | null = null
+  let sessionExpiryHandled = false
 
-  if (result.error?.status === 401 && shouldTryRefresh(args)) {
-    const refreshResult = await rawBaseQuery(
-      {
-        method: 'POST',
-        url: '/auth/refresh',
-      },
-      api,
-      extraOptions,
-    )
+  const handleSessionExpired = (api: BaseQueryApi) => {
+    if (sessionExpiryHandled) return
 
-    if (!refreshResult.error) {
-      result = await rawBaseQuery(args, api, extraOptions)
-    } else {
-      redirectToLogin(api)
-    }
-  } else if (result.error?.status === 401) {
-    redirectToLogin(api)
+    sessionExpiryHandled = true
+    onSessionExpired(api)
   }
 
-  return result
+  const refreshSession = (
+    api: BaseQueryApi,
+    extraOptions: Record<string, unknown>,
+  ) => {
+    if (!refreshPromise) {
+      refreshPromise = (async () => {
+        try {
+          const result = await query(
+            {
+              method: 'POST',
+              url: '/auth/refresh',
+            },
+            api,
+            extraOptions,
+          )
+
+          return !result.error
+        } catch {
+          return false
+        } finally {
+          refreshPromise = null
+        }
+      })()
+    }
+
+    return refreshPromise
+  }
+
+  return async (args, api, extraOptions) => {
+    let result = await query(args, api, extraOptions)
+
+    if (!result.error) {
+      sessionExpiryHandled = false
+    }
+
+    if (result.error?.status === 401 && shouldTryRefresh(args)) {
+      const isSessionRefreshed = await refreshSession(api, extraOptions)
+
+      if (isSessionRefreshed) {
+        result = await query(args, api, extraOptions)
+        if (!result.error) {
+          sessionExpiryHandled = false
+        }
+      } else {
+        handleSessionExpired(api)
+      }
+    } else if (result.error?.status === 401) {
+      handleSessionExpired(api)
+    }
+
+    return result
+  }
 }
+
+const baseQueryWithUnauthorizedRedirect =
+  createBaseQueryWithAuthRecovery(rawBaseQuery)
 
 export const baseApi = createApi({
   reducerPath: 'api',

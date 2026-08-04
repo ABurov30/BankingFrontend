@@ -37,12 +37,7 @@ export function addLiveNotificationToCache(
     'getNotifications',
     undefined,
     (notifications) => {
-      const alreadyPresent = notifications.some(
-        (item) =>
-          item.title === notification.title && item.body === notification.body,
-      )
-
-      if (!alreadyPresent) notifications.unshift(notification)
+      notifications.unshift(notification)
     },
   )
 }

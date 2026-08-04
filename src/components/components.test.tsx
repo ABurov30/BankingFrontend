@@ -3,9 +3,10 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { Button } from './Button'
 import { PageLoader } from './PageLoader'
-import { RightPanel } from './RightPanel'
 import { Skeleton } from './Skeleton'
+import { TransferPanel } from './TransferPanel'
 import { Typography } from './Typography'
+import { renderWithProviders } from '@/test/renderWithProviders'
 
 describe('shared visual components', () => {
   it('renders button variants and handles interactions', () => {
@@ -31,17 +32,8 @@ describe('shared visual components', () => {
   })
 
   it('shows panel content and skeleton dimensions', () => {
-    const { container, rerender } = render(<RightPanel />)
-    expect(container.querySelector('aside')?.getAttribute('aria-hidden')).toBe(
-      'true',
-    )
-
-    rerender(
-      <RightPanel>
-        <span>Transfer</span>
-      </RightPanel>,
-    )
-    expect(screen.getByText('Transfer')).toBeTruthy()
+    renderWithProviders(<TransferPanel />)
+    expect(screen.getByRole('dialog', { name: 'Transfer panel' })).toBeTruthy()
 
     const { container: skeletonContainer } = render(
       <Skeleton height={24} radius={8} width={120} />,

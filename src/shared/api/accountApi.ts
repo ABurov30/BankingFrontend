@@ -1,12 +1,8 @@
+import { invalidateAccounts } from '@/features/accounts/accountsSlice'
 import {
-  invalidateAccounts,
-  setAccounts,
-  updateAccount,
-} from '@/features/accounts/accountsSlice'
-import {
-  setCardsFromAccounts,
-  updateCardAccount,
-} from '@/features/cards/cardsSlice'
+  syncAccountUpdate,
+  syncAccountsSnapshot,
+} from '@/features/accounts/syncAccounts'
 
 import { baseApi } from './baseApi'
 import type { RootState } from '@/app/store'
@@ -79,8 +75,7 @@ export const accountApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
-          dispatch(updateAccount(data))
-          dispatch(updateCardAccount(data))
+          syncAccountUpdate(dispatch, data)
         } catch {
           // RTK Query exposes the failed mutation to the caller.
         }
@@ -99,8 +94,7 @@ export const accountApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
-          dispatch(updateAccount(data))
-          dispatch(updateCardAccount(data))
+          syncAccountUpdate(dispatch, data)
         } catch {
           // RTK Query exposes the failed mutation to the caller.
         }
@@ -157,8 +151,7 @@ export const accountApi = baseApi.injectEndpoints({
           const currentUser = (getState() as RootState).user.currentUser
 
           if (currentUser?.userProfileId === ownerUserId) {
-            dispatch(setAccounts(data))
-            dispatch(setCardsFromAccounts(data))
+            syncAccountsSnapshot(dispatch, data)
           }
         } catch {
           // Keep the previous redux state until a successful refetch replaces it.
@@ -174,8 +167,7 @@ export const accountApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
-          dispatch(setAccounts(data))
-          dispatch(setCardsFromAccounts(data))
+          syncAccountsSnapshot(dispatch, data)
         } catch {
           // Keep the previous redux state until a successful refetch replaces it.
         }

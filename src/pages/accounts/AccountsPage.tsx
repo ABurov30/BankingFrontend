@@ -1,10 +1,11 @@
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { ArrowLeftRight, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Skeleton } from '@/components/Skeleton'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
 import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
+import { openRightPanel } from '@/features/rightPanel/rightPanelSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { formatMoney } from '@/lib/formatMoney'
@@ -149,15 +150,26 @@ function AccountsPage() {
           </p>
         </div>
 
-        <button
-          className={`${styles['accounts__add-button']} ui-lift`}
-          disabled={!ownerUserId || isCreatingAccount}
-          onClick={() => setIsCreateFormOpen(true)}
-          type="button"
-        >
-          <Plus className={styles['accounts__button-icon']} />
-          {t('newAccount')}
-        </button>
+        <div className={styles['accounts__header-actions']}>
+          <button
+            className={`${styles['accounts__transfer-button']} ui-lift`}
+            disabled={!ownerUserId}
+            onClick={() => dispatch(openRightPanel('transfer'))}
+            type="button"
+          >
+            <ArrowLeftRight className={styles['accounts__button-icon']} />
+            {t('transfer')}
+          </button>
+          <button
+            className={`${styles['accounts__add-button']} ui-lift`}
+            disabled={!ownerUserId || isCreatingAccount}
+            onClick={() => setIsCreateFormOpen(true)}
+            type="button"
+          >
+            <Plus className={styles['accounts__button-icon']} />
+            {t('newAccount')}
+          </button>
+        </div>
       </header>
 
       {isCreateFormOpen ? (

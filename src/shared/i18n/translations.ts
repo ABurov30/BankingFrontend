@@ -4,8 +4,11 @@ export const translations = {
     accounts: 'Accounts',
     accountCreationFailed: 'Account creation failed',
     accountCreated: 'Account has been created.',
+    accountBalanceUpdateFailed: 'Account balance update failed',
     accountStatusUpdated: 'Account status has been updated.',
+    accountTopUpSuccess: 'Money has been added to the account.',
     accountUpdateFailed: 'Account update failed',
+    accountWithdrawSuccess: 'Money has been withdrawn from the account.',
     active: 'ACTIVE',
     amount: 'Amount',
     alreadyHaveAccount: 'Already have an account?',
@@ -74,6 +77,8 @@ export const translations = {
     newPasswordRequired: 'New password is required.',
     newTransfer: 'New transfer',
     noAccountSelected: 'No account selected',
+    noActiveAccounts:
+      'There are no active accounts available for this operation.',
     noCardData: 'No card data available.',
     noCardIssued: 'No card issued',
     noCardsMatchStatus: 'No cards match the selected status.',
@@ -94,6 +99,7 @@ export const translations = {
     passwordUpdateFailed: 'Password update failed',
     passwordUpdated: 'Password has been updated.',
     pending: 'Pending',
+    processing: 'Processing...',
     personalInformation: 'Personal information',
     preferences: 'Preferences',
     previousPage: 'Previous page',
@@ -202,6 +208,7 @@ export const translations = {
     verification: 'Verification',
     verified: 'VERIFIED',
     verify: 'Verify',
+    withdraw: 'Withdraw',
   },
   /*
   ru: {
