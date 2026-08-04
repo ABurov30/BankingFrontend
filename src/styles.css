@@ -187,14 +187,7 @@
 }
 
 body {
-  background:
-    radial-gradient(circle at 15% 10%, var(--ui-brand-soft), transparent 28rem),
-    radial-gradient(
-      circle at 85% 82%,
-      var(--ui-primary-soft),
-      transparent 32rem
-    ),
-    var(--background);
+  background: var(--background);
   background-size: 120% 120%;
   animation: ui-background-drift 18s ease-in-out infinite alternate;
   color: var(--foreground);
