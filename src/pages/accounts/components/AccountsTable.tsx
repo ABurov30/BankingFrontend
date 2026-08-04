@@ -9,10 +9,12 @@ export function AccountsTable({
   accounts,
   isLoading = false,
   onFreeze,
+  onUnfreeze,
 }: {
   accounts: AccountRowModel[]
   isLoading?: boolean
   onFreeze: (accountId: string) => void
+  onUnfreeze: (accountId: string) => void
 }) {
   const { t } = useI18n()
 
@@ -41,7 +43,7 @@ export function AccountsTable({
                   <Skeleton height={18} width={72} />
                   <Skeleton height={18} width={96} />
                   <Skeleton height={26} width={76} />
-                  <Skeleton height={34} width={34} />
+                  <Skeleton height={24} width={44} />
                 </div>
               ))
             : accounts.map((account) => (
@@ -49,6 +51,7 @@ export function AccountsTable({
                   key={account.accountId}
                   {...account}
                   onFreeze={onFreeze}
+                  onUnfreeze={onUnfreeze}
                 />
               ))}
         </div>

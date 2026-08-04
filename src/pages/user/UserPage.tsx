@@ -30,7 +30,7 @@ function UserPage() {
         status={user?.status}
       />
       <ProfileSettingsCards
-        authUserId={user?.userProfileId}
+        authUserId={user?.authUserId}
         isLoading={isLoading}
         personalInfo={personalInfo}
       />

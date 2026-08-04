@@ -2,15 +2,24 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
-import { useAppDispatch } from '@/app/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { PageLoader } from '@/components/PageLoader'
-import { clearCurrentUser, setCurrentUser } from '@/features/user/userSlice'
+import {
+  clearCurrentUser,
+  selectCurrentUser,
+  setCurrentUser,
+} from '@/features/user/userSlice'
 import { useGetUserInfoQuery } from '@/shared/api/userApi'
 
 export function ProtectedRoute() {
   const dispatch = useAppDispatch()
   const location = useLocation()
-  const { data: user, error, isLoading } = useGetUserInfoQuery()
+  const currentUser = useAppSelector(selectCurrentUser)
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useGetUserInfoQuery(undefined, { skip: Boolean(currentUser) })
 
   useEffect(() => {
     if (user) {
@@ -24,7 +33,7 @@ export function ProtectedRoute() {
     }
   }, [dispatch, error])
 
-  if (isLoading) {
+  if (!currentUser && isLoading) {
     return <PageLoader />
   }
 

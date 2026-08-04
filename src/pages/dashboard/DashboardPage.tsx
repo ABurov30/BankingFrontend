@@ -1,13 +1,11 @@
-import { skipToken } from '@reduxjs/toolkit/query'
-
 import { useAppSelector } from '@/app/hooks'
 import { DashboardBankCardVisual } from '@/components/BankCardVisual'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
+import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
 import { selectCards } from '@/features/cards/cardsSlice'
 import type { CardWithAccount } from '@/features/cards/cardsSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
-import { useGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
-import { AccountType } from '@/shared/api/enums'
+import { AccountType, CardStatus } from '@/shared/api/enums'
 import { Skeleton } from '@/components/Skeleton'
 import {
   AccountsGrid,
@@ -44,21 +42,24 @@ function DashboardPage() {
   const user = useAppSelector(selectCurrentUser)
   const accounts = useAppSelector(selectAccounts)
   const cards = useAppSelector(selectCards)
-  const { isFetching } = useGetAccountsWithCardsByOwnerIdQuery(
-    user?.userProfileId ?? skipToken,
-  )
+  const { isFetching } = useEnsureAccountsLoaded(user?.userProfileId)
   const isInitialCardsLoading = isFetching && cards.length === 0
   const highestDebitCard = getHighestLimitCard(
-    cards.filter(({ account }) => {
+    cards.filter(({ account, card }) => {
       const accountType = account.account?.type
       return (
-        accountType === AccountType.CHECKING ||
-        accountType === AccountType.SAVINGS
+        card.status === CardStatus.ACTIVE &&
+        (accountType === AccountType.CHECKING ||
+          accountType === AccountType.SAVINGS)
       )
     }),
   )
   const highestCreditCard = getHighestLimitCard(
-    cards.filter(({ account }) => account.account?.type === AccountType.CREDIT),
+    cards.filter(
+      ({ account, card }) =>
+        card.status === CardStatus.ACTIVE &&
+        account.account?.type === AccountType.CREDIT,
+    ),
   )
   const highlightedCards = [highestDebitCard, highestCreditCard].filter(
     (item): item is CardWithAccount => item !== null,

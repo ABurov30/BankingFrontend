@@ -1,15 +1,19 @@
 import type {
+  AccountCurrencyValue,
   ChangeAuthUserRoleRequestDto,
   CreateAccountRequestDto,
   GetAccountResponseDto,
   GetCardByAccountIdResponseDto,
   GetUserInfoResponseDto,
+  GetUserInfoWithAuthInfoResponseDto,
 } from './types'
 
-export type AccountCurrency = CreateAccountRequestDto['currency']
+export type AccountCurrency = AccountCurrencyValue
 export type AccountType = CreateAccountRequestDto['type']
 export type AccountStatus = NonNullable<GetAccountResponseDto['status']>
-export type AuthUserStatus = NonNullable<GetUserInfoResponseDto['status']>
+export type AuthUserStatus = NonNullable<
+  GetUserInfoWithAuthInfoResponseDto['status']
+>
 export type Role = ChangeAuthUserRoleRequestDto['role']
 export type CardStatus = NonNullable<GetCardByAccountIdResponseDto['status']>
 export type UserProfileStatus = NonNullable<GetUserInfoResponseDto['status']>
@@ -18,7 +22,6 @@ export const AccountCurrency = {
   CNY: 'CNY',
   EUR: 'EUR',
   GBP: 'GBP',
-  RUB: 'RUB',
   USD: 'USD',
 } as const satisfies Record<AccountCurrency, AccountCurrency>
 
@@ -37,6 +40,7 @@ export const AccountStatus = {
 export const AuthUserStatus = {
   ACTIVE: 'ACTIVE',
   BLOCKED: 'BLOCKED',
+  FORGET_PASSWORD: 'FORGET_PASSWORD',
   PENDING: 'PENDING',
 } as const satisfies Record<AuthUserStatus, AuthUserStatus>
 

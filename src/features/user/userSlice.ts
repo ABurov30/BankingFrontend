@@ -1,10 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { RootState } from '@/app/store'
-import type { GetUserInfoResponse } from '@/shared/api/types'
+import type { UserInfo } from '@/shared/api/types'
+
+export type CurrentUser = UserInfo
 
 type UserState = {
-  currentUser: GetUserInfoResponse | null
+  currentUser: CurrentUser | null
 }
 
 const initialState: UserState = {
@@ -18,7 +20,7 @@ const userSlice = createSlice({
     clearCurrentUser(state) {
       state.currentUser = null
     },
-    setCurrentUser(state, action: PayloadAction<GetUserInfoResponse>) {
+    setCurrentUser(state, action: PayloadAction<CurrentUser>) {
       state.currentUser = action.payload
     },
   },

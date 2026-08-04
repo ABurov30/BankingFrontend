@@ -10,18 +10,12 @@ const readSystemTheme = (): ResolvedTheme =>
 
 export function AppTheme() {
   const dispatch = useAppDispatch()
-  const { language, resolvedTheme, themeMode } = useAppSelector(
-    (state) => state.app,
-  )
+  const { resolvedTheme, themeMode } = useAppSelector((state) => state.app)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
     document.documentElement.style.colorScheme = resolvedTheme
   }, [resolvedTheme])
-
-  useEffect(() => {
-    document.documentElement.lang = language
-  }, [language])
 
   useEffect(() => {
     if (themeMode !== 'system') {

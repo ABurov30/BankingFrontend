@@ -7,15 +7,13 @@ import {
   X,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { skipToken } from '@reduxjs/toolkit/query'
-
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Skeleton } from '@/components/Skeleton'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
+import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
 import { closeRightPanel } from '@/features/rightPanel/rightPanelSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { formatMoney } from '@/lib/formatMoney'
-import { useGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
 import { AccountCurrency } from '@/shared/api/enums'
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from './styles.module.css'
@@ -25,9 +23,7 @@ export function TransferPanel() {
   const { t } = useI18n()
   const user = useAppSelector(selectCurrentUser)
   const accounts = useAppSelector(selectAccounts)
-  const { isFetching } = useGetAccountsWithCardsByOwnerIdQuery(
-    user?.userProfileId ?? skipToken,
-  )
+  const { isFetching } = useEnsureAccountsLoaded(user?.userProfileId)
   const isInitialLoading = isFetching && accounts.length === 0
   const sourceAccount = accounts.find((item) => item.account)?.account
   const sourceAccountName = sourceAccount?.type

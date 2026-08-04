@@ -1,4 +1,8 @@
+import type { AppDispatch } from '@/app/store'
+import { AuthUserStatus } from '@/shared/api/enums'
+
 import { baseApi } from './baseApi'
+import { userApi } from './userApi'
 import type {
   BlockUserByManagerRequest,
   ChangeAuthUserRoleRequest,
@@ -9,9 +13,37 @@ import type {
   VerifyUserRequest,
 } from './types'
 
+function patchManagedUserStatus(
+  dispatch: AppDispatch,
+  authUserId: string,
+  status: AuthUserStatus,
+) {
+  return dispatch(
+    userApi.util.updateQueryData('getAllUserInfo', undefined, (users) => {
+      const user = users.find(
+        (item) =>
+          item.authUserId === authUserId || item.userProfileId === authUserId,
+      )
+
+      if (user) user.status = status
+    }),
+  )
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     blockUserByManager: builder.mutation<void, BlockUserByManagerRequest>({
+      async onQueryStarted({ authUserId }, { dispatch, queryFulfilled }) {
+        const patch = authUserId
+          ? patchManagedUserStatus(dispatch, authUserId, AuthUserStatus.BLOCKED)
+          : undefined
+
+        try {
+          await queryFulfilled
+        } catch {
+          patch?.undo()
+        }
+      },
       query: (body) => ({
         body,
         method: 'PUT',
@@ -66,6 +98,17 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ['Auth', 'User'],
     }),
     unlockUserByManager: builder.mutation<void, UnlockUserByManagerRequest>({
+      async onQueryStarted({ authUserId }, { dispatch, queryFulfilled }) {
+        const patch = authUserId
+          ? patchManagedUserStatus(dispatch, authUserId, AuthUserStatus.ACTIVE)
+          : undefined
+
+        try {
+          await queryFulfilled
+        } catch {
+          patch?.undo()
+        }
+      },
       query: (body) => ({
         body,
         method: 'PUT',
@@ -82,6 +125,19 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ['Auth', 'User'],
     }),
     verifyUserByManager: builder.mutation<void, string>({
+      async onQueryStarted(authUserId, { dispatch, queryFulfilled }) {
+        const patch = patchManagedUserStatus(
+          dispatch,
+          authUserId,
+          AuthUserStatus.ACTIVE,
+        )
+
+        try {
+          await queryFulfilled
+        } catch {
+          patch.undo()
+        }
+      },
       query: (authUserId) => ({
         method: 'PUT',
         url: `/auth/manager/verify-user/${authUserId}`,

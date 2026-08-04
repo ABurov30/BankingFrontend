@@ -1,0 +1,208 @@
+.user-details {
+  min-width: 0;
+  padding: 28px 20px;
+  color: var(--ui-shell-text);
+}
+.user-details__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ui-brand);
+  font-size: 13px;
+  font-weight: 700;
+}
+.user-details__back svg {
+  width: 17px;
+  height: 17px;
+}
+.user-details__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+.user-details__avatar {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--ui-brand-soft);
+  color: var(--ui-brand);
+}
+.user-details__avatar svg {
+  width: 26px;
+  height: 26px;
+}
+.user-details__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.1;
+}
+.user-details__email {
+  margin: 6px 0 0;
+  color: var(--ui-shell-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.user-details__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.user-details__meta span {
+  border: 1px solid var(--ui-shell-border);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: var(--ui-panel);
+  color: var(--ui-shell-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+.user-details__section {
+  margin-top: 24px;
+}
+.user-details__section-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.user-details__section-heading svg {
+  width: 21px;
+  height: 21px;
+  color: var(--ui-brand);
+}
+.user-details__section-heading h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+.user-details__accounts {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+.user-details__account {
+  border: 1px solid var(--ui-shell-border);
+  border-radius: 16px;
+  padding: 18px;
+  background: var(--ui-panel);
+}
+.user-details__account-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.user-details__account-header strong,
+.user-details__account-header span {
+  display: block;
+}
+.user-details__account-header strong {
+  font-size: 15px;
+}
+.user-details__account-header span {
+  margin-top: 5px;
+  color: var(--ui-shell-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.user-details__balance {
+  margin: 16px 0 0;
+  color: var(--ui-brand);
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+.user-details__cards {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+.user-details__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  border-radius: 10px;
+  padding: 10px;
+  background: var(--ui-panel-strong);
+}
+.user-details__card-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+}
+.user-details__card-main > svg {
+  width: 18px;
+  height: 18px;
+  color: var(--ui-brand);
+}
+.user-details__card-main span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+}
+.user-details__card-main small {
+  color: var(--ui-shell-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.user-details__limits {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--ui-shell-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.user-details__freeze {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 32px;
+  border-radius: 8px;
+  padding: 0 10px;
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger);
+  font-size: 11px;
+  font-weight: 700;
+}
+.user-details__freeze svg {
+  width: 14px;
+  height: 14px;
+}
+.user-details__freeze:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.user-details__empty {
+  margin: 14px 0 0;
+  border: 1px solid var(--ui-shell-border);
+  border-radius: 12px;
+  padding: 18px;
+  background: var(--ui-panel);
+  color: var(--ui-shell-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+@media (min-width: 64rem) {
+  .user-details {
+    padding-inline: 28px;
+  }
+}
+@media (max-width: 47.99rem) {
+  .user-details__card {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .user-details__card .user-details__freeze {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}

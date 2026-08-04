@@ -67,6 +67,14 @@ const baseQueryWithUnauthorizedRedirect: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithUnauthorizedRedirect,
-  tagTypes: ['Auth', 'User', 'Account', 'Card', 'Transaction', 'Health'],
+  tagTypes: [
+    'Auth',
+    'User',
+    'Account',
+    'Card',
+    'Transaction',
+    'Notification',
+    'Health',
+  ],
   endpoints: () => ({}),
 })

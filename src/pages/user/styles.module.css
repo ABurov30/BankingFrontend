@@ -289,11 +289,14 @@
   font-weight: var(--font-weight-bold, 700);
   color: var(--ui-danger-alt);
 }
+.user__password-actions {
+  margin-top: calc(var(--spacing, 0.25rem) * 5);
+}
 .user__password-submit {
   height: calc(var(--spacing, 0.25rem) * 10);
   border-radius: 3.40282e38px;
   background-color: var(--ui-brand);
-  margin-top: calc(var(--spacing, 0.25rem) * 4);
+  margin-top: 0;
   padding-inline: calc(var(--spacing, 0.25rem) * 5);
   font-size: 13px;
   font-weight: var(--font-weight-bold, 700);

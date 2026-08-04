@@ -16,7 +16,7 @@ export type IssueCardFormValues = {
 
 function getAccountLabel({ account }: GetAccountWithCardsResponseDto) {
   const type = account?.type ?? 'ACCOUNT'
-  const currency = account?.currency ?? AccountCurrency.RUB
+  const currency = account?.currency ?? AccountCurrency.USD
   const number = account?.accountNumber
     ? `•• ${account.accountNumber.slice(-4)}`
     : 'number pending'
@@ -127,7 +127,7 @@ export function IssueCardDialog({
                       <span className={styles['cards__issue-option-meta']}>
                         {formatMoney(
                           item.account?.availableBalance,
-                          item.account?.currency ?? AccountCurrency.RUB,
+                          item.account?.currency ?? AccountCurrency.USD,
                         )}
                       </span>
                     </button>

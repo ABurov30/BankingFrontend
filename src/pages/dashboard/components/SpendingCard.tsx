@@ -18,9 +18,7 @@ export function SpendingCard() {
         </div>
       </div>
 
-      <p className={styles['dashboard__empty-state']}>
-        {t('noSpendingData')}
-      </p>
+      <p className={styles['dashboard__empty-state']}>{t('noSpendingData')}</p>
     </section>
   )
 }

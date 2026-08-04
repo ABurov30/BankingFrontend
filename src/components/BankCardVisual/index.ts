@@ -1,4 +1,1 @@
-export {
-  CardsBankCardVisual,
-  DashboardBankCardVisual,
-} from './BankCardVisual'
+export { CardsBankCardVisual, DashboardBankCardVisual } from './BankCardVisual'

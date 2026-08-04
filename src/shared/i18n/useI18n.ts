@@ -1,18 +1,25 @@
 import { useCallback } from 'react'
 
-import { useAppSelector } from '@/app/hooks'
 import { translations, type TranslationKey } from './translations'
 
 export function useI18n() {
-  const language = useAppSelector((state) => state.app.language)
-  const dictionary = translations[language]
+  const dictionary = translations.en
   const t = useCallback(
-    (key: TranslationKey) => dictionary[key] ?? translations.en[key],
+    (key: TranslationKey, values?: Record<string, string | number>) => {
+      const message: string = dictionary[key] ?? translations.en[key]
+
+      if (!values) return message
+
+      return Object.entries(values).reduce(
+        (result, [name, value]) =>
+          result.replaceAll(`{${name}}`, String(value)),
+        message,
+      )
+    },
     [dictionary],
   )
 
   return {
-    language,
     t,
   }
 }

@@ -16,7 +16,7 @@ export function LimitsCard({
   card?: GetCardByAccountIdResponseDto
 }) {
   const { t } = useI18n()
-  const currency = account?.account?.currency ?? AccountCurrency.RUB
+  const currency = account?.account?.currency ?? AccountCurrency.USD
 
   return (
     <section className={styles['dashboard__limits-card']}>

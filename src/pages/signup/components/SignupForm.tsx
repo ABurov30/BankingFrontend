@@ -159,9 +159,7 @@ export function SignupForm({
               strokeWidth={3}
             />
           </span>
-          <span className={styles['signup__terms-copy']}>
-            {t('termsCopy')}
-          </span>
+          <span className={styles['signup__terms-copy']}>{t('termsCopy')}</span>
         </label>
 
         <button

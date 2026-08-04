@@ -88,6 +88,10 @@
   padding-block: 5px;
   padding-inline: 23px;
 }
+.notifications__items {
+  display: grid;
+  gap: 10px;
+}
 .notifications__item-icon {
   width: 19px;
   height: 19px;

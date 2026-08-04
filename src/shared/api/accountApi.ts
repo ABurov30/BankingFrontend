@@ -1,13 +1,50 @@
-import { setAccounts } from '@/features/accounts/accountsSlice'
-import { setCardsFromAccounts } from '@/features/cards/cardsSlice'
+import {
+  invalidateAccounts,
+  setAccounts,
+  updateAccount,
+} from '@/features/accounts/accountsSlice'
+import {
+  setCardsFromAccounts,
+  updateCardAccount,
+} from '@/features/cards/cardsSlice'
 
 import { baseApi } from './baseApi'
+import type { RootState } from '@/app/store'
 import type {
   CreateAccountRequest,
   CreateAccountResponse,
   GetAccountsWithCardsByOwnerIdResponse,
   GetAllAccountsWithCardsResponse,
+  UpdateAccountBalanceRequest,
+  UpdateAccountBalanceResponse,
 } from './types'
+
+type AccountActionArgs = {
+  accountId: string
+  ownerUserId?: string
+}
+
+async function refreshAccounts({
+  dispatch,
+  ownerUserId,
+}: {
+  dispatch: typeof import('@/app/store').store.dispatch
+  ownerUserId?: string
+}) {
+  if (!ownerUserId) return
+
+  const request = dispatch(
+    accountApi.endpoints.getAccountsWithCardsByOwnerId.initiate(ownerUserId, {
+      forceRefetch: true,
+    }),
+  )
+
+  try {
+    await request.unwrap()
+  } finally {
+    request.unsubscribe()
+  }
+}
 
 export const accountApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,6 +52,19 @@ export const accountApi = baseApi.injectEndpoints({
       CreateAccountResponse,
       CreateAccountRequest
     >({
+      async onQueryStarted(_, { dispatch, getState, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(invalidateAccounts())
+          await refreshAccounts({
+            dispatch,
+            ownerUserId: (getState() as RootState).user.currentUser
+              ?.userProfileId,
+          })
+        } catch {
+          // The mutation error is exposed to the caller.
+        }
+      },
       query: (body) => ({
         body,
         method: 'POST',
@@ -22,10 +72,75 @@ export const accountApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Account'],
     }),
-    freezeAccount: builder.mutation<void, string>({
-      query: (accountId) => ({
+    topUpAccount: builder.mutation<
+      UpdateAccountBalanceResponse,
+      UpdateAccountBalanceRequest
+    >({
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          dispatch(updateAccount(data))
+          dispatch(updateCardAccount(data))
+        } catch {
+          // RTK Query exposes the failed mutation to the caller.
+        }
+      },
+      query: (body) => ({
+        body,
+        method: 'POST',
+        url: '/account/topUp',
+      }),
+      invalidatesTags: ['Account', 'Card'],
+    }),
+    withdrawAccount: builder.mutation<
+      UpdateAccountBalanceResponse,
+      UpdateAccountBalanceRequest
+    >({
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          dispatch(updateAccount(data))
+          dispatch(updateCardAccount(data))
+        } catch {
+          // RTK Query exposes the failed mutation to the caller.
+        }
+      },
+      query: (body) => ({
+        body,
+        method: 'POST',
+        url: '/account/withdraw',
+      }),
+      invalidatesTags: ['Account', 'Card'],
+    }),
+    freezeAccount: builder.mutation<void, AccountActionArgs>({
+      async onQueryStarted({ ownerUserId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(invalidateAccounts())
+          await refreshAccounts({ dispatch, ownerUserId })
+        } catch {
+          // The mutation error is exposed to the caller.
+        }
+      },
+      query: ({ accountId }) => ({
         method: 'PUT',
         url: `/account/freeze/${accountId}`,
+      }),
+      invalidatesTags: ['Account', 'Card'],
+    }),
+    unfreezeAccount: builder.mutation<void, AccountActionArgs>({
+      async onQueryStarted({ ownerUserId }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(invalidateAccounts())
+          await refreshAccounts({ dispatch, ownerUserId })
+        } catch {
+          // The mutation error is exposed to the caller.
+        }
+      },
+      query: ({ accountId }) => ({
+        method: 'PUT',
+        url: `/account/unfreeze/${accountId}`,
       }),
       invalidatesTags: ['Account', 'Card'],
     }),
@@ -33,11 +148,18 @@ export const accountApi = baseApi.injectEndpoints({
       GetAccountsWithCardsByOwnerIdResponse,
       string
     >({
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        ownerUserId,
+        { dispatch, getState, queryFulfilled },
+      ) {
         try {
           const { data } = await queryFulfilled
-          dispatch(setAccounts(data))
-          dispatch(setCardsFromAccounts(data))
+          const currentUser = (getState() as RootState).user.currentUser
+
+          if (currentUser?.userProfileId === ownerUserId) {
+            dispatch(setAccounts(data))
+            dispatch(setCardsFromAccounts(data))
+          }
         } catch {
           // Keep the previous redux state until a successful refetch replaces it.
         }
@@ -69,4 +191,8 @@ export const {
   useFreezeAccountMutation,
   useGetAccountsWithCardsByOwnerIdQuery,
   useGetAllAccountsWithCardsQuery,
+  useLazyGetAccountsWithCardsByOwnerIdQuery,
+  useTopUpAccountMutation,
+  useUnfreezeAccountMutation,
+  useWithdrawAccountMutation,
 } = accountApi

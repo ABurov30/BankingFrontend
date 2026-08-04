@@ -1,6 +1,5 @@
 import { Plus } from 'lucide-react'
-import { skipToken } from '@reduxjs/toolkit/query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Skeleton } from '@/components/Skeleton'
@@ -9,7 +8,7 @@ import { selectCards } from '@/features/cards/cardsSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { cn } from '@/lib/utils'
-import { useGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
+import { useLazyGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
 import {
   useCreateCardMutation,
   useUpdateCardMutation,
@@ -38,9 +37,14 @@ function CardsPage() {
   const user = useAppSelector(selectCurrentUser)
   const accounts = useAppSelector(selectAccounts)
   const cards = useAppSelector(selectCards)
-  const { isFetching } = useGetAccountsWithCardsByOwnerIdQuery(
-    user?.userProfileId ?? skipToken,
-  )
+  const [loadAccounts, { isFetching }] =
+    useLazyGetAccountsWithCardsByOwnerIdQuery()
+
+  useEffect(() => {
+    if (user?.userProfileId) {
+      void loadAccounts(user.userProfileId)
+    }
+  }, [loadAccounts, user?.userProfileId])
   const [statusFilter, setStatusFilter] = useState<CardStatusValue>(
     CardStatus.ACTIVE,
   )
@@ -57,12 +61,6 @@ function CardsPage() {
     try {
       await createCard({ accountId }).unwrap()
       setIsIssueCardDialogOpen(false)
-      dispatch(
-        showToast({
-          message: t('cardIssued'),
-          variant: 'success',
-        }),
-      )
     } catch (error) {
       dispatch(
         showToast({
@@ -102,23 +100,26 @@ function CardsPage() {
     card: GetCardByAccountIdResponseDto | undefined,
     status: EditableCardStatus,
   ) => {
-    if (!card?.cardId) {
+    if (!card?.cardId || !card.accountId) {
       return
     }
 
     try {
       await updateCard({
+        accountId: card.accountId,
         cardId: card.cardId,
-        dailyLimit: card.dailyLimit,
-        monthlyLimit: card.monthlyLimit,
+        dailyLimit: card.dailyLimit ?? 0,
+        monthlyLimit: card.monthlyLimit ?? 0,
         status,
       }).unwrap()
-      dispatch(
-        showToast({
-          message: t('cardSettingsUpdated'),
-          variant: 'success',
-        }),
-      )
+      if (status === CardStatus.BLOCKED) {
+        dispatch(
+          showToast({
+            message: t('cardSettingsUpdated'),
+            variant: 'success',
+          }),
+        )
+      }
     } catch (error) {
       dispatch(
         showToast({
@@ -201,9 +202,7 @@ function CardsPage() {
             ) : (
               <section className={`${styles['cards__limits-card']} ui-lift`}>
                 <p className={styles['cards__card-subtitle']}>
-                  {cards.length > 0
-                    ? t('noCardsMatchStatus')
-                    : t('noCardData')}
+                  {cards.length > 0 ? t('noCardsMatchStatus') : t('noCardData')}
                 </p>
               </section>
             )}

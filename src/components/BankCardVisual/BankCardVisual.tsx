@@ -105,9 +105,7 @@ export function DashboardBankCardVisual({
           <span className={styles['bank-card__type']}>{cardType}</span>
         </div>
 
-        <p className={styles['bank-card__pan']}>
-          •••• •••• •••• {panSuffix}
-        </p>
+        <p className={styles['bank-card__pan']}>•••• •••• •••• {panSuffix}</p>
 
         <div className={styles['bank-card__footer']}>
           <div>
@@ -162,9 +160,7 @@ export function CardsBankCardVisual({
           <span className={styles['bank-card__type']}>{cardType}</span>
         </div>
 
-        <p className={styles['bank-card__pan']}>
-          •••• •••• •••• {panSuffix}
-        </p>
+        <p className={styles['bank-card__pan']}>•••• •••• •••• {panSuffix}</p>
 
         <div className={styles['bank-card__footer']}>
           <span className={styles['bank-card__value']}>{cardHolderName}</span>

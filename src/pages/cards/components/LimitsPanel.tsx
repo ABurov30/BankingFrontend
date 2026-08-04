@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/app/hooks'
 import { showToast } from '@/features/toast/toastSlice'
 import { cn } from '@/lib/utils'
 import { useUpdateCardMutation } from '@/shared/api/cardApi'
-import { AccountCurrency } from '@/shared/api/enums'
+import { AccountCurrency, CardStatus } from '@/shared/api/enums'
 import { getApiErrorMessage } from '@/shared/api/error'
 import type {
   GetAccountWithCardsResponseDto,
@@ -36,7 +36,7 @@ export function LimitsPanel({
   const { t } = useI18n()
   const [isEditingLimits, setIsEditingLimits] = useState(false)
   const [updateCard, { isLoading: isUpdatingLimits }] = useUpdateCardMutation()
-  const currency = account?.account?.currency ?? AccountCurrency.RUB
+  const currency = account?.account?.currency ?? AccountCurrency.USD
   const {
     formState: { errors, isDirty },
     handleSubmit,
@@ -88,16 +88,17 @@ export function LimitsPanel({
   }, [card?.dailyLimit, card?.monthlyLimit, reset])
 
   const handleSaveLimits = async (values: LimitsFormValues) => {
-    if (!card?.cardId) {
+    if (!card?.cardId || !card.accountId) {
       return
     }
 
     try {
       await updateCard({
+        accountId: card.accountId,
         cardId: card.cardId,
         dailyLimit: values.dailyLimit,
         monthlyLimit: values.monthlyLimit,
-        status: card.status,
+        status: card.status ?? CardStatus.ACTIVE,
       }).unwrap()
       reset(values)
       setIsEditingLimits(false)
@@ -121,8 +122,7 @@ export function LimitsPanel({
   return (
     <section className={`${styles['cards__limits-card']} ui-lift`}>
       <h2 className={styles['cards__section-title']}>
-        {t('limits')}{' '}
-        {card?.pan ? `- Buro card •• ${card.pan.slice(-4)}` : ''}
+        {t('limits')} {card?.pan ? `- Buro card •• ${card.pan.slice(-4)}` : ''}
       </h2>
 
       <form

@@ -61,7 +61,11 @@ export function BalanceHero({
           onClick={openTransferPanel}
           primary
         />
-        <ActionButton icon={Plus} label={t('topUp')} onClick={openTransferPanel} />
+        <ActionButton
+          icon={Plus}
+          label={t('topUp')}
+          onClick={openTransferPanel}
+        />
         <ActionButton
           icon={ArrowDownLeft}
           label={t('request')}

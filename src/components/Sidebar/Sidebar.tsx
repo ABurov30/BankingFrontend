@@ -2,7 +2,8 @@ import { X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
-import { navItems } from '@/components/navigation'
+import { useAppSelector } from '@/app/hooks'
+import { getNavigationItems } from '@/components/navigation'
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from './styles.module.css'
 
@@ -14,6 +15,8 @@ export function Sidebar({
   onClose?: () => void
 }) {
   const { t } = useI18n()
+  const role = useAppSelector((state) => state.user.currentUser?.role)
+  const items = getNavigationItems(role)
 
   return (
     <aside
@@ -40,7 +43,7 @@ export function Sidebar({
         </div>
 
         <nav className={styles['sidebar__nav']}>
-          {navItems.map(({ badge, icon: Icon, labelKey, to }) => (
+          {items.map(({ badge, icon: Icon, labelKey, to }) => (
             <NavLink
               className={({ isActive }) =>
                 cn(

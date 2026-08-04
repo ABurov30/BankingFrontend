@@ -1,13 +1,11 @@
 import { baseApi } from './baseApi'
 
-type ServiceHealth = {
-  account: string
-  auth: string
-  card: string
-  notification: string
-  transaction: string
-  user: string
+export type ServiceHealthResult = {
+  data?: unknown
+  error?: unknown
 }
+
+export type ServiceHealth = Record<string, ServiceHealthResult>
 
 export const healthApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,20 +20,20 @@ export const healthApi = baseApi.injectEndpoints({
             ['transaction', '/transaction/health'],
             ['user', '/user/health'],
           ].map(async ([service, url]) => {
-            const result = await baseQuery(url)
+            const result = await baseQuery({
+              responseHandler: 'text',
+              url,
+            })
             return [service, result] as const
           }),
         )
 
-        const failed = entries.find((entry) => entry[1].error)
-
-        if (failed?.[1].error) {
-          return { error: failed[1].error }
-        }
-
         return {
           data: Object.fromEntries(
-            entries.map(([service, result]) => [service, result.data]),
+            entries.map(([service, result]) => [
+              service,
+              result.error ? { error: result.error } : { data: result.data },
+            ]),
           ) as ServiceHealth,
         }
       },

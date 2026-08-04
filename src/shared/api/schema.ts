@@ -36,6 +36,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["ResetPassword"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/manager/verify-user/{authUserId}": {
         parameters: {
             query?: never;
@@ -109,6 +125,22 @@ export interface paths {
         };
         get?: never;
         put: operations["ChangeAuthUserRole"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/unfreeze/{accountId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["unfreezeAccount"];
         post?: never;
         delete?: never;
         options?: never;
@@ -196,6 +228,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/forget-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ForgetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["withdrawAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/topUp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["topUpAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/create": {
         parameters: {
             query?: never;
@@ -212,7 +292,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/user/userInfo": {
+    "/notification/notifications/mark-as-readed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["markAsReaded"];
+        trace?: never;
+    };
+    "/user/user-info": {
         parameters: {
             query?: never;
             header?: never;
@@ -228,7 +324,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/user/manager/all-userinfo": {
+    "/user/manager/user-info/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getUserInfoByManager"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user/manager/all-user-info": {
         parameters: {
             query?: never;
             header?: never;
@@ -268,6 +380,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["getTransactionHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notification/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getNotifications"];
         put?: never;
         post?: never;
         delete?: never;
@@ -394,11 +522,13 @@ export interface components {
     schemas: {
         UpdateCardRequestDto: {
             /** Format: uuid */
+            accountId: string;
+            /** Format: uuid */
             cardId: string;
             /** @enum {string} */
-            status?: "ACTIVE" | "BLOCKED" | "FROZEN" | "EXPIRED";
-            dailyLimit?: number;
-            monthlyLimit?: number;
+            status: "ACTIVE" | "BLOCKED" | "FROZEN" | "EXPIRED";
+            dailyLimit: number;
+            monthlyLimit: number;
         };
         UpdateCardResponseDto: {
             /** Format: uuid */
@@ -417,6 +547,11 @@ export interface components {
             /** Format: uuid */
             authUserId: string;
             verificationCode: string;
+        };
+        ResetPasswordRequestDto: {
+            /** Format: uuid */
+            authUserId: string;
+            newPassword: string;
         };
         UnlockAuthUserRequestDto: {
             /** Format: uuid */
@@ -466,37 +601,14 @@ export interface components {
             email: string;
             password: string;
         };
-        CreateAccountRequestDto: {
-            /** Format: uuid */
-            ownerUserId: string;
-            /** @enum {string} */
-            type: "CHECKING" | "SAVINGS" | "CREDIT";
-            /** @enum {string} */
-            currency: "RUB" | "USD" | "EUR" | "CNY" | "GBP";
+        ForgetPasswordRequestDto: {
+            /** Format: email */
+            email: string;
         };
-        CreateAccountResponseDto: {
+        UpdateAccountBalanceRequestDto: {
             /** Format: uuid */
-            accountId?: string;
-            /** Format: uuid */
-            ownerUserId?: string;
-            accountNumber?: string;
-            /** @enum {string} */
-            type?: "CHECKING" | "SAVINGS" | "CREDIT";
-            /** @enum {string} */
-            status?: "ACTIVE" | "FROZEN" | "CLOSED";
-            availableBalance?: number;
-            reservedBalance?: number;
-            /** @enum {string} */
-            currency?: "RUB" | "USD" | "EUR" | "CNY" | "GBP";
-        };
-        GetUserInfoResponseDto: {
-            /** Format: uuid */
-            userProfileId?: string;
-            email?: string;
-            firstName?: string;
-            lastName?: string;
-            /** @enum {string} */
-            status?: "ACTIVE" | "BLOCKED" | "PENDING";
+            accountId: string;
+            amount: number;
         };
         GetAccountResponseDto: {
             /** Format: uuid */
@@ -511,7 +623,55 @@ export interface components {
             availableBalance?: number;
             reservedBalance?: number;
             /** @enum {string} */
-            currency?: "RUB" | "USD" | "EUR" | "CNY" | "GBP";
+            currency?: "USD" | "EUR" | "CNY" | "GBP";
+        };
+        CreateAccountRequestDto: {
+            /** Format: uuid */
+            ownerUserId: string;
+            /** @enum {string} */
+            type: "CHECKING" | "SAVINGS" | "CREDIT";
+            /** @enum {string} */
+            currency: "USD" | "EUR" | "CNY" | "GBP";
+        };
+        CreateAccountResponseDto: {
+            /** Format: uuid */
+            accountId?: string;
+            /** Format: uuid */
+            ownerUserId?: string;
+            accountNumber?: string;
+            /** @enum {string} */
+            type?: "CHECKING" | "SAVINGS" | "CREDIT";
+            /** @enum {string} */
+            status?: "ACTIVE" | "FROZEN" | "CLOSED";
+            availableBalance?: number;
+            reservedBalance?: number;
+            /** @enum {string} */
+            currency?: "USD" | "EUR" | "CNY" | "GBP";
+        };
+        MarkNotificationsAsReadedRequestDto: {
+            ids: string[];
+        };
+        GetUserInfoResponseDto: {
+            /** Format: uuid */
+            userProfileId?: string;
+            /** Format: uuid */
+            autUserId?: string;
+            email?: string;
+            firstName?: string;
+            lastName?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "PENDING";
+        };
+        GetUserInfoWithAuthInfoResponseDto: {
+            userInfo?: components["schemas"]["GetUserInfoResponseDto"];
+            /** @enum {string} */
+            role?: "USER" | "MANAGER" | "ADMIN";
+            /** @enum {string} */
+            status?: "ACTIVE" | "BLOCKED" | "PENDING" | "FORGET_PASSWORD";
+        };
+        NotificationResponseDto: {
+            title?: string;
+            body?: string;
         };
         GetAccountWithCardsResponseDto: {
             account?: components["schemas"]["GetAccountResponseDto"];
@@ -573,6 +733,28 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["VerifyAuthUserByCodeRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ResetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordRequestDto"];
             };
         };
         responses: {
@@ -693,6 +875,26 @@ export interface operations {
             };
         };
     };
+    unfreezeAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     freezeAccount: {
         parameters: {
             query?: never;
@@ -799,6 +1001,76 @@ export interface operations {
             };
         };
     };
+    ForgetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgetPasswordRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    withdrawAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAccountBalanceRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetAccountResponseDto"];
+                };
+            };
+        };
+    };
+    topUpAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAccountBalanceRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetAccountResponseDto"];
+                };
+            };
+        };
+    };
     postCreateAccount: {
         parameters: {
             query?: never;
@@ -823,6 +1095,28 @@ export interface operations {
             };
         };
     };
+    markAsReaded: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarkNotificationsAsReadedRequestDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getUserInfo: {
         parameters: {
             query?: never;
@@ -838,7 +1132,29 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["GetUserInfoResponseDto"];
+                    "*/*": components["schemas"]["GetUserInfoWithAuthInfoResponseDto"];
+                };
+            };
+        };
+    };
+    getUserInfoByManager: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetUserInfoWithAuthInfoResponseDto"];
                 };
             };
         };
@@ -858,7 +1174,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["GetUserInfoResponseDto"][];
+                    "*/*": components["schemas"]["GetUserInfoWithAuthInfoResponseDto"][];
                 };
             };
         };
@@ -899,6 +1215,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": string;
+                };
+            };
+        };
+    };
+    getNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NotificationResponseDto"][];
                 };
             };
         };

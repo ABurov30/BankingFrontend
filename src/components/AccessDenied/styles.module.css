@@ -1,0 +1,56 @@
+.access-denied {
+  min-height: 100%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--ui-shell-text);
+}
+
+.access-denied__icon-wrap {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 30px;
+  background-color: var(--ui-danger-soft);
+  color: var(--ui-danger-alt);
+}
+
+.access-denied__icon {
+  width: 29px;
+  height: 29px;
+}
+
+.access-denied__title {
+  margin: 26px 0 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.access-denied__text {
+  max-width: 360px;
+  margin: 14px 0 0;
+  color: var(--ui-shell-text-muted);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.access-denied__button {
+  min-height: 44px;
+  margin-top: 24px;
+  border-radius: 999px;
+  padding: 0 20px;
+  background-color: var(--ui-brand);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.access-denied__button:hover,
+.access-denied__button:focus-visible {
+  background-color: var(--ui-brand-hover);
+}

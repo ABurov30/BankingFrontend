@@ -2,9 +2,12 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { PageLoader } from './components/PageLoader'
+import { useNotificationsWebSocket } from './features/notifications/useNotificationsWebSocket'
 import { AuthenticatedLayout } from './layouts/AuthenticatedLayout'
 import { GuestLayout } from './layouts/GuestLayout'
 import { ProtectedRoute } from './routes/ProtectedRoute'
+import { RoleRoute } from './routes/RoleRoute'
+import { Role } from './shared/api/enums'
 
 const AccountsPage = lazy(() => import('./pages/accounts/AccountsPage'))
 const CardsPage = lazy(() => import('./pages/cards/CardsPage'))
@@ -19,9 +22,16 @@ const TransactionsPage = lazy(
   () => import('./pages/transactions/TransactionsPage'),
 )
 const UserPage = lazy(() => import('./pages/user/UserPage'))
+const UserDetailsPage = lazy(
+  () => import('./pages/user-details/UserDetailsPage'),
+)
 const UserVerifyPage = lazy(() => import('./pages/user-verify/UserVerifyPage'))
+const UsersPage = lazy(() => import('./pages/users/UsersPage'))
+const HealthPage = lazy(() => import('./pages/health/HealthPage'))
 
 function App() {
+  useNotificationsWebSocket()
+
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
@@ -33,6 +43,15 @@ function App() {
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/profile" element={<UserPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
+            <Route
+              element={<RoleRoute allowedRoles={[Role.MANAGER, Role.ADMIN]} />}
+            >
+              <Route path="/users" element={<UsersPage />} />
+              <Route path="/users/:authUserId" element={<UserDetailsPage />} />
+            </Route>
+            <Route element={<RoleRoute allowedRoles={[Role.ADMIN]} />}>
+              <Route path="/health" element={<HealthPage />} />
+            </Route>
           </Route>
         </Route>
 

@@ -1,17 +1,17 @@
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
-import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { Skeleton } from '@/components/Skeleton'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
+import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { formatMoney } from '@/lib/formatMoney'
 import {
   useCreateAccountMutation,
   useFreezeAccountMutation,
-  useGetAccountsWithCardsByOwnerIdQuery,
+  useUnfreezeAccountMutation,
 } from '@/shared/api/accountApi'
 import { getApiErrorMessage } from '@/shared/api/error'
 import { useI18n } from '@/shared/i18n/useI18n'
@@ -43,12 +43,11 @@ function AccountsPage() {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false)
   const [filters, setFilters] = useState<AccountFilters>(initialFilters)
   const [currentPage, setCurrentPage] = useState(1)
-  const { isFetching } = useGetAccountsWithCardsByOwnerIdQuery(
-    ownerUserId ?? skipToken,
-  )
+  const { isFetching } = useEnsureAccountsLoaded(ownerUserId)
   const [createAccount, { isLoading: isCreatingAccount }] =
     useCreateAccountMutation()
   const [freezeAccount] = useFreezeAccountMutation()
+  const [unfreezeAccount] = useUnfreezeAccountMutation()
   const accounts = accountsWithCards
     .map(mapAccountRow)
     .filter(isAccountRowModel)
@@ -97,12 +96,6 @@ function AccountsPage() {
         type: values.type,
       }).unwrap()
       setIsCreateFormOpen(false)
-      dispatch(
-        showToast({
-          message: t('accountCreated'),
-          variant: 'success',
-        }),
-      )
     } catch (error) {
       dispatch(
         showToast({
@@ -116,13 +109,21 @@ function AccountsPage() {
 
   const handleFreezeAccount = async (accountId: string) => {
     try {
-      await freezeAccount(accountId).unwrap()
+      await freezeAccount({ accountId, ownerUserId }).unwrap()
+    } catch (error) {
       dispatch(
         showToast({
-          message: t('accountStatusUpdated'),
-          variant: 'success',
+          message: getApiErrorMessage(error),
+          title: t('accountUpdateFailed'),
+          variant: 'error',
         }),
       )
+    }
+  }
+
+  const handleUnfreezeAccount = async (accountId: string) => {
+    try {
+      await unfreezeAccount({ accountId, ownerUserId }).unwrap()
     } catch (error) {
       dispatch(
         showToast({
@@ -172,13 +173,14 @@ function AccountsPage() {
         accounts={paginatedAccounts}
         isLoading={isInitialLoading}
         onFreeze={handleFreezeAccount}
+        onUnfreeze={handleUnfreezeAccount}
       />
 
       {shouldShowPagination ? (
         <footer className={styles['accounts__footer']}>
           <p className={styles['accounts__footer-text']}>
-            {t('showing')} {visibleAccountsStart}-{visibleAccountsEnd}{' '}
-            {t('of')} {totalAccounts} {t('totalAccounts')}
+            {t('showing')} {visibleAccountsStart}-{visibleAccountsEnd} {t('of')}{' '}
+            {totalAccounts} {t('totalAccounts')}
           </p>
 
           <div className={styles['accounts__pagination']}>

@@ -291,11 +291,8 @@
   border-color: var(--ui-shell-border);
   background-color: var(--ui-panel);
   border-radius: 18px;
-  overflow: hidden;
 }
-.accounts__table-scroll {
-  overflow-x: auto;
-}
+
 .accounts__table-head {
   min-width: 820px;
 }
@@ -314,7 +311,21 @@
   letter-spacing: 0.88px;
   color: var(--ui-shell-text-subtle);
   text-transform: uppercase;
-  grid-template-columns: 2.2fr 1fr 1fr 1.2fr 1fr 130px;
+  grid-template-columns: 2.2fr 1fr 1fr 1.2fr 1fr;
+  padding-inline: 22px;
+  display: grid;
+}
+.accounts__account-head,
+.accounts__account-row,
+.accounts__table-row {
+  grid-template-columns:
+    minmax(210px, 2.2fr) minmax(90px, 1fr) minmax(72px, 1fr)
+    minmax(120px, 1.2fr) minmax(90px, 1fr) 52px;
+}
+.accounts__account-row {
+  align-items: center;
+  gap: calc(var(--spacing, 0.25rem) * 3);
+  min-height: 71px;
   padding-inline: 22px;
   display: grid;
 }
@@ -511,6 +522,37 @@
   letter-spacing: 0.63px;
   border-radius: 3.40282e38px;
 }
+.accounts__freeze-toggle {
+  display: flex;
+  width: 44px;
+  height: 24px;
+  align-items: center;
+  justify-self: end;
+  justify-content: flex-start;
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--ui-toggle-off);
+  color: var(--ui-shell-text-muted);
+  transition: background-color 0.18s ease;
+}
+.accounts__freeze-toggle:hover,
+.accounts__freeze-toggle:focus-visible {
+  background: var(--ui-brand-soft);
+  color: var(--ui-brand);
+}
+.accounts__freeze-toggle--frozen {
+  justify-content: flex-end;
+  background: var(--ui-info-strong);
+  color: var(--ui-info-strong);
+}
+.accounts__freeze-toggle svg {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  padding: 3px;
+  background: #fff;
+  transition: transform 0.18s ease;
+}
 .accounts__status-badge--active {
   width: 38px;
   height: 22px;
@@ -532,7 +574,6 @@
   border-bottom-style: var(--tw-border-style);
   border-bottom-width: 1px;
   border-color: var(--ui-shell-border-soft);
-  grid-template-columns: 2.2fr 1fr 1fr 1.2fr 1fr 130px;
   height: 71px;
   padding-inline: 22px;
   display: grid;
@@ -541,4 +582,8 @@
   border-bottom-style: var(--tw-border-style);
   border-bottom-width: 0;
   height: 70px;
+}
+.accounts__table-row:focus-within {
+  position: relative;
+  z-index: 2;
 }

@@ -5,18 +5,42 @@ export type ApiOperation = operations
 
 export type SignupRequestDto = ApiSchema['SignupRequestDto']
 export type LoginRequestDto = ApiSchema['LoginRequestDto']
-export type CreateAccountRequestDto = ApiSchema['CreateAccountRequestDto']
+export type AccountCurrencyValue = NonNullable<
+  ApiSchema['CreateAccountRequestDto']['currency']
+>
+export type CreateAccountRequestDto = Omit<
+  ApiSchema['CreateAccountRequestDto'],
+  'currency'
+> & {
+  currency: AccountCurrencyValue
+}
 export type CreateAccountResponseDto = ApiSchema['CreateAccountResponseDto']
-export type GetAccountResponseDto = ApiSchema['GetAccountResponseDto']
-export type GetAccountWithCardsResponseDto =
-  ApiSchema['GetAccountWithCardsResponseDto']
+export type UpdateAccountBalanceRequestDto =
+  ApiSchema['UpdateAccountBalanceRequestDto']
+export type GetAccountResponseDto = Omit<
+  ApiSchema['GetAccountResponseDto'],
+  'currency'
+> & {
+  currency?: AccountCurrencyValue
+}
+export type GetAccountWithCardsResponseDto = Omit<
+  ApiSchema['GetAccountWithCardsResponseDto'],
+  'account'
+> & {
+  account?: GetAccountResponseDto
+}
 export type GetCardByAccountIdResponseDto =
   ApiSchema['GetCardByAccountIdResponseDto']
 export type CreateCardRequestDto = ApiSchema['CreateCardRequestDto']
 export type CreateCardResponseDto = ApiSchema['CreateCardResponseDto']
 export type UpdateCardRequestDto = ApiSchema['UpdateCardRequestDto']
 export type UpdateCardResponseDto = ApiSchema['UpdateCardResponseDto']
+export type NotificationResponseDto = ApiSchema['NotificationResponseDto']
+export type MarkNotificationsAsReadedRequestDto =
+  ApiSchema['MarkNotificationsAsReadedRequestDto']
 export type GetUserInfoResponseDto = ApiSchema['GetUserInfoResponseDto']
+export type GetUserInfoWithAuthInfoResponseDto =
+  ApiSchema['GetUserInfoWithAuthInfoResponseDto']
 export type VerifyAuthUserByCodeRequestDto =
   ApiSchema['VerifyAuthUserByCodeRequestDto']
 export type ChangePasswordRequestDto = ApiSchema['ChangePasswordRequestDto']
@@ -30,15 +54,21 @@ export type LoginOperation = ApiOperation['Login']
 export type LogoutOperation = ApiOperation['Logout']
 export type RefreshOperation = ApiOperation['Refresh']
 export type GetUserInfoOperation = ApiOperation['getUserInfo']
+export type GetUserInfoByManagerOperation = ApiOperation['getUserInfoByManager']
 export type GetAllUserInfoOperation = ApiOperation['getAllUserInfo']
 export type CreateAccountOperation = ApiOperation['postCreateAccount']
+export type TopUpAccountOperation = ApiOperation['topUpAccount']
+export type WithdrawAccountOperation = ApiOperation['withdrawAccount']
 export type FreezeAccountOperation = ApiOperation['freezeAccount']
+export type UnfreezeAccountOperation = ApiOperation['unfreezeAccount']
 export type GetAllAccountsWithCardsOperation =
   ApiOperation['getAllAccountsWithCards']
 export type GetAccountsWithCardsByOwnerIdOperation =
   ApiOperation['getAccountsWithCardsByOwnerId']
 export type CreateCardOperation = ApiOperation['createCard']
 export type UpdateCardOperation = ApiOperation['updateCard']
+export type GetNotificationsOperation = ApiOperation['getNotifications']
+export type MarkNotificationsAsReadedOperation = ApiOperation['markAsReaded']
 export type VerifyUserOperation = ApiOperation['VerifyUser']
 export type VerifyUserByManagerOperation = ApiOperation['VerifyUserByManager']
 export type UnlockUserByManagerOperation = ApiOperation['UnlockUserByManager']
@@ -60,23 +90,37 @@ export type ChangePasswordRequest =
   ChangePasswordOperation['requestBody']['content']['application/json']
 export type ChangeAuthUserRoleRequest =
   ChangeAuthUserRoleOperation['requestBody']['content']['application/json']
-export type CreateAccountRequest =
-  CreateAccountOperation['requestBody']['content']['application/json']
+export type CreateAccountRequest = CreateAccountRequestDto
+export type UpdateAccountBalanceRequest =
+  TopUpAccountOperation['requestBody']['content']['application/json']
 export type CreateCardRequest =
   CreateCardOperation['requestBody']['content']['application/json']
 export type UpdateCardRequest =
   UpdateCardOperation['requestBody']['content']['application/json']
-export type GetUserInfoResponse =
+export type MarkNotificationsAsReadedRequest =
+  MarkNotificationsAsReadedOperation['requestBody']['content']['application/json']
+export type GetUserInfoWithAuthInfoResponse =
   GetUserInfoOperation['responses'][200]['content']['*/*']
-export type GetAllUserInfoResponse =
+export type GetUserInfoByManagerResponse =
+  GetUserInfoByManagerOperation['responses'][200]['content']['*/*']
+export type GetAllUserInfoWithAuthInfoResponse =
   GetAllUserInfoOperation['responses'][200]['content']['*/*']
-export type CreateAccountResponse =
-  CreateAccountOperation['responses'][200]['content']['*/*']
-export type GetAllAccountsWithCardsResponse =
-  GetAllAccountsWithCardsOperation['responses'][200]['content']['*/*']
+
+/** Application-facing user model, normalized from the API's user/auth wrapper. */
+export type UserInfo = Omit<GetUserInfoResponseDto, 'status'> & {
+  authUserId?: GetUserInfoResponseDto['autUserId']
+  role?: GetUserInfoWithAuthInfoResponseDto['role']
+  status?: GetUserInfoWithAuthInfoResponseDto['status']
+}
+export type CreateAccountResponse = GetAccountResponseDto
+export type UpdateAccountBalanceResponse =
+  TopUpAccountOperation['responses'][200]['content']['*/*']
+export type GetAllAccountsWithCardsResponse = GetAccountWithCardsResponseDto[]
 export type GetAccountsWithCardsByOwnerIdResponse =
-  GetAccountsWithCardsByOwnerIdOperation['responses'][200]['content']['*/*']
+  GetAccountWithCardsResponseDto[]
 export type CreateCardResponse =
   CreateCardOperation['responses'][200]['content']['*/*']
 export type UpdateCardResponse =
   UpdateCardOperation['responses'][200]['content']['*/*']
+export type GetNotificationsResponse =
+  GetNotificationsOperation['responses'][200]['content']['*/*']

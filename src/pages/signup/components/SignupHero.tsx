@@ -20,9 +20,7 @@ export function SignupHero() {
       </div>
 
       <div className={styles['signup__hero-copy']}>
-        <h2 className={styles['signup__hero-title']}>
-          {t('signupHeroTitle')}
-        </h2>
+        <h2 className={styles['signup__hero-title']}>{t('signupHeroTitle')}</h2>
 
         <ol className={styles['signup__steps']}>
           {steps.map((step, index) => (

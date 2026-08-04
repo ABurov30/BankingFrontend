@@ -3,12 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import {
-  setLanguage,
-  setThemeMode,
-  type AppLanguage,
-  type ResolvedTheme,
-} from '@/features/app/appSlice'
+import { setThemeMode, type ResolvedTheme } from '@/features/app/appSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { cn } from '@/lib/utils'
 import { useChangePasswordMutation } from '@/shared/api/authApi'
@@ -207,9 +202,7 @@ function SecurityCard({ authUserId }: { authUserId?: string }) {
             />
             <button
               aria-label={
-                isOldPasswordVisible
-                  ? t('hidePassword')
-                  : t('showPassword')
+                isOldPasswordVisible ? t('hidePassword') : t('showPassword')
               }
               className={styles['user__password-toggle']}
               onClick={() => setIsOldPasswordVisible((value) => !value)}
@@ -311,13 +304,15 @@ function SecurityCard({ authUserId }: { authUserId?: string }) {
           </p>
         ) : null}
 
-        <button
-          className={styles['user__password-submit']}
-          disabled={isSubmitting || isLoading || !authUserId}
-          type="submit"
-        >
-          {isLoading ? t('saving') : t('changePassword')}
-        </button>
+        <div className={styles['user__password-actions']}>
+          <button
+            className={styles['user__password-submit']}
+            disabled={isSubmitting || isLoading || !authUserId}
+            type="submit"
+          >
+            {isLoading ? t('saving') : t('changePassword')}
+          </button>
+        </div>
       </form>
     </section>
   )
@@ -325,15 +320,11 @@ function SecurityCard({ authUserId }: { authUserId?: string }) {
 
 function PreferencesCard() {
   const dispatch = useAppDispatch()
-  const { language, resolvedTheme } = useAppSelector((state) => state.app)
+  const { resolvedTheme } = useAppSelector((state) => state.app)
   const { t } = useI18n()
 
   const handleThemeChange = (theme: ResolvedTheme) => {
     dispatch(setThemeMode(theme))
-  }
-
-  const handleLanguageChange = (language: AppLanguage) => {
-    dispatch(setLanguage(language))
   }
 
   return (
@@ -349,15 +340,6 @@ function PreferencesCard() {
           ]}
           value={resolvedTheme}
           onChange={(value) => handleThemeChange(value as ResolvedTheme)}
-        />
-        <PreferenceSegment
-          label={t('language')}
-          options={[
-            { label: 'EN', value: 'en' },
-            { label: 'RU', value: 'ru' },
-          ]}
-          value={language}
-          onChange={(value) => handleLanguageChange(value as AppLanguage)}
         />
       </div>
     </section>

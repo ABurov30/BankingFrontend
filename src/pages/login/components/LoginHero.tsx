@@ -15,12 +15,8 @@ export function LoginHero() {
       </div>
 
       <div className={styles['login__hero-copy']}>
-        <h2 className={styles['login__hero-title']}>
-          {t('welcomeHeroTitle')}
-        </h2>
-        <p className={styles['login__hero-text']}>
-          {t('welcomeHeroText')}
-        </p>
+        <h2 className={styles['login__hero-title']}>{t('welcomeHeroTitle')}</h2>
+        <p className={styles['login__hero-text']}>{t('welcomeHeroText')}</p>
       </div>
     </aside>
   )

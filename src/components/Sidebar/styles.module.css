@@ -163,7 +163,8 @@
   --tw-leading: 1;
   transition-property:
     color, background-color, border-color, outline-color, text-decoration-color,
-    fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+    fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to,
+    transform;
   transition-timing-function: var(
     --tw-ease,
     var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1))
@@ -201,4 +202,5 @@
 }
 .sidebar__nav-link--idle:hover {
   color: var(--ui-shell-text);
+  transform: translateX(4px);
 }
