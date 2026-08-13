@@ -1,6 +1,7 @@
 import { Landmark, WalletCards } from 'lucide-react'
 
 import { Skeleton } from '@/components/Skeleton'
+import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { cn } from '@/lib/utils'
 import { AccountCurrency, AccountStatus, AccountType } from '@/shared/api/enums'
 import type { GetAccountWithCardsResponseDto } from '@/shared/api/types'
@@ -82,7 +83,7 @@ export function AccountsGrid({
               </span>
             </div>
             <p className={styles['dashboard__account-balance']}>
-              {formatMoney(account.availableBalance, account.currency)}
+              {formatMoney(getAvailableFunds(account), account.currency)}
             </p>
           </article>
         )

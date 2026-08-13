@@ -1,6 +1,7 @@
-import { PiggyBank, Store, WalletCards } from 'lucide-react'
+import { PiggyBank, WalletCards } from 'lucide-react'
 
 import { formatMoney } from '@/lib/formatMoney'
+import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { AccountCurrency, AccountStatus, AccountType } from '@/shared/api/enums'
 import type { GetAccountWithCardsResponseDto } from '@/shared/api/types'
 import styles from '../styles.module.css'
@@ -19,20 +20,12 @@ function getAccountIcon(type?: string) {
     return PiggyBank
   }
 
-  if (type === AccountType.CREDIT) {
-    return Store
-  }
-
   return WalletCards
 }
 
 function getIconClassName(type?: string) {
   if (type === AccountType.SAVINGS) {
     return styles['accounts__filter-button--idle']
-  }
-
-  if (type === AccountType.CREDIT) {
-    return styles['accounts__icon-banking']
   }
 
   return styles['accounts__filter-button']
@@ -59,7 +52,7 @@ export function mapAccountRow({
   return {
     account: `${type.charAt(0)}${type.slice(1).toLowerCase()} account`,
     accountId: account.accountId,
-    balance: formatMoney(account.availableBalance, account.currency),
+    balance: formatMoney(getAvailableFunds(account), account.currency),
     currency: account.currency ?? AccountCurrency.USD,
     enabled: status === AccountStatus.ACTIVE,
     icon: getAccountIcon(type),

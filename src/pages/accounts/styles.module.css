@@ -481,10 +481,6 @@
   background-color: var(--ui-shell-border);
   color: var(--ui-shell-text-secondary);
 }
-.accounts__icon-banking {
-  background-color: var(--ui-shell-border-soft);
-  color: var(--ui-shell-text-secondary);
-}
 .accounts__icon-card {
   background-color: var(--ui-shell-border-soft);
   color: var(--ui-shell-text-muted);

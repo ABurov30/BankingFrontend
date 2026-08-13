@@ -133,12 +133,10 @@ Do not use currency symbols like `$`.
 ## Cards And Accounts
 
 - Account currencies: `RUB`, `USD`, `EUR`, `CNY`, `GBP`
-- Account types: `CHECKING`, `SAVINGS`, `CREDIT`
+- Account types: `CHECKING`, `SAVINGS`
 - Account statuses: `ACTIVE`, `FROZEN`, `CLOSED`
 - Card statuses: `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`
 - `CHECKING` and `SAVINGS` accounts render debit cards.
-- `CREDIT` accounts render credit cards.
-- Credit and debit card visuals are intentionally different.
 - Card limits are edited with the `/card/update` mutation.
 
 Forms use `react-hook-form`. Dialogs and modal overlays should render through React Portal into `document.body`.

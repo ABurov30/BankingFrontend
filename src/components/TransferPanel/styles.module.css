@@ -5,6 +5,11 @@
   margin-bottom: 18px;
   display: flex;
 }
+.transfer-panel__header-start {
+  align-items: center;
+  gap: 8px;
+  display: flex;
+}
 .transfer-panel__title {
   font-family: var(--font-display);
   font-size: var(--text-lg, 1.125rem);
@@ -15,6 +20,23 @@
   --tw-font-weight: var(--font-weight-bold, 700);
   font-weight: var(--font-weight-bold, 700);
   color: var(--ui-shell-text);
+}
+.transfer-panel__back-button {
+  width: calc(var(--spacing, 0.25rem) * 8);
+  height: calc(var(--spacing, 0.25rem) * 8);
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--ui-shell-text-subtle);
+  place-items: center;
+  display: grid;
+}
+.transfer-panel__back-button:hover,
+.transfer-panel__back-button:focus-visible {
+  background-color: var(--ui-shell-border-soft);
+  color: var(--ui-shell-text-secondary);
+}
+.transfer-panel__back-button svg {
+  width: calc(var(--spacing, 0.25rem) * 5);
+  height: calc(var(--spacing, 0.25rem) * 5);
 }
 .transfer-panel__close-button {
   width: calc(var(--spacing, 0.25rem) * 8);
@@ -152,6 +174,70 @@
   border-radius: 3.40282e38px;
   place-items: center;
   display: grid;
+}
+.transfer-panel__recipient-name {
+  font-size: 13px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text);
+}
+.transfer-panel__recipient-email {
+  margin-top: 3px;
+  font-size: 11.5px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-subtle);
+}
+.transfer-panel__email-row {
+  display: flex;
+  gap: 8px;
+}
+.transfer-panel__email-input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--ui-shell-border-strong);
+  border-radius: calc(var(--radius) + 4px);
+  outline: 0;
+  background-color: var(--ui-panel-strong);
+  padding: 14.5px 17.5px;
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text);
+}
+.transfer-panel__email-input::placeholder {
+  color: var(--ui-shell-text-faint);
+}
+.transfer-panel__email-input:hover,
+.transfer-panel__email-input:focus-visible {
+  border-color: var(--ui-brand);
+}
+.transfer-panel__email-input[aria-invalid='true'] {
+  border-color: #e9506b;
+}
+.transfer-panel__search-button {
+  flex-shrink: 0;
+  min-width: 95px;
+  border-radius: calc(var(--radius) + 4px);
+  background-color: var(--ui-shell-border-soft);
+  padding: 0 13px;
+  font-size: 12px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.transfer-panel__search-button:hover,
+.transfer-panel__search-button:focus-visible {
+  background-color: var(--ui-brand-soft);
+  color: var(--ui-brand);
+}
+.transfer-panel__search-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.transfer-panel__search-icon {
+  width: 15px;
+  height: 15px;
 }
 .transfer-panel__amount-card {
   border-radius: calc(var(--radius) + 4px);
@@ -323,7 +409,12 @@
   margin-bottom: 18px;
   display: grid;
 }
+.transfer-panel__tabs--own-operations > :last-child {
+  grid-column: 1 / -1;
+}
 .transfer-panel__tab {
+  min-width: 0;
+  padding-inline: 6px;
   height: calc(var(--spacing, 0.25rem) * 9);
   --tw-font-weight: var(--font-weight-bold, 700);
   font-size: 12.5px;
@@ -337,6 +428,8 @@
   display: flex;
 }
 .transfer-panel__tab--active {
+  min-width: 0;
+  padding-inline: 6px;
   height: calc(var(--spacing, 0.25rem) * 9);
   background-color: var(--ui-panel);
   font-size: 12.5px;
@@ -369,4 +462,133 @@
   align-items: center;
   gap: 7px;
   display: flex;
+}
+.transfer-panel__dialog-backdrop {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(8 5 18 / 0.62);
+  backdrop-filter: blur(3px);
+}
+.transfer-panel__dialog {
+  position: relative;
+  width: min(100%, 420px);
+  border: 1px solid var(--ui-shell-border);
+  border-radius: 18px;
+  padding: 27px;
+  background: var(--ui-panel);
+  box-shadow: 0 30px 35px rgb(8 5 18 / 0.4);
+}
+.transfer-panel__dialog-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 9px;
+  color: var(--ui-shell-text-subtle);
+}
+.transfer-panel__dialog-close:hover,
+.transfer-panel__dialog-close:focus-visible {
+  background: var(--ui-panel-strong);
+  color: var(--ui-shell-text);
+}
+.transfer-panel__dialog-close svg {
+  width: 18px;
+  height: 18px;
+}
+.transfer-panel__dialog-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--ui-brand-soft);
+  color: var(--ui-brand);
+}
+.transfer-panel__dialog-icon svg {
+  width: 23px;
+  height: 23px;
+}
+.transfer-panel__dialog-title {
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--ui-shell-text);
+}
+.transfer-panel__dialog-copy {
+  margin-top: 10px;
+  color: var(--ui-shell-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.transfer-panel__confirmation-details {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--ui-panel-strong);
+}
+.transfer-panel__confirmation-row {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  color: var(--ui-shell-text-muted);
+  font-size: 12px;
+}
+.transfer-panel__confirmation-row strong {
+  max-width: 70%;
+  overflow-wrap: anywhere;
+  color: var(--ui-shell-text);
+  font-size: 12px;
+  text-align: right;
+}
+.transfer-panel__dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+.transfer-panel__dialog-cancel,
+.transfer-panel__dialog-confirm {
+  min-height: 44px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: var(--font-weight-bold, 700);
+}
+.transfer-panel__dialog-cancel {
+  background: var(--ui-panel-strong);
+  color: var(--ui-shell-text-secondary);
+}
+.transfer-panel__dialog-cancel:hover,
+.transfer-panel__dialog-cancel:focus-visible {
+  background: var(--ui-shell-border-soft);
+}
+.transfer-panel__dialog-confirm {
+  background: var(--ui-brand);
+  color: var(--color-white, #fff);
+}
+.transfer-panel__dialog-confirm:hover,
+.transfer-panel__dialog-confirm:focus-visible {
+  background: var(--ui-brand-hover);
+}
+
+@media (width < 26rem) {
+  .transfer-panel__email-row {
+    flex-direction: column;
+  }
+  .transfer-panel__search-button {
+    min-height: 42px;
+  }
+  .transfer-panel__tab,
+  .transfer-panel__tab--active {
+    font-size: 11px;
+  }
 }

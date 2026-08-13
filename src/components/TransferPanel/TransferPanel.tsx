@@ -15,6 +15,7 @@ export function TransferPanel() {
     const previousOverflow = document.body.style.overflow
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        if (document.querySelector('[data-transfer-confirmation]')) return
         dispatch(closeRightPanel())
       }
     }

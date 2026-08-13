@@ -49,7 +49,7 @@ export function PaymentCard({
 
   return (
     <article className={styles['cards__main']}>
-      <CardsBankCardVisual account={account} card={card} />
+      <CardsBankCardVisual card={card} />
 
       <div className={styles['cards__card-summary']}>
         <div className={styles['cards__main']}>

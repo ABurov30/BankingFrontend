@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 import { useForm } from 'react-hook-form'
 
 import { formatMoney } from '@/lib/formatMoney'
+import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { cn } from '@/lib/utils'
 import { AccountCurrency } from '@/shared/api/enums'
 import type { GetAccountWithCardsResponseDto } from '@/shared/api/types'
@@ -126,7 +127,7 @@ export function IssueCardDialog({
                       <span>{getAccountLabel(item)}</span>
                       <span className={styles['cards__issue-option-meta']}>
                         {formatMoney(
-                          item.account?.availableBalance,
+                          getAvailableFunds(item.account),
                           item.account?.currency ?? AccountCurrency.USD,
                         )}
                       </span>

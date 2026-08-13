@@ -1,8 +1,9 @@
-import { ArrowDownLeft, ArrowUpRight, Plus } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
 import { useAppDispatch } from '@/app/hooks'
 import { Skeleton } from '@/components/Skeleton'
 import { openRightPanel } from '@/features/rightPanel/rightPanelSlice'
+import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { cn } from '@/lib/utils'
 import { AccountCurrency } from '@/shared/api/enums'
 import type { GetAccountWithCardsResponseDto } from '@/shared/api/types'
@@ -22,7 +23,7 @@ export function BalanceHero({
   const showSkeleton = isFetching && accounts.length === 0
   const openTransferPanel = () => dispatch(openRightPanel('transfer'))
   const totalBalance = accounts.reduce(
-    (sum, item) => sum + (item.account?.availableBalance ?? 0),
+    (sum, item) => sum + (getAvailableFunds(item.account) ?? 0),
     0,
   )
   const currency = accounts[0]?.account?.currency ?? AccountCurrency.USD
@@ -60,16 +61,6 @@ export function BalanceHero({
           label={t('transfer')}
           onClick={openTransferPanel}
           primary
-        />
-        <ActionButton
-          icon={Plus}
-          label={t('topUp')}
-          onClick={openTransferPanel}
-        />
-        <ActionButton
-          icon={ArrowDownLeft}
-          label={t('request')}
-          onClick={openTransferPanel}
         />
       </div>
     </section>

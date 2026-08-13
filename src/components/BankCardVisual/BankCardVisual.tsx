@@ -1,11 +1,8 @@
 import { useAppSelector } from '@/app/hooks'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { cn } from '@/lib/utils'
-import { AccountType, CardStatus } from '@/shared/api/enums'
-import type {
-  GetAccountWithCardsResponseDto,
-  GetCardByAccountIdResponseDto,
-} from '@/shared/api/types'
+import { CardStatus } from '@/shared/api/enums'
+import type { GetCardByAccountIdResponseDto } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from './styles.module.css'
 
@@ -22,11 +19,9 @@ function getExpiryLabel(expiresAt?: string) {
 }
 
 function useBankCardData({
-  account,
   card,
   holderName,
 }: {
-  account?: GetAccountWithCardsResponseDto
   card?: GetCardByAccountIdResponseDto
   holderName?: string
 }) {
@@ -37,30 +32,21 @@ function useBankCardData({
     .join(' ')
     .trim()
   const cardHolderName = userFullName || holderName || t('buroUser')
-  const accountType = account?.account?.type ?? AccountType.CHECKING
-  const cardType = accountType === AccountType.CREDIT ? 'CREDIT' : 'DEBIT'
   const status = card?.status ?? CardStatus.ACTIVE
 
   return {
     cardHolderName,
-    cardType,
+    cardType: 'DEBIT',
     expiresLabel: getExpiryLabel(card?.expiresAt),
-    isCreditCard: accountType === AccountType.CREDIT,
     panSuffix: card?.pan?.slice(-4) ?? '----',
     status,
     t,
   }
 }
 
-function getColorClassNames({
-  isCreditCard,
-  status,
-}: {
-  isCreditCard: boolean
-  status: CardStatus
-}) {
+function getColorClassNames(status: CardStatus) {
   return [
-    isCreditCard ? styles['bank-card--credit'] : styles['bank-card--debit'],
+    styles['bank-card--debit'],
     status === CardStatus.ACTIVE && styles['bank-card--active'],
     status === CardStatus.BLOCKED && styles['bank-card--blocked'],
     status === CardStatus.EXPIRED && styles['bank-card--expired'],
@@ -69,30 +55,21 @@ function getColorClassNames({
 }
 
 export function DashboardBankCardVisual({
-  account,
   card,
   holderName,
 }: {
-  account?: GetAccountWithCardsResponseDto
   card?: GetCardByAccountIdResponseDto
   holderName?: string
 }) {
-  const {
-    cardHolderName,
-    cardType,
-    expiresLabel,
-    isCreditCard,
-    panSuffix,
-    status,
-    t,
-  } = useBankCardData({ account, card, holderName })
+  const { cardHolderName, cardType, expiresLabel, panSuffix, status, t } =
+    useBankCardData({ card, holderName })
 
   return (
     <section
       className={cn(
         styles['bank-card'],
         styles['bank-card--dashboard'],
-        getColorClassNames({ isCreditCard, status }),
+        getColorClassNames(status),
         'ui-lift',
       )}
     >
@@ -127,27 +104,19 @@ export function DashboardBankCardVisual({
 }
 
 export function CardsBankCardVisual({
-  account,
   card,
 }: {
-  account?: GetAccountWithCardsResponseDto
   card?: GetCardByAccountIdResponseDto
 }) {
-  const {
-    cardHolderName,
-    cardType,
-    expiresLabel,
-    isCreditCard,
-    panSuffix,
-    status,
-  } = useBankCardData({ account, card })
+  const { cardHolderName, cardType, expiresLabel, panSuffix, status } =
+    useBankCardData({ card })
 
   return (
     <section
       className={cn(
         styles['bank-card'],
         styles['bank-card--cards'],
-        getColorClassNames({ isCreditCard, status }),
+        getColorClassNames(status),
         'ui-lift',
       )}
     >

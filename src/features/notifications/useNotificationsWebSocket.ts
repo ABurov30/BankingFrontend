@@ -3,8 +3,10 @@ import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect, useRef } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
+import { invalidateAccounts } from '@/features/accounts/accountsSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
+import { accountApi } from '@/shared/api/accountApi'
 import {
   addLiveNotificationToCache,
   useGetNotificationsQuery,
@@ -14,6 +16,28 @@ import { parseNotificationEvent } from './notificationEvent'
 const brokerURL =
   import.meta.env.VITE_NOTIFICATIONS_WS_URL ??
   `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/api/ws`
+
+async function refreshAccounts(
+  dispatch: typeof import('@/app/store').store.dispatch,
+  ownerUserId?: string,
+) {
+  if (!ownerUserId) return
+
+  dispatch(invalidateAccounts())
+  const request = dispatch(
+    accountApi.endpoints.getAccountsWithCardsByOwnerId.initiate(ownerUserId, {
+      forceRefetch: true,
+    }),
+  )
+
+  try {
+    await request.unwrap()
+  } catch {
+    // Keep the existing account snapshot if the refresh request fails.
+  } finally {
+    request.unsubscribe()
+  }
+}
 
 export function useNotificationsWebSocket() {
   const dispatch = useAppDispatch()
@@ -57,7 +81,8 @@ export function useNotificationsWebSocket() {
             // Plain-text notifications are valid too.
           }
 
-          const { eventId, notification } = parseNotificationEvent(payload)
+          const { eventId, notification, shouldRefreshAccounts } =
+            parseNotificationEvent(payload)
 
           if (eventId && receivedEventIdsRef.current.has(eventId)) {
             return
@@ -65,6 +90,10 @@ export function useNotificationsWebSocket() {
 
           if (eventId) {
             receivedEventIdsRef.current.add(eventId)
+          }
+
+          if (shouldRefreshAccounts) {
+            void refreshAccounts(dispatch, currentUser.userProfileId)
           }
 
           dispatch(addLiveNotificationToCache(notification))
@@ -84,5 +113,5 @@ export function useNotificationsWebSocket() {
     return () => {
       void client.deactivate()
     }
-  }, [currentUser?.authUserId, dispatch])
+  }, [currentUser?.authUserId, currentUser?.userProfileId, dispatch])
 }

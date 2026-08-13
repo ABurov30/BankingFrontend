@@ -2,6 +2,8 @@ import { baseApi } from './baseApi'
 import type {
   GetAllUserInfoWithAuthInfoResponse,
   GetUserInfoByManagerResponse,
+  GetUserInfoWithAccountsByEmailRequest,
+  GetUserInfoWithAccountsByEmailResponse,
   GetUserInfoWithAuthInfoResponse,
   UserInfo,
 } from './types'
@@ -30,6 +32,16 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ['User'],
       transformResponse: normalizeUser,
     }),
+    getUserInfoWithAccountsByEmail: builder.mutation<
+      GetUserInfoWithAccountsByEmailResponse,
+      GetUserInfoWithAccountsByEmailRequest
+    >({
+      query: (body) => ({
+        body,
+        method: 'POST',
+        url: '/user/user-info',
+      }),
+    }),
     getUserInfoByManager: builder.query<UserInfo, { authUserId: string }>({
       query: ({ authUserId }) => `/user/manager/user-info/${authUserId}`,
       providesTags: ['User'],
@@ -43,4 +55,5 @@ export const {
   useGetAllUserInfoQuery,
   useGetUserInfoByManagerQuery,
   useGetUserInfoQuery,
+  useGetUserInfoWithAccountsByEmailMutation,
 } = userApi

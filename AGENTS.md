@@ -49,7 +49,7 @@ The preferred dev hostname is `buro-bank.ru`.
 Current frontend enums:
 
 - `AccountCurrency`: `RUB`, `USD`, `EUR`, `CNY`, `GBP`
-- `AccountType`: `CHECKING`, `SAVINGS`, `CREDIT`
+- `AccountType`: `CHECKING`, `SAVINGS`
 - `AccountStatus`: `ACTIVE`, `FROZEN`, `CLOSED`
 - `AuthUserStatus`: `ACTIVE`, `BLOCKED`, `PENDING`
 - `Role`: `USER`, `MANAGER`, `ADMIN`
@@ -68,8 +68,7 @@ Current frontend enums:
   - Card status values are only `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`.
   - Do not use a separate "virtual card" style/status.
   - Card status badge is interactive for `ACTIVE`, `BLOCKED`, `FROZEN` and should show a chevron.
-  - Account type determines card type: `CHECKING` and `SAVINGS` render `DEBIT`; `CREDIT` renders `CREDIT`.
-  - Credit and debit card visuals should differ.
+  - `CHECKING` and `SAVINGS` accounts render `DEBIT` cards.
 - Account creation opens a form where the user selects account currency and account type.
 
 ## Git Safety

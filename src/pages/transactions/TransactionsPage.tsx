@@ -1,11 +1,14 @@
 import { ArrowUpRight } from 'lucide-react'
+import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect } from 'react'
 
-import { useAppDispatch } from '@/app/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import {
   closeRightPanel,
   openRightPanel,
 } from '@/features/rightPanel/rightPanelSlice'
+import { selectCurrentUser } from '@/features/user/userSlice'
+import { useGetTransactionsByUserIdQuery } from '@/shared/api/transactionApi'
 import { useI18n } from '@/shared/i18n/useI18n'
 import { Filters, TransactionsTable } from './components'
 import styles from './styles.module.css'
@@ -13,6 +16,9 @@ import styles from './styles.module.css'
 function TransactionsPage() {
   const dispatch = useAppDispatch()
   const { t } = useI18n()
+  const user = useAppSelector(selectCurrentUser)
+  const { data: transactions = [], isFetching } =
+    useGetTransactionsByUserIdQuery(user?.userProfileId ?? skipToken)
 
   useEffect(() => {
     dispatch(closeRightPanel())
@@ -38,7 +44,10 @@ function TransactionsPage() {
           </header>
 
           <Filters />
-          <TransactionsTable />
+          <TransactionsTable
+            isLoading={isFetching}
+            transactions={transactions}
+          />
         </div>
       </div>
     </section>

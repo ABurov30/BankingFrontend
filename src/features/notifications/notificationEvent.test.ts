@@ -16,6 +16,7 @@ describe('parseNotificationEvent', () => {
         body: 'Your account was frozen',
         title: 'Account frozen',
       },
+      shouldRefreshAccounts: false,
     })
   })
 
@@ -32,6 +33,8 @@ describe('parseNotificationEvent', () => {
     expect(first.eventId).toBeUndefined()
     expect(second.eventId).toBeUndefined()
     expect(first.notification).toEqual(second.notification)
+    expect(first.shouldRefreshAccounts).toBe(false)
+    expect(second.shouldRefreshAccounts).toBe(false)
   })
 
   it('supports plain-text messages while producing a renderable notification', () => {
@@ -41,6 +44,21 @@ describe('parseNotificationEvent', () => {
         body: 'Connection restored',
         title: 'Notification',
       },
+      shouldRefreshAccounts: false,
     })
+  })
+
+  it.each([
+    'TRANSACTION_FAILED',
+    'TRANSACTION_COMPLETED',
+    'TRANSACTION_RECEIVED',
+    'Funds received',
+  ])('marks %s events for an account refresh', (eventType) => {
+    expect(
+      parseNotificationEvent({
+        body: 'Your account balance has changed',
+        title: eventType,
+      }).shouldRefreshAccounts,
+    ).toBe(true)
   })
 })

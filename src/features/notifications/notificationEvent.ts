@@ -5,10 +5,25 @@ type NotificationEventSource = Record<string, unknown>
 export type NotificationEvent = {
   eventId?: string
   notification: NotificationResponseDto
+  shouldRefreshAccounts: boolean
 }
+
+const accountRefreshEventTypes = new Set([
+  'FUNDS_RECEIVED',
+  'TRANSACTION_COMPLETED',
+  'TRANSACTION_FAILED',
+  'TRANSACTION_RECEIVED',
+])
 
 function asText(value: unknown) {
   return typeof value === 'string' && value.trim() ? value : undefined
+}
+
+function normalizeEventType(value: unknown) {
+  return asText(value)
+    ?.trim()
+    .toUpperCase()
+    .replaceAll(/[\s-]+/g, '_')
 }
 
 function toSource(payload: unknown): NotificationEventSource | null {
@@ -44,5 +59,13 @@ export function parseNotificationEvent(payload: unknown): NotificationEvent {
         asText(source?.type) ??
         'Notification',
     },
+    shouldRefreshAccounts: [
+      source?.eventType,
+      source?.notificationType,
+      source?.type,
+      source?.title,
+    ].some((eventType) =>
+      accountRefreshEventTypes.has(normalizeEventType(eventType) ?? ''),
+    ),
   }
 }

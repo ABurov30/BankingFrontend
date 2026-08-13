@@ -13,6 +13,7 @@ describe('account row mapping', () => {
         accountId: 'account-1',
         accountNumber: '4081781000000001',
         availableBalance: 12.5,
+        reservedBalance: 2.5,
         currency: 'USD',
         status: 'FROZEN',
         type: 'SAVINGS',
@@ -22,7 +23,7 @@ describe('account row mapping', () => {
     expect(isAccountRowModel(row)).toBe(true)
     expect(row).toMatchObject({
       account: 'Savings account',
-      balance: 'USD 12.50',
+      balance: 'USD 10.00',
       enabled: false,
       number: '•• 0001',
     })

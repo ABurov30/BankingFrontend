@@ -37,26 +37,6 @@
   color: rgb(255 255 255 / 0.68);
 }
 
-.bank-card--credit.bank-card--active {
-  border: 1px solid rgb(255 255 255 / 0.16);
-  background:
-    radial-gradient(
-      circle at 88% -12%,
-      rgb(255 255 255 / 0.28) 0,
-      transparent 30%
-    ),
-    radial-gradient(circle at 18% 112%, var(--ui-brand) 0, transparent 38%),
-    linear-gradient(
-      128deg,
-      var(--ui-primary-strong),
-      var(--ui-primary) 48%,
-      var(--ui-brand) 132%
-    );
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.2),
-    0 16px 34px rgb(61 111 224 / 0.22);
-}
-
 .bank-card--frozen {
   color: var(--ui-shell-text-muted);
   background-image: linear-gradient(135deg, #313447, #50566d 55%, #697085);
@@ -88,15 +68,6 @@
   height: 200px;
 }
 
-.bank-card--credit .bank-card__orb-primary {
-  width: 248px;
-  height: 248px;
-  top: -104px;
-  right: -94px;
-  background-color: rgb(255 255 255 / 0.18);
-  opacity: 1;
-}
-
 .bank-card__orb-secondary {
   top: calc(var(--spacing, 0.25rem) * 16);
   right: calc(var(--spacing, 0.25rem) * 6);
@@ -106,29 +77,6 @@
   width: 92px;
   height: 92px;
   position: absolute;
-}
-
-.bank-card--credit .bank-card__orb-secondary {
-  width: 118px;
-  height: 118px;
-  top: 82px;
-  right: -18px;
-  background-color: var(--ui-brand-soft);
-  opacity: 0.22;
-}
-
-.bank-card--credit .bank-card__brand {
-  color: var(--color-white, #fff);
-}
-
-.bank-card--credit .bank-card__type,
-.bank-card--credit .bank-card__label {
-  color: rgb(255 255 255 / 0.72);
-}
-
-.bank-card--credit .bank-card__pan,
-.bank-card--credit .bank-card__value {
-  color: var(--color-white, #fff);
 }
 
 .bank-card__content {

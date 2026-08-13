@@ -5,7 +5,7 @@ import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLo
 import { selectCards } from '@/features/cards/cardsSlice'
 import type { CardWithAccount } from '@/features/cards/cardsSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
-import { AccountType, CardStatus } from '@/shared/api/enums'
+import { CardStatus } from '@/shared/api/enums'
 import { Skeleton } from '@/components/Skeleton'
 import {
   AccountsGrid,
@@ -44,24 +44,10 @@ function DashboardPage() {
   const cards = useAppSelector(selectCards)
   const { isFetching } = useEnsureAccountsLoaded(user?.userProfileId)
   const isInitialCardsLoading = isFetching && cards.length === 0
-  const highestDebitCard = getHighestLimitCard(
-    cards.filter(({ account, card }) => {
-      const accountType = account.account?.type
-      return (
-        card.status === CardStatus.ACTIVE &&
-        (accountType === AccountType.CHECKING ||
-          accountType === AccountType.SAVINGS)
-      )
-    }),
+  const highestActiveCard = getHighestLimitCard(
+    cards.filter(({ card }) => card.status === CardStatus.ACTIVE),
   )
-  const highestCreditCard = getHighestLimitCard(
-    cards.filter(
-      ({ account, card }) =>
-        card.status === CardStatus.ACTIVE &&
-        account.account?.type === AccountType.CREDIT,
-    ),
-  )
-  const highlightedCards = [highestDebitCard, highestCreditCard].filter(
+  const highlightedCards = [highestActiveCard].filter(
     (item): item is CardWithAccount => item !== null,
   )
   const userName = [user?.firstName, user?.lastName].filter(Boolean).join(' ')
@@ -80,7 +66,7 @@ function DashboardPage() {
 
         <aside className={styles['dashboard__aside']}>
           {isInitialCardsLoading
-            ? Array.from({ length: 2 }, (_, index) => (
+            ? Array.from({ length: 1 }, (_, index) => (
                 <div className={styles['dashboard__card-stack']} key={index}>
                   <Skeleton height={190} radius={20} />
                   <Skeleton height={112} radius={18} />
@@ -91,11 +77,7 @@ function DashboardPage() {
                   className={styles['dashboard__card-stack']}
                   key={card.cardId ?? `${card.accountId}-${index}`}
                 >
-                  <DashboardBankCardVisual
-                    account={account}
-                    card={card}
-                    holderName={userName}
-                  />
+                  <DashboardBankCardVisual card={card} holderName={userName} />
                   <LimitsCard account={account} card={card} />
                 </div>
               ))}

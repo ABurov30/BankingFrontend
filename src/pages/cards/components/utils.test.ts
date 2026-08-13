@@ -10,8 +10,8 @@ describe('card utilities', () => {
 
   it('creates a linked-account label', () => {
     expect(getAccountName()).toBe('Linked account')
-    expect(getAccountName({ account: { type: 'CREDIT' } })).toBe(
-      'Credit account',
+    expect(getAccountName({ account: { type: 'SAVINGS' } })).toBe(
+      'Savings account',
     )
   })
 })

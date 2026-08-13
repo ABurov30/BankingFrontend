@@ -2,13 +2,11 @@ import { ArrowLeftRight, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { Skeleton } from '@/components/Skeleton'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
 import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
 import { openRightPanel } from '@/features/rightPanel/rightPanelSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
-import { formatMoney } from '@/lib/formatMoney'
 import {
   useCreateAccountMutation,
   useFreezeAccountMutation,
@@ -70,9 +68,6 @@ function AccountsPage() {
   const visibleAccountsStart =
     totalAccounts === 0 ? 0 : firstVisibleAccountIndex + 1
   const visibleAccountsEnd = firstVisibleAccountIndex + paginatedAccounts.length
-  const totalBalance = accountsWithCards.reduce((sum, item) => {
-    return sum + (item.account?.availableBalance ?? 0)
-  }, 0)
   const isInitialLoading = isFetching && accountsWithCards.length === 0
 
   useEffect(() => {
@@ -141,13 +136,6 @@ function AccountsPage() {
       <header className={styles['accounts__header']}>
         <div>
           <h1 className={styles['accounts__title']}>{t('accounts')}</h1>
-          <p className={styles['accounts__subtitle']}>
-            {isInitialLoading ? (
-              <Skeleton height={14} width={190} />
-            ) : (
-              `${accounts.length} ${t('totalAccounts')} · ${formatMoney(totalBalance)} ${t('totalBalance')}`
-            )}
-          </p>
         </div>
 
         <div className={styles['accounts__header-actions']}>

@@ -10,6 +10,7 @@ import type {
 } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
 import { formatMoney } from '@/lib/formatMoney'
+import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import styles from '../styles.module.css'
 import { UserCardItem } from './UserCardItem'
 
@@ -76,7 +77,7 @@ export function UserAccountsSection({
                   </button>
                 </header>
                 <p className={styles['user-details__balance']}>
-                  {formatMoney(account?.availableBalance, account?.currency)}
+                  {formatMoney(getAvailableFunds(account), account?.currency)}
                 </p>
                 <div className={styles['user-details__cards']}>
                   {cards?.length ? (
