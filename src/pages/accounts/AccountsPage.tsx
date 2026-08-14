@@ -1,4 +1,3 @@
-import { ArrowLeftRight, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
@@ -15,6 +14,8 @@ import {
 import { getApiErrorMessage } from '@/shared/api/error'
 import { useI18n } from '@/shared/i18n/useI18n'
 import {
+  AccountsPageHeader,
+  AccountsPagination,
   AccountsTable,
   AccountsToolbar,
   CreateAccountDialog,
@@ -133,32 +134,17 @@ function AccountsPage() {
 
   return (
     <section className={`${styles['accounts']} ui-enter`}>
-      <header className={styles['accounts__header']}>
-        <div>
-          <h1 className={styles['accounts__title']}>{t('accounts')}</h1>
-        </div>
-
-        <div className={styles['accounts__header-actions']}>
-          <button
-            className={`${styles['accounts__transfer-button']} ui-lift`}
-            disabled={!ownerUserId}
-            onClick={() => dispatch(openRightPanel('transfer'))}
-            type="button"
-          >
-            <ArrowLeftRight className={styles['accounts__button-icon']} />
-            {t('transfer')}
-          </button>
-          <button
-            className={`${styles['accounts__add-button']} ui-lift`}
-            disabled={!ownerUserId || isCreatingAccount}
-            onClick={() => setIsCreateFormOpen(true)}
-            type="button"
-          >
-            <Plus className={styles['accounts__button-icon']} />
-            {t('newAccount')}
-          </button>
-        </div>
-      </header>
+      <AccountsPageHeader
+        isCreateDisabled={!ownerUserId}
+        isCreatingAccount={isCreatingAccount}
+        labels={{
+          accounts: t('accounts'),
+          newAccount: t('newAccount'),
+          transfer: t('transfer'),
+        }}
+        onCreateAccount={() => setIsCreateFormOpen(true)}
+        onOpenTransfer={() => dispatch(openRightPanel('transfer'))}
+      />
 
       {isCreateFormOpen ? (
         <CreateAccountDialog
@@ -177,56 +163,21 @@ function AccountsPage() {
       />
 
       {shouldShowPagination ? (
-        <footer className={styles['accounts__footer']}>
-          <p className={styles['accounts__footer-text']}>
-            {t('showing')} {visibleAccountsStart}-{visibleAccountsEnd} {t('of')}{' '}
-            {totalAccounts} {t('totalAccounts')}
-          </p>
-
-          <div className={styles['accounts__pagination']}>
-            <button
-              aria-label={t('previousPage')}
-              className={`${styles['accounts__page-button']} ui-lift`}
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-              type="button"
-            >
-              <ChevronLeft className={styles['accounts__page-icon']} />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, index) => {
-              const page = index + 1
-
-              return (
-                <button
-                  aria-current={currentPage === page ? 'page' : undefined}
-                  className={`${styles['accounts__page-button']} ${
-                    currentPage === page
-                      ? styles['accounts__page-button--active']
-                      : ''
-                  } ui-lift`}
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  type="button"
-                >
-                  {page}
-                </button>
-              )
-            })}
-
-            <button
-              aria-label={t('nextPage')}
-              className={`${styles['accounts__page-button']} ui-lift`}
-              disabled={currentPage === totalPages}
-              onClick={() =>
-                setCurrentPage((page) => Math.min(totalPages, page + 1))
-              }
-              type="button"
-            >
-              <ChevronRight className={styles['accounts__page-icon']} />
-            </button>
-          </div>
-        </footer>
+        <AccountsPagination
+          currentPage={currentPage}
+          labels={{
+            nextPage: t('nextPage'),
+            of: t('of'),
+            previousPage: t('previousPage'),
+            showing: t('showing'),
+            totalAccounts: t('totalAccounts'),
+          }}
+          onPageChange={setCurrentPage}
+          totalAccounts={totalAccounts}
+          totalPages={totalPages}
+          visibleAccountsEnd={visibleAccountsEnd}
+          visibleAccountsStart={visibleAccountsStart}
+        />
       ) : null}
     </section>
   )

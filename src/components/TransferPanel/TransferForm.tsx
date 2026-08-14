@@ -1,33 +1,18 @@
-import {
-  ArrowDownLeft,
-  ArrowLeft,
-  ArrowLeftRight,
-  ArrowUpRight,
-  ChevronDown,
-  Landmark,
-  Search,
-  Send,
-  ShieldCheck,
-  X,
-} from 'lucide-react'
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
+import type { ChangeEventHandler } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { Skeleton } from '@/components/Skeleton'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
 import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
 import { closeRightPanel } from '@/features/rightPanel/rightPanelSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
-import { formatMoney } from '@/lib/formatMoney'
-import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import {
   useTopUpAccountMutation,
   useWithdrawAccountMutation,
 } from '@/shared/api/accountApi'
-import { AccountCurrency, AccountStatus } from '@/shared/api/enums'
+import { AccountStatus } from '@/shared/api/enums'
 import { getApiErrorMessage } from '@/shared/api/error'
 import type {
   GetAccountResponseDto,
@@ -36,32 +21,26 @@ import type {
 import { useCreateTransactionMutation } from '@/shared/api/transactionApi'
 import { useGetUserInfoWithAccountsByEmailMutation } from '@/shared/api/userApi'
 import { useI18n } from '@/shared/i18n/useI18n'
+import {
+  AccountPicker,
+  AmountField,
+  Field,
+  OwnAccountOperationTabs,
+  RecipientFields,
+  TransferConfirmationDialog,
+  TransferPanelHeader,
+  TransferSubmitBlock,
+  TransferTargetTabs,
+} from './components'
+import type {
+  AccountMenu,
+  PanelOperation,
+  TransferConfirmation,
+  TransferFormValues,
+  TransferStage,
+} from './types'
+import { emailPattern } from './utils'
 import styles from './styles.module.css'
-
-type PanelOperation =
-  'TOP_UP' | 'WITHDRAW' | 'BETWEEN_OWN_ACCOUNTS' | 'TO_ANOTHER_USER'
-
-type TransferStage = 'TARGET' | 'OWN_OPERATION' | 'FORM'
-
-type AccountMenu = 'source' | 'destination' | 'recipient' | null
-
-type TransferFormValues = {
-  amount: string
-  destinationAccountId: string
-  email: string
-  recipientAccountId: string
-  sourceAccountId: string
-}
-
-type TransferConfirmation = {
-  amount: number
-  destinationAccount: GetAccountResponseDto
-  idempotencyKey: string
-  recipient?: GetUserInfoResponseDto
-  sourceAccount: GetAccountResponseDto
-}
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function TransferForm() {
   const dispatch = useAppDispatch()
@@ -245,12 +224,24 @@ export function TransferForm() {
     setTransferStage('OWN_OPERATION')
   }
 
+  const toggleAccountMenu = (menu: Exclude<AccountMenu, null>) => {
+    setOpenAccountMenu((currentMenu) => (currentMenu === menu ? null : menu))
+  }
+
   const selectAccount = (
     field: 'sourceAccountId' | 'destinationAccountId' | 'recipientAccountId',
     accountId: string,
   ) => {
     setValue(field, accountId, { shouldValidate: true })
     setOpenAccountMenu(null)
+  }
+
+  const handleRecipientEmailChange: ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    recipientEmailField.onChange(event)
+    clearErrors('email')
+    resetRecipient()
   }
 
   const searchRecipient = async () => {
@@ -436,76 +427,24 @@ export function TransferForm() {
 
   return (
     <>
-      <header className={styles['transfer-panel__header']}>
-        <div className={styles['transfer-panel__header-start']}>
-          {transferStage !== 'TARGET' ? (
-            <button
-              aria-label={t('back')}
-              className={styles['transfer-panel__back-button']}
-              onClick={goBack}
-              type="button"
-            >
-              <ArrowLeft />
-            </button>
-          ) : null}
-          <h2 className={styles['transfer-panel__title']}>{t('transfer')}</h2>
-        </div>
-        <button
-          aria-label={t('closeTransferPanel')}
-          className={styles['transfer-panel__close-button']}
-          onClick={() => dispatch(closeRightPanel())}
-          type="button"
-        >
-          <X className={styles['transfer-panel__close-icon']} />
-        </button>
-      </header>
+      <TransferPanelHeader
+        backLabel={t('back')}
+        canGoBack={transferStage !== 'TARGET'}
+        closeLabel={t('closeTransferPanel')}
+        onBack={goBack}
+        onClose={() => dispatch(closeRightPanel())}
+        title={t('transfer')}
+      />
 
       {transferStage === 'TARGET' ? (
-        <div className={styles['transfer-panel__tabs']}>
-          <OperationTab
-            active={false}
-            icon={<Landmark className={styles['transfer-panel__tab-icon']} />}
-            label={t('toYourAccount')}
-            onClick={() => chooseTransferTarget('OWN_ACCOUNT')}
-          />
-          <OperationTab
-            active={false}
-            icon={<Send className={styles['transfer-panel__tab-icon']} />}
-            label={t('toAnotherPerson')}
-            onClick={() => chooseTransferTarget('ANOTHER_PERSON')}
-          />
-        </div>
+        <TransferTargetTabs onSelectTarget={chooseTransferTarget} t={t} />
       ) : null}
 
       {transferStage === 'OWN_OPERATION' ? (
-        <div
-          className={`${styles['transfer-panel__tabs']} ${styles['transfer-panel__tabs--own-operations']}`}
-        >
-          <OperationTab
-            active={false}
-            icon={
-              <ArrowDownLeft className={styles['transfer-panel__tab-icon']} />
-            }
-            label={t('topUp')}
-            onClick={() => chooseOwnAccountOperation('TOP_UP')}
-          />
-          <OperationTab
-            active={false}
-            icon={
-              <ArrowUpRight className={styles['transfer-panel__tab-icon']} />
-            }
-            label={t('withdraw')}
-            onClick={() => chooseOwnAccountOperation('WITHDRAW')}
-          />
-          <OperationTab
-            active={false}
-            icon={
-              <ArrowLeftRight className={styles['transfer-panel__tab-icon']} />
-            }
-            label={t('betweenMyAccounts')}
-            onClick={() => chooseOwnAccountOperation('BETWEEN_OWN_ACCOUNTS')}
-          />
-        </div>
+        <OwnAccountOperationTabs
+          onSelectOperation={chooseOwnAccountOperation}
+          t={t}
+        />
       ) : null}
 
       {transferStage === 'FORM' ? (
@@ -517,84 +456,25 @@ export function TransferForm() {
 
           {isExternalTransfer ? (
             <>
-              <Field label={t('emailAddress')}>
-                <div className={styles['transfer-panel__email-row']}>
-                  <input
-                    {...recipientEmailField}
-                    aria-invalid={Boolean(errors.email)}
-                    className={styles['transfer-panel__email-input']}
-                    onChange={(event) => {
-                      recipientEmailField.onChange(event)
-                      clearErrors('email')
-                      resetRecipient()
-                    }}
-                    placeholder="name@example.com"
-                    type="email"
-                  />
-                  <button
-                    className={styles['transfer-panel__search-button']}
-                    disabled={isLookingUpRecipient}
-                    onClick={searchRecipient}
-                    type="button"
-                  >
-                    <Search className={styles['transfer-panel__search-icon']} />
-                    {isLookingUpRecipient ? t('searching') : t('search')}
-                  </button>
-                </div>
-                {errors.email?.message ? (
-                  <p className={styles['transfer-panel__error']}>
-                    {errors.email.message}
-                  </p>
-                ) : null}
-              </Field>
-
-              {recipient ? (
-                <div className={styles['transfer-panel__recipient']}>
-                  <span className={styles['transfer-panel__recipient-avatar']}>
-                    {getInitials(recipient)}
-                  </span>
-                  <div>
-                    <p className={styles['transfer-panel__recipient-name']}>
-                      {getUserName(recipient)}
-                    </p>
-                    <p className={styles['transfer-panel__recipient-email']}>
-                      {recipient.email}
-                    </p>
-                  </div>
-                </div>
-              ) : null}
-
-              {recipient ? (
-                <Field label={t('recipientAccount')}>
-                  <input type="hidden" {...register('recipientAccountId')} />
-                  <AccountPicker
-                    accounts={activeRecipientAccounts}
-                    emptyLabel={t('noActiveRecipientAccounts')}
-                    isOpen={openAccountMenu === 'recipient'}
-                    onOpenChange={() =>
-                      setOpenAccountMenu((menu) =>
-                        menu === 'recipient' ? null : 'recipient',
-                      )
-                    }
-                    onSelect={(accountId) =>
-                      selectAccount('recipientAccountId', accountId)
-                    }
-                    selectedAccount={recipientAccount}
-                    selectedAccountId={recipientAccountId}
-                    t={t}
-                  />
-                  {activeRecipientAccounts.length === 0 ? (
-                    <p className={styles['transfer-panel__hint']}>
-                      {t('noActiveRecipientAccounts')}
-                    </p>
-                  ) : null}
-                  {errors.recipientAccountId?.message ? (
-                    <p className={styles['transfer-panel__error']}>
-                      {errors.recipientAccountId.message}
-                    </p>
-                  ) : null}
-                </Field>
-              ) : null}
+              <input type="hidden" {...register('recipientAccountId')} />
+              <RecipientFields
+                activeRecipientAccounts={activeRecipientAccounts}
+                emailError={errors.email}
+                isLookingUpRecipient={isLookingUpRecipient}
+                isRecipientMenuOpen={openAccountMenu === 'recipient'}
+                onEmailChange={handleRecipientEmailChange}
+                onRecipientAccountSelect={(accountId) =>
+                  selectAccount('recipientAccountId', accountId)
+                }
+                onRecipientMenuToggle={() => toggleAccountMenu('recipient')}
+                onSearchRecipient={searchRecipient}
+                recipient={recipient}
+                recipientAccount={recipientAccount}
+                recipientAccountError={errors.recipientAccountId}
+                recipientAccountId={recipientAccountId}
+                recipientEmailField={recipientEmailField}
+                t={t}
+              />
             </>
           ) : null}
 
@@ -605,11 +485,7 @@ export function TransferForm() {
               emptyLabel={t('noActiveAccounts')}
               isLoading={isInitialLoading}
               isOpen={openAccountMenu === 'source'}
-              onOpenChange={() =>
-                setOpenAccountMenu((menu) =>
-                  menu === 'source' ? null : 'source',
-                )
-              }
+              onOpenChange={() => toggleAccountMenu('source')}
               onSelect={(accountId) =>
                 selectAccount('sourceAccountId', accountId)
               }
@@ -640,11 +516,7 @@ export function TransferForm() {
                 emptyLabel={t('selectDifferentAccount')}
                 isLoading={isInitialLoading}
                 isOpen={openAccountMenu === 'destination'}
-                onOpenChange={() =>
-                  setOpenAccountMenu((menu) =>
-                    menu === 'destination' ? null : 'destination',
-                  )
-                }
+                onOpenChange={() => toggleAccountMenu('destination')}
                 onSelect={(accountId) =>
                   selectAccount('destinationAccountId', accountId)
                 }
@@ -665,63 +537,21 @@ export function TransferForm() {
             </Field>
           ) : null}
 
-          <Field label={t('amount')}>
-            <div className={styles['transfer-panel__amount-card']}>
-              <div className={styles['transfer-panel__amount-row']}>
-                <input
-                  aria-invalid={Boolean(errors.amount)}
-                  aria-label={t('amount')}
-                  className={styles['transfer-panel__amount-input']}
-                  inputMode="decimal"
-                  min="0.01"
-                  placeholder="0"
-                  step="0.01"
-                  type="number"
-                  {...register('amount', {
-                    required: t('enterValidAmount'),
-                    validate: (value) =>
-                      Number(value) > 0 || t('enterValidAmount'),
-                  })}
-                />
-                <span className={styles['transfer-panel__currency-badge']}>
-                  {sourceAccount?.currency ?? '--'}
-                </span>
-              </div>
-            </div>
-            {errors.amount?.message ? (
-              <p className={styles['transfer-panel__error']}>
-                {errors.amount.message}
-              </p>
-            ) : null}
-          </Field>
+          <AmountField
+            amountError={errors.amount}
+            register={register}
+            sourceAccount={sourceAccount}
+            t={t}
+          />
 
-          <div className={styles['transfer-panel__security']}>
-            <div className={styles['transfer-panel__account-summary']}>
-              <ShieldCheck
-                className={styles['transfer-panel__security-icon']}
-              />
-              <p className={styles['transfer-panel__security-copy']}>
-                {t('fundsVerified')}
-              </p>
-            </div>
-            <button
-              className={`${styles['transfer-panel__submit']} ui-lift`}
-              disabled={
-                isSubmitting ||
-                isInitialLoading ||
-                eligibleAccounts.length === 0
-              }
-              type="submit"
-            >
-              {isSubmitting
-                ? t('processing')
-                : operation === 'TOP_UP'
-                  ? t('topUp')
-                  : operation === 'WITHDRAW'
-                    ? t('withdraw')
-                    : t('reviewTransfer')}
-            </button>
-          </div>
+          <TransferSubmitBlock
+            disabled={
+              isSubmitting || isInitialLoading || eligibleAccounts.length === 0
+            }
+            isSubmitting={isSubmitting}
+            operation={operation}
+            t={t}
+          />
         </form>
       ) : null}
 
@@ -736,274 +566,4 @@ export function TransferForm() {
       ) : null}
     </>
   )
-}
-
-function OperationTab({
-  active,
-  icon,
-  label,
-  onClick,
-}: {
-  active: boolean
-  icon: ReactNode
-  label: string
-  onClick: () => void
-}) {
-  return (
-    <button
-      aria-pressed={active}
-      className={
-        active
-          ? styles['transfer-panel__tab--active']
-          : styles['transfer-panel__tab']
-      }
-      onClick={onClick}
-      type="button"
-    >
-      {icon}
-      {label}
-    </button>
-  )
-}
-
-function AccountPicker({
-  accounts,
-  disabled = false,
-  emptyLabel,
-  isLoading = false,
-  isOpen,
-  onOpenChange,
-  onSelect,
-  selectedAccount,
-  selectedAccountId,
-  t,
-}: {
-  accounts: GetAccountResponseDto[]
-  disabled?: boolean
-  emptyLabel: string
-  isLoading?: boolean
-  isOpen: boolean
-  onOpenChange: () => void
-  onSelect: (accountId: string) => void
-  selectedAccount?: GetAccountResponseDto
-  selectedAccountId: string
-  t: ReturnType<typeof useI18n>['t']
-}) {
-  return (
-    <div className={styles['transfer-panel__account-picker']}>
-      <button
-        aria-expanded={isOpen}
-        className={styles['transfer-panel__account-select']}
-        disabled={disabled}
-        onClick={onOpenChange}
-        type="button"
-      >
-        <AccountSummary
-          account={selectedAccount}
-          emptyLabel={emptyLabel}
-          isLoading={isLoading}
-          t={t}
-        />
-        <ChevronDown className={styles['transfer-panel__chevron']} />
-      </button>
-
-      {isOpen ? (
-        <div className={styles['transfer-panel__account-menu']} role="listbox">
-          {accounts.map((account) => (
-            <button
-              aria-selected={account.accountId === selectedAccountId}
-              className={styles['transfer-panel__account-option']}
-              key={account.accountId}
-              onClick={() => account.accountId && onSelect(account.accountId)}
-              role="option"
-              type="button"
-            >
-              <AccountSummary account={account} emptyLabel={emptyLabel} t={t} />
-            </button>
-          ))}
-        </div>
-      ) : null}
-    </div>
-  )
-}
-
-function AccountSummary({
-  account,
-  emptyLabel,
-  isLoading = false,
-  t,
-}: {
-  account?: GetAccountResponseDto
-  emptyLabel: string
-  isLoading?: boolean
-  t: ReturnType<typeof useI18n>['t']
-}) {
-  const availableFunds = getAvailableFunds(account)
-
-  return (
-    <div className={styles['transfer-panel__account-summary']}>
-      <span className={styles['transfer-panel__account-icon']}>
-        <Landmark className={styles['transfer-panel__icon']} />
-      </span>
-      <div>
-        {isLoading ? (
-          <>
-            <Skeleton height={16} width={150} />
-            <Skeleton height={13} width={110} />
-          </>
-        ) : (
-          <>
-            <p className={styles['transfer-panel__account-name']}>
-              {account?.accountNumber ?? emptyLabel}
-            </p>
-            <p className={styles['transfer-panel__account-meta']}>
-              {availableFunds == null
-                ? t('balanceUnavailable')
-                : formatMoney(
-                    availableFunds,
-                    account?.currency ?? AccountCurrency.USD,
-                  )}
-            </p>
-          </>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function TransferConfirmationDialog({
-  confirmation,
-  isSubmitting,
-  onClose,
-  onConfirm,
-  t,
-}: {
-  confirmation: TransferConfirmation
-  isSubmitting: boolean
-  onClose: () => void
-  onConfirm: () => Promise<void>
-  t: ReturnType<typeof useI18n>['t']
-}) {
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
-    }
-
-    document.addEventListener('keydown', closeOnEscape)
-    return () => document.removeEventListener('keydown', closeOnEscape)
-  }, [onClose])
-
-  const destinationAccountNumber =
-    confirmation.destinationAccount.accountNumber ?? t('noAccountSelected')
-
-  return createPortal(
-    <div
-      className={styles['transfer-panel__dialog-backdrop']}
-      data-transfer-confirmation
-      role="presentation"
-    >
-      <section
-        aria-labelledby="transfer-confirmation-title"
-        aria-modal="true"
-        className={styles['transfer-panel__dialog']}
-        role="dialog"
-      >
-        <button
-          aria-label={t('closeDialog')}
-          className={styles['transfer-panel__dialog-close']}
-          onClick={onClose}
-          type="button"
-        >
-          <X />
-        </button>
-        <span className={styles['transfer-panel__dialog-icon']}>
-          <ShieldCheck />
-        </span>
-        <h2
-          id="transfer-confirmation-title"
-          className={styles['transfer-panel__dialog-title']}
-        >
-          {t('confirmTransfer')}
-        </h2>
-        <p className={styles['transfer-panel__dialog-copy']}>
-          {t('transferConfirmationDescription')}
-        </p>
-
-        <div className={styles['transfer-panel__confirmation-details']}>
-          <ConfirmationRow
-            label={t('from')}
-            value={
-              confirmation.sourceAccount.accountNumber ?? t('noAccountSelected')
-            }
-          />
-          <ConfirmationRow label={t('to')} value={destinationAccountNumber} />
-          {confirmation.recipient ? (
-            <ConfirmationRow
-              label={t('recipient')}
-              value={getUserName(confirmation.recipient)}
-            />
-          ) : null}
-          <ConfirmationRow
-            label={t('amount')}
-            value={formatMoney(
-              confirmation.amount,
-              confirmation.sourceAccount.currency ?? AccountCurrency.USD,
-            )}
-          />
-        </div>
-
-        <div className={styles['transfer-panel__dialog-actions']}>
-          <button
-            className={styles['transfer-panel__dialog-cancel']}
-            disabled={isSubmitting}
-            onClick={onClose}
-            type="button"
-          >
-            {t('cancel')}
-          </button>
-          <button
-            className={styles['transfer-panel__dialog-confirm']}
-            disabled={isSubmitting}
-            onClick={onConfirm}
-            type="button"
-          >
-            {isSubmitting ? t('processing') : t('confirmTransfer')}
-          </button>
-        </div>
-      </section>
-    </div>,
-    document.body,
-  )
-}
-
-function ConfirmationRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className={styles['transfer-panel__confirmation-row']}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  )
-}
-
-function Field({ children, label }: { children: ReactNode; label: string }) {
-  return (
-    <div className={styles['transfer-panel__field']}>
-      <span className={styles['transfer-panel__label']}>{label}</span>
-      {children}
-    </div>
-  )
-}
-
-function getUserName(user: GetUserInfoResponseDto) {
-  const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ')
-  return fullName || user.email || '—'
-}
-
-function getInitials(user: GetUserInfoResponseDto) {
-  const initials = [user.firstName, user.lastName]
-    .filter(Boolean)
-    .map((name) => name![0])
-    .join('')
-
-  return initials || user.email?.[0]?.toUpperCase() || '?'
 }

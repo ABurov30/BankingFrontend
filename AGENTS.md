@@ -13,7 +13,27 @@ Buro Bank frontend is a React + TypeScript + Vite application for a banking pet 
 - Dev server on local domain without a port: run `npm run dev:domain` and `npm run dev:nginx`
 - Generate local HTTPS cert: `npm run dev:cert`
 - Generate API types from Swagger: `npm run api:types`
-- Verify changes: `npm run lint` and `npm run build`
+- Verify changes: `npm run lint`, `npm run test`, and `npm run build` when application code, TypeScript, routing, imports, API contracts, or build behavior changed
+
+## Documentation
+
+Technical documentation lives in `docs/`:
+
+- `docs/README.md` - documentation index and maintenance rule.
+- `docs/project-overview.md` - product scope, stack, routes, deployment model.
+- `docs/architecture.md` - bootstrap, routing, layout, store, and component boundaries.
+- `docs/api-and-state.md` - RTK Query, generated contracts, Redux slices, auth recovery, synchronization rules.
+- `docs/ui-and-components.md` - UI conventions, forms, dialogs, accounts/cards, transfer panel.
+- `docs/development-and-quality.md` - setup, scripts, Docker, tests, and required quality checks.
+
+After every coding-agent session:
+
+- Review `docs/` and update the relevant Markdown files when behavior, architecture, API/state contracts, routing, commands, UI rules, or project structure changed.
+- Run `npm run lint`.
+- Run `npm run test`.
+- Run `npm run build` when application code, TypeScript, routing, imports, API contracts, or build behavior changed.
+- If documentation does not need changes, say that it was reviewed and no update was required in the final response.
+- If a required command cannot be run, include the exact reason in the final response.
 
 ## Local Domain
 

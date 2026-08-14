@@ -1,13 +1,10 @@
-import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { Skeleton } from '@/components/Skeleton'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
 import { selectCards } from '@/features/cards/cardsSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
-import { cn } from '@/lib/utils'
 import { useLazyGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
 import {
   useCreateCardMutation,
@@ -22,9 +19,9 @@ import { getApiErrorMessage } from '@/shared/api/error'
 import { useI18n } from '@/shared/i18n/useI18n'
 import type { GetCardByAccountIdResponseDto } from '@/shared/api/types'
 import {
+  CardsList,
+  CardsPageHeader,
   IssueCardDialog,
-  LimitsPanel,
-  PaymentCard,
   type EditableCardStatus,
 } from './components'
 import styles from './styles.module.css'
@@ -135,38 +132,18 @@ function CardsPage() {
     <section className={`${styles['cards']} ui-enter`}>
       <div className={styles['cards__layout']}>
         <div className={styles['cards__main']}>
-          <header className={styles['cards__stack']}>
-            <h1 className={styles['cards__header']}>{t('cards')}</h1>
-
-            <div className={styles['cards__header-actions']}>
-              <div className={styles['cards__status-filters']}>
-                {cardStatusFilters.map((filter) => (
-                  <button
-                    className={cn(
-                      styles['cards__status-filter-button'],
-                      filter === statusFilter &&
-                        styles['cards__status-filter-button--active'],
-                    )}
-                    key={filter}
-                    onClick={() => setStatusFilter(filter)}
-                    type="button"
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                className={`${styles['cards__title']} ui-lift`}
-                disabled={isCreatingCard}
-                onClick={handleCreateCard}
-                type="button"
-              >
-                <Plus className={styles['cards__add-button']} />
-                {isCreatingCard ? t('issuing') : t('issueCard')}
-              </button>
-            </div>
-          </header>
+          <CardsPageHeader
+            isCreatingCard={isCreatingCard}
+            labels={{
+              cards: t('cards'),
+              issueCard: t('issueCard'),
+              issuing: t('issuing'),
+            }}
+            onCreateCard={handleCreateCard}
+            onStatusFilterChange={setStatusFilter}
+            statusFilter={statusFilter}
+            statusFilters={cardStatusFilters}
+          />
 
           {isIssueCardDialogOpen ? (
             <IssueCardDialog
@@ -177,36 +154,14 @@ function CardsPage() {
             />
           ) : null}
 
-          <div className={styles['cards__button-icon']}>
-            {isInitialLoading ? (
-              Array.from({ length: 2 }, (_, index) => (
-                <div className={styles['cards__card-group']} key={index}>
-                  <Skeleton height={230} radius={20} />
-                  <Skeleton height={220} radius={18} />
-                </div>
-              ))
-            ) : visibleCards.length > 0 ? (
-              visibleCards.map(({ account, card }, index) => (
-                <div
-                  className={styles['cards__card-group']}
-                  key={card.cardId ?? `${card.accountId}-${index}`}
-                >
-                  <PaymentCard
-                    account={account}
-                    card={card}
-                    onUpdateStatus={handleUpdateCardStatus}
-                  />
-                  <LimitsPanel account={account} card={card} />
-                </div>
-              ))
-            ) : (
-              <section className={`${styles['cards__limits-card']} ui-lift`}>
-                <p className={styles['cards__card-subtitle']}>
-                  {cards.length > 0 ? t('noCardsMatchStatus') : t('noCardData')}
-                </p>
-              </section>
-            )}
-          </div>
+          <CardsList
+            cards={visibleCards}
+            emptyLabel={
+              cards.length > 0 ? t('noCardsMatchStatus') : t('noCardData')
+            }
+            isLoading={isInitialLoading}
+            onUpdateStatus={handleUpdateCardStatus}
+          />
         </div>
       </div>
     </section>

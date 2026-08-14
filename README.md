@@ -171,3 +171,13 @@ src/
   pages/        Page components
   shared/api/   Shared API setup
 ```
+
+## Technical Documentation
+
+Detailed technical documentation lives in [`docs/`](./docs/README.md):
+
+- [Project Overview](./docs/project-overview.md)
+- [Architecture](./docs/architecture.md)
+- [API And State Management](./docs/api-and-state.md)
+- [UI And Components](./docs/ui-and-components.md)
+- [Development And Quality](./docs/development-and-quality.md)

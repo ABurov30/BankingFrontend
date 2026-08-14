@@ -1,10 +1,8 @@
-import { Pencil, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useAppDispatch } from '@/app/hooks'
 import { showToast } from '@/features/toast/toastSlice'
-import { cn } from '@/lib/utils'
 import { useUpdateCardMutation } from '@/shared/api/cardApi'
 import { AccountCurrency, CardStatus } from '@/shared/api/enums'
 import { getApiErrorMessage } from '@/shared/api/error'
@@ -14,16 +12,13 @@ import type {
 } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from '../styles.module.css'
+import {
+  getLimitValue,
+  LimitActions,
+  LimitItem,
+  type LimitsFormValues,
+} from './limits'
 import { formatMoney } from './utils'
-
-type LimitsFormValues = {
-  dailyLimit: number
-  monthlyLimit: number
-}
-
-function getLimitValue(value?: number) {
-  return value ?? 0
-}
 
 export function LimitsPanel({
   account,
@@ -54,7 +49,7 @@ export function LimitsPanel({
   const limits = [
     {
       colorClassName: styles['cards__card--primary'],
-      error: errors.dailyLimit?.message,
+      error: errors.dailyLimit,
       fieldName: 'dailyLimit' as const,
       label: t('dailyLimit'),
       value: formatMoney(
@@ -67,7 +62,7 @@ export function LimitsPanel({
     },
     {
       colorClassName: styles['cards__card--secondary'],
-      error: errors.monthlyLimit?.message,
+      error: errors.monthlyLimit,
       fieldName: 'monthlyLimit' as const,
       label: t('monthlyLimit'),
       value: formatMoney(
@@ -132,89 +127,39 @@ export function LimitsPanel({
         <div className={styles['cards__limit-list']}>
           {limits.map(
             ({ colorClassName, error, fieldName, label, value, width }) => (
-              <div className={styles['cards__main']} key={label}>
-                <div className={styles['cards__limit-row']}>
-                  <span className={styles['cards__limit-label']}>{label}</span>
-                  <span className={styles['cards__limit-value']}>{value}</span>
-                </div>
-                {isEditingLimits ? (
-                  <>
-                    <label className={styles['cards__limit-field']}>
-                      <span className={styles['cards__limit-currency']}>
-                        {currency}
-                      </span>
-                      <input
-                        className={styles['cards__limit-input']}
-                        disabled={!card || isUpdatingLimits}
-                        min="0"
-                        step="0.01"
-                        type="number"
-                        {...register(fieldName, {
-                          min: {
-                            message: t('limitCannotBeNegative'),
-                            value: 0,
-                          },
-                          required: t('limitRequired'),
-                          valueAsNumber: true,
-                          validate: (value) =>
-                            Number.isFinite(value) || t('enterValidAmount'),
-                        })}
-                      />
-                    </label>
-                    {error ? (
-                      <p className={styles['cards__limit-error']}>{error}</p>
-                    ) : null}
-                  </>
-                ) : null}
-                <div className={styles['cards__limit-track']}>
-                  <div
-                    className={cn(styles['cards__limit-fill'], colorClassName)}
-                    style={{ width }}
-                  />
-                </div>
-              </div>
+              <LimitItem
+                colorClassName={colorClassName}
+                currency={currency}
+                disabled={!card || isUpdatingLimits}
+                error={error}
+                fieldName={fieldName}
+                isEditing={isEditingLimits}
+                key={label}
+                label={label}
+                register={register}
+                t={t}
+                value={value}
+                width={width}
+              />
             ),
           )}
         </div>
 
-        <div className={styles['cards__limits-actions']}>
-          {isEditingLimits ? (
-            <>
-              <button
-                className={styles['cards__limits-cancel']}
-                disabled={isUpdatingLimits}
-                onClick={() => {
-                  reset({
-                    dailyLimit: getLimitValue(card?.dailyLimit),
-                    monthlyLimit: getLimitValue(card?.monthlyLimit),
-                  })
-                  setIsEditingLimits(false)
-                }}
-                type="button"
-              >
-                {t('cancel')}
-              </button>
-              <button
-                className={styles['cards__limits-save']}
-                disabled={!card || !isDirty || isUpdatingLimits}
-                type="submit"
-              >
-                <Save className={styles['cards__limits-save-icon']} />
-                {isUpdatingLimits ? t('saving') : t('saveLimits')}
-              </button>
-            </>
-          ) : (
-            <button
-              className={styles['cards__limits-save']}
-              disabled={!card}
-              onClick={() => setIsEditingLimits(true)}
-              type="button"
-            >
-              <Pencil className={styles['cards__limits-save-icon']} />
-              {t('editLimits')}
-            </button>
-          )}
-        </div>
+        <LimitActions
+          hasCard={Boolean(card)}
+          isDirty={isDirty}
+          isEditing={isEditingLimits}
+          isUpdating={isUpdatingLimits}
+          onCancel={() => {
+            reset({
+              dailyLimit: getLimitValue(card?.dailyLimit),
+              monthlyLimit: getLimitValue(card?.monthlyLimit),
+            })
+            setIsEditingLimits(false)
+          }}
+          onEdit={() => setIsEditingLimits(true)}
+          t={t}
+        />
       </form>
     </section>
   )
