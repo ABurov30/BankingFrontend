@@ -1,6 +1,7 @@
 import type { useI18n } from '@/shared/i18n/useI18n'
 import type {
   GetAccountResponseDto,
+  GetCardByAccountIdResponseDto,
   GetUserInfoResponseDto,
 } from '@/shared/api/types'
 
@@ -9,7 +10,8 @@ export type PanelOperation =
 
 export type TransferStage = 'TARGET' | 'OWN_OPERATION' | 'FORM'
 
-export type AccountMenu = 'source' | 'destination' | 'recipient' | null
+export type AccountMenu =
+  'source' | 'sourceCard' | 'destination' | 'recipient' | null
 
 export type TransferFormValues = {
   amount: string
@@ -17,6 +19,7 @@ export type TransferFormValues = {
   email: string
   recipientAccountId: string
   sourceAccountId: string
+  sourceCardId: string
 }
 
 export type TransferConfirmation = {
@@ -25,6 +28,13 @@ export type TransferConfirmation = {
   idempotencyKey: string
   recipient?: GetUserInfoResponseDto
   sourceAccount: GetAccountResponseDto
+  sourceCard: GetCardByAccountIdResponseDto
+  sourceCardId: string
+}
+
+export type TransferSourceCardOption = {
+  account: GetAccountResponseDto
+  card: GetCardByAccountIdResponseDto
 }
 
 export type TranslationFunction = ReturnType<typeof useI18n>['t']

@@ -84,6 +84,8 @@ export const translations = {
     noAccountSelected: 'No account selected',
     noActiveAccounts:
       'There are no active accounts available for this operation.',
+    noActiveSourceCards:
+      'There are no active cards linked to this source account.',
     noCardData: 'No card data available.',
     noCardIssued: 'No card issued',
     noCardsMatchStatus: 'No cards match the selected status.',
@@ -190,8 +192,11 @@ export const translations = {
     noteOptional: 'Note · optional',
     recentActivity: 'Recent activity',
     source: 'Source',
+    sourceCard: 'Source card',
     spendingThisWeek: 'Spending this week',
     viewAll: 'View all',
+    sourceCardUnavailable:
+      'The source account has no active card available for this transfer.',
     week: 'Week',
     accessDenied: 'Access denied',
     accessDeniedText:

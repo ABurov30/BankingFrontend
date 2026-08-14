@@ -12,10 +12,10 @@ import {
   useTopUpAccountMutation,
   useWithdrawAccountMutation,
 } from '@/shared/api/accountApi'
-import { AccountStatus } from '@/shared/api/enums'
+import { AccountStatus, CardStatus } from '@/shared/api/enums'
 import { getApiErrorMessage } from '@/shared/api/error'
 import type {
-  GetAccountResponseDto,
+  GetAccountWithCardsResponseDto,
   GetUserInfoResponseDto,
 } from '@/shared/api/types'
 import { useCreateTransactionMutation } from '@/shared/api/transactionApi'
@@ -24,6 +24,7 @@ import { useI18n } from '@/shared/i18n/useI18n'
 import {
   AccountPicker,
   AmountField,
+  CardPicker,
   Field,
   OwnAccountOperationTabs,
   RecipientFields,
@@ -37,6 +38,7 @@ import type {
   PanelOperation,
   TransferConfirmation,
   TransferFormValues,
+  TransferSourceCardOption,
   TransferStage,
 } from './types'
 import { emailPattern } from './utils'
@@ -53,7 +55,7 @@ export function TransferForm() {
   const [openAccountMenu, setOpenAccountMenu] = useState<AccountMenu>(null)
   const [recipient, setRecipient] = useState<GetUserInfoResponseDto>()
   const [recipientAccounts, setRecipientAccounts] = useState<
-    GetAccountResponseDto[]
+    GetAccountWithCardsResponseDto[]
   >([])
   const [confirmation, setConfirmation] = useState<TransferConfirmation>()
   const [topUpAccount, { isLoading: isToppingUp }] = useTopUpAccountMutation()
@@ -79,6 +81,7 @@ export function TransferForm() {
       email: '',
       recipientAccountId: '',
       sourceAccountId: '',
+      sourceCardId: '',
     },
     shouldUnregister: true,
   })
@@ -93,11 +96,35 @@ export function TransferForm() {
     [accounts],
   )
   const sourceAccountId = watch('sourceAccountId')
+  const sourceCardId = watch('sourceCardId')
   const destinationAccountId = watch('destinationAccountId')
   const recipientAccountId = watch('recipientAccountId')
-  const sourceAccount = eligibleAccounts.find(
+  const isTransfer =
+    operation === 'BETWEEN_OWN_ACCOUNTS' || operation === 'TO_ANOTHER_USER'
+  const isExternalTransfer = operation === 'TO_ANOTHER_USER'
+  const sourceCardOptions = useMemo<TransferSourceCardOption[]>(
+    () =>
+      accounts.flatMap(({ account, cards }) =>
+        account?.accountId && account.status === AccountStatus.ACTIVE
+          ? (cards ?? []).flatMap((card) =>
+              card.cardId && card.status === CardStatus.ACTIVE
+                ? [{ account, card }]
+                : [],
+            )
+          : [],
+      ),
+    [accounts],
+  )
+  const selectedSourceCardOption = sourceCardOptions.find(
+    ({ card }) => card.cardId === sourceCardId,
+  )
+  const selectedSourceAccount = eligibleAccounts.find(
     (account) => account.accountId === sourceAccountId,
   )
+  const sourceAccount = isTransfer
+    ? selectedSourceCardOption?.account
+    : selectedSourceAccount
+  const sourceCard = selectedSourceCardOption?.card
   const ownDestinationAccounts = useMemo(
     () =>
       eligibleAccounts.filter(
@@ -110,9 +137,10 @@ export function TransferForm() {
   )
   const activeRecipientAccounts = useMemo(
     () =>
-      recipientAccounts.filter(
-        (account) =>
-          Boolean(account.accountId) && account.status === AccountStatus.ACTIVE,
+      recipientAccounts.flatMap(({ account }) =>
+        account?.accountId && account.status === AccountStatus.ACTIVE
+          ? [account]
+          : [],
       ),
     [recipientAccounts],
   )
@@ -120,19 +148,21 @@ export function TransferForm() {
     (account) => account.accountId === recipientAccountId,
   )
   const isSubmitting = isToppingUp || isWithdrawing || isCreatingTransaction
-  const isTransfer =
-    operation === 'BETWEEN_OWN_ACCOUNTS' || operation === 'TO_ANOTHER_USER'
-  const isExternalTransfer = operation === 'TO_ANOTHER_USER'
+  const hasAvailableSource = isTransfer
+    ? sourceCardOptions.length > 0
+    : eligibleAccounts.length > 0
   const recipientEmailField = register('email')
 
   useEffect(() => {
+    if (isTransfer) return
+
     if (
       !sourceAccountId ||
       !eligibleAccounts.some((account) => account.accountId === sourceAccountId)
     ) {
       setValue('sourceAccountId', eligibleAccounts[0]?.accountId ?? '')
     }
-  }, [eligibleAccounts, setValue, sourceAccountId])
+  }, [eligibleAccounts, isTransfer, setValue, sourceAccountId])
 
   useEffect(() => {
     if (
@@ -147,6 +177,34 @@ export function TransferForm() {
       )
     }
   }, [destinationAccountId, ownDestinationAccounts, setValue])
+
+  useEffect(() => {
+    if (!isTransfer) return
+
+    const selectedOption = sourceCardOptions.find(
+      ({ card }) => card.cardId === sourceCardId,
+    )
+    const fallbackOption = sourceCardOptions[0]
+
+    if (!sourceCardId || !selectedOption) {
+      setValue('sourceCardId', fallbackOption?.card.cardId ?? '')
+      setValue('sourceAccountId', fallbackOption?.account.accountId ?? '')
+      clearErrors('sourceCardId')
+      clearErrors('sourceAccountId')
+      return
+    }
+
+    if (selectedOption.account.accountId !== sourceAccountId) {
+      setValue('sourceAccountId', selectedOption.account.accountId ?? '')
+    }
+  }, [
+    clearErrors,
+    isTransfer,
+    setValue,
+    sourceAccountId,
+    sourceCardId,
+    sourceCardOptions,
+  ])
 
   useEffect(() => {
     if (
@@ -229,10 +287,32 @@ export function TransferForm() {
   }
 
   const selectAccount = (
-    field: 'sourceAccountId' | 'destinationAccountId' | 'recipientAccountId',
+    field:
+      | 'sourceAccountId'
+      | 'sourceCardId'
+      | 'destinationAccountId'
+      | 'recipientAccountId',
     accountId: string,
   ) => {
     setValue(field, accountId, { shouldValidate: true })
+    clearErrors(field)
+
+    if (field === 'sourceAccountId') {
+      clearErrors('sourceCardId')
+    }
+
+    setOpenAccountMenu(null)
+  }
+
+  const selectSourceCard = (cardId: string) => {
+    const option = sourceCardOptions.find(({ card }) => card.cardId === cardId)
+
+    setValue('sourceCardId', cardId, { shouldValidate: true })
+    setValue('sourceAccountId', option?.account.accountId ?? '', {
+      shouldValidate: true,
+    })
+    clearErrors('sourceCardId')
+    clearErrors('sourceAccountId')
     setOpenAccountMenu(null)
   }
 
@@ -297,7 +377,9 @@ export function TransferForm() {
     }
 
     if (!sourceAccount) {
-      setError('sourceAccountId', { message: t('selectAccount') })
+      setError(isTransfer ? 'sourceCardId' : 'sourceAccountId', {
+        message: isTransfer ? t('sourceCardUnavailable') : t('selectAccount'),
+      })
       return
     }
 
@@ -339,6 +421,14 @@ export function TransferForm() {
       return
     }
 
+    if (!sourceCard?.cardId) {
+      setError('sourceCardId', { message: t('sourceCardUnavailable') })
+      return
+    }
+
+    const transferSourceCard = sourceCard
+    const transferSourceCardId = sourceCard.cardId
+
     if (operation === 'BETWEEN_OWN_ACCOUNTS') {
       if (!destinationAccount) {
         setError('destinationAccountId', {
@@ -352,6 +442,8 @@ export function TransferForm() {
         destinationAccount,
         idempotencyKey: crypto.randomUUID(),
         sourceAccount,
+        sourceCard: transferSourceCard,
+        sourceCardId: transferSourceCardId,
       })
       return
     }
@@ -372,6 +464,8 @@ export function TransferForm() {
       idempotencyKey: crypto.randomUUID(),
       recipient,
       sourceAccount,
+      sourceCard: transferSourceCard,
+      sourceCardId: transferSourceCardId,
     })
   }
 
@@ -382,6 +476,7 @@ export function TransferForm() {
 
     if (
       !sourceAccount.accountId ||
+      !confirmation.sourceCardId ||
       !destinationAccount.accountId ||
       !sourceAccount.currency
     ) {
@@ -401,6 +496,7 @@ export function TransferForm() {
         currency: sourceAccount.currency,
         idempotencyKey: confirmation.idempotencyKey,
         sourceAccountId: sourceAccount.accountId,
+        sourceCardId: confirmation.sourceCardId,
         targetAccountId: destinationAccount.accountId,
       }).unwrap()
 
@@ -454,6 +550,10 @@ export function TransferForm() {
         >
           <input type="hidden" {...register('sourceAccountId')} />
 
+          {isTransfer ? (
+            <input type="hidden" {...register('sourceCardId')} />
+          ) : null}
+
           {isExternalTransfer ? (
             <>
               <input type="hidden" {...register('recipientAccountId')} />
@@ -478,32 +578,60 @@ export function TransferForm() {
             </>
           ) : null}
 
-          <Field label={isTransfer ? t('fromAccount') : t('selectAccount')}>
-            <AccountPicker
-              accounts={eligibleAccounts}
-              disabled={isInitialLoading || eligibleAccounts.length === 0}
-              emptyLabel={t('noActiveAccounts')}
-              isLoading={isInitialLoading}
-              isOpen={openAccountMenu === 'source'}
-              onOpenChange={() => toggleAccountMenu('source')}
-              onSelect={(accountId) =>
-                selectAccount('sourceAccountId', accountId)
-              }
-              selectedAccount={sourceAccount}
-              selectedAccountId={sourceAccountId}
-              t={t}
-            />
-            {eligibleAccounts.length === 0 && !isInitialLoading ? (
-              <p className={styles['transfer-panel__hint']}>
-                {t('noActiveAccounts')}
-              </p>
-            ) : null}
-            {errors.sourceAccountId?.message ? (
-              <p className={styles['transfer-panel__error']}>
-                {errors.sourceAccountId.message}
-              </p>
-            ) : null}
-          </Field>
+          {!isTransfer ? (
+            <Field label={t('selectAccount')}>
+              <AccountPicker
+                accounts={eligibleAccounts}
+                disabled={isInitialLoading || eligibleAccounts.length === 0}
+                emptyLabel={t('noActiveAccounts')}
+                isLoading={isInitialLoading}
+                isOpen={openAccountMenu === 'source'}
+                onOpenChange={() => toggleAccountMenu('source')}
+                onSelect={(accountId) =>
+                  selectAccount('sourceAccountId', accountId)
+                }
+                selectedAccount={sourceAccount}
+                selectedAccountId={sourceAccountId}
+                t={t}
+              />
+              {eligibleAccounts.length === 0 && !isInitialLoading ? (
+                <p className={styles['transfer-panel__hint']}>
+                  {t('noActiveAccounts')}
+                </p>
+              ) : null}
+              {errors.sourceAccountId?.message ? (
+                <p className={styles['transfer-panel__error']}>
+                  {errors.sourceAccountId.message}
+                </p>
+              ) : null}
+            </Field>
+          ) : null}
+
+          {isTransfer ? (
+            <Field label={t('sourceCard')}>
+              <CardPicker
+                disabled={isInitialLoading || sourceCardOptions.length === 0}
+                emptyLabel={t('noActiveSourceCards')}
+                isOpen={openAccountMenu === 'sourceCard'}
+                onOpenChange={() => toggleAccountMenu('sourceCard')}
+                onSelect={selectSourceCard}
+                options={sourceCardOptions}
+                selectedOption={selectedSourceCardOption}
+                selectedCardId={sourceCardId}
+                t={t}
+              />
+              {sourceCardOptions.length === 0 && !isInitialLoading ? (
+                <p className={styles['transfer-panel__hint']}>
+                  {t('noActiveSourceCards')}
+                </p>
+              ) : null}
+              {errors.sourceCardId?.message ? (
+                <p className={styles['transfer-panel__error']}>
+                  {errors.sourceCardId.message}
+                </p>
+              ) : null}
+            </Field>
+          ) : null}
 
           {operation === 'BETWEEN_OWN_ACCOUNTS' ? (
             <Field label={t('toAccount')}>
@@ -545,9 +673,7 @@ export function TransferForm() {
           />
 
           <TransferSubmitBlock
-            disabled={
-              isSubmitting || isInitialLoading || eligibleAccounts.length === 0
-            }
+            disabled={isSubmitting || isInitialLoading || !hasAvailableSource}
             isSubmitting={isSubmitting}
             operation={operation}
             t={t}

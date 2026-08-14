@@ -132,6 +132,7 @@
   font-size: 13px;
   font-weight: var(--font-weight-bold, 700);
   color: var(--ui-shell-text);
+  text-align: left;
 }
 .transfer-panel__account-meta {
   margin-top: var(--spacing, 0.25rem);
@@ -139,6 +140,7 @@
   font-size: 11.5px;
   font-weight: var(--font-weight-semibold, 600);
   color: var(--ui-shell-text-subtle);
+  text-align: left;
 }
 .transfer-panel__chevron {
   width: 18px;

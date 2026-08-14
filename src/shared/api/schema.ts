@@ -28,7 +28,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['VerifyUser']
+    put: operations['verifyUser']
     post?: never
     delete?: never
     options?: never
@@ -44,7 +44,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['ResetPassword']
+    put: operations['resetPassword']
     post?: never
     delete?: never
     options?: never
@@ -60,7 +60,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['VerifyUserByManager']
+    put: operations['verifyUserByManager']
     post?: never
     delete?: never
     options?: never
@@ -76,7 +76,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['UnlockUserByManager']
+    put: operations['unlockUserByManager']
     post?: never
     delete?: never
     options?: never
@@ -92,7 +92,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['BlockUserByManager']
+    put: operations['blockUserByManager']
     post?: never
     delete?: never
     options?: never
@@ -108,7 +108,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['ChangePassword']
+    put: operations['changePassword']
     post?: never
     delete?: never
     options?: never
@@ -124,7 +124,7 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    put: operations['ChangeAuthUserRole']
+    put: operations['changeAuthUserRole']
     post?: never
     delete?: never
     options?: never
@@ -221,7 +221,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    post: operations['Signup']
+    post: operations['signup']
     delete?: never
     options?: never
     head?: never
@@ -237,7 +237,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    post: operations['Refresh']
+    post: operations['refresh']
     delete?: never
     options?: never
     head?: never
@@ -253,7 +253,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    post: operations['Login']
+    post: operations['login']
     delete?: never
     options?: never
     head?: never
@@ -269,7 +269,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    post: operations['ForgetPassword']
+    post: operations['forgetPassword']
     delete?: never
     options?: never
     head?: never
@@ -542,7 +542,7 @@ export interface paths {
     get?: never
     put?: never
     post?: never
-    delete: operations['Logout']
+    delete: operations['logout']
     options?: never
     head?: never
     patch?: never
@@ -574,6 +574,8 @@ export interface components {
       monthlyLimit?: number
       /** Format: date-time */
       expiresAt?: string
+      spendDailyLimit?: number
+      spendMonthlyLimit?: number
     }
     VerifyAuthUserByCodeRequestDto: {
       /** Format: uuid */
@@ -623,6 +625,25 @@ export interface components {
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
+    GetAccountWithCardsResponseDto: {
+      account?: components['schemas']['GetAccountResponseDto']
+      cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
+    }
+    GetCardByAccountIdResponseDto: {
+      /** Format: uuid */
+      cardId?: string
+      /** Format: uuid */
+      accountId?: string
+      pan?: string
+      /** @enum {string} */
+      status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
+      dailyLimit?: number
+      monthlyLimit?: number
+      /** Format: date-time */
+      expiresAt?: string
+      spendDailyLimit?: number
+      spendMonthlyLimit?: number
+    }
     GetUserInfoResponseDto: {
       /** Format: uuid */
       userProfileId?: string
@@ -636,11 +657,13 @@ export interface components {
     }
     GetUserInfoWithAccountResponseDto: {
       userInfo?: components['schemas']['GetUserInfoResponseDto']
-      accounts?: components['schemas']['GetAccountResponseDto'][]
+      accounts?: components['schemas']['GetAccountWithCardsResponseDto'][]
     }
     CreateTransactionRequestDto: {
       /** Format: uuid */
       sourceAccountId: string
+      /** Format: uuid */
+      sourceCardId: string
       /** Format: uuid */
       targetAccountId: string
       amount: number
@@ -665,6 +688,8 @@ export interface components {
       monthlyLimit?: number
       /** Format: date-time */
       expiresAt?: string
+      spendDailyLimit?: number
+      spendMonthlyLimit?: number
     }
     SignupRequestDto: {
       /** Format: email */
@@ -743,23 +768,6 @@ export interface components {
       body?: string
       type?: string
     }
-    GetAccountWithCardsResponseDto: {
-      account?: components['schemas']['GetAccountResponseDto']
-      cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
-    }
-    GetCardByAccountIdResponseDto: {
-      /** Format: uuid */
-      cardId?: string
-      /** Format: uuid */
-      accountId?: string
-      pan?: string
-      /** @enum {string} */
-      status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
-      dailyLimit?: number
-      monthlyLimit?: number
-      /** Format: date-time */
-      expiresAt?: string
-    }
   }
   responses: never
   parameters: never
@@ -793,7 +801,7 @@ export interface operations {
       }
     }
   }
-  VerifyUser: {
+  verifyUser: {
     parameters: {
       query?: never
       header?: never
@@ -815,7 +823,7 @@ export interface operations {
       }
     }
   }
-  ResetPassword: {
+  resetPassword: {
     parameters: {
       query?: never
       header?: never
@@ -837,7 +845,7 @@ export interface operations {
       }
     }
   }
-  VerifyUserByManager: {
+  verifyUserByManager: {
     parameters: {
       query?: never
       header?: never
@@ -857,7 +865,7 @@ export interface operations {
       }
     }
   }
-  UnlockUserByManager: {
+  unlockUserByManager: {
     parameters: {
       query?: never
       header?: never
@@ -879,7 +887,7 @@ export interface operations {
       }
     }
   }
-  BlockUserByManager: {
+  blockUserByManager: {
     parameters: {
       query?: never
       header?: never
@@ -901,7 +909,7 @@ export interface operations {
       }
     }
   }
-  ChangePassword: {
+  changePassword: {
     parameters: {
       query?: never
       header?: never
@@ -923,7 +931,7 @@ export interface operations {
       }
     }
   }
-  ChangeAuthUserRole: {
+  changeAuthUserRole: {
     parameters: {
       query?: never
       header?: never
@@ -1075,7 +1083,7 @@ export interface operations {
       }
     }
   }
-  Signup: {
+  signup: {
     parameters: {
       query?: never
       header?: never
@@ -1097,7 +1105,7 @@ export interface operations {
       }
     }
   }
-  Refresh: {
+  refresh: {
     parameters: {
       query?: never
       header?: never
@@ -1115,7 +1123,7 @@ export interface operations {
       }
     }
   }
-  Login: {
+  login: {
     parameters: {
       query?: never
       header?: never
@@ -1137,7 +1145,7 @@ export interface operations {
       }
     }
   }
-  ForgetPassword: {
+  forgetPassword: {
     parameters: {
       query?: never
       header?: never
@@ -1499,7 +1507,7 @@ export interface operations {
       }
     }
   }
-  Logout: {
+  logout: {
     parameters: {
       query?: never
       header?: never

@@ -80,6 +80,7 @@ export function RecipientFields({
             accounts={activeRecipientAccounts}
             emptyLabel={t('noActiveRecipientAccounts')}
             isOpen={isRecipientMenuOpen}
+            metaVariant="currency"
             onOpenChange={onRecipientMenuToggle}
             onSelect={onRecipientAccountSelect}
             selectedAccount={recipientAccount}

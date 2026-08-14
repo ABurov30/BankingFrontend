@@ -124,20 +124,22 @@ The UI should not use mock banking data. If the API does not return data, show a
 Money is displayed as currency code plus amount:
 
 ```text
-RUB 0.00
 USD 0.00
+EUR 0.00
 ```
 
 Do not use currency symbols like `$`.
 
 ## Cards And Accounts
 
-- Account currencies: `RUB`, `USD`, `EUR`, `CNY`, `GBP`
+- Account currencies: `USD`, `EUR`, `CNY`, `GBP`
 - Account types: `CHECKING`, `SAVINGS`
 - Account statuses: `ACTIVE`, `FROZEN`, `CLOSED`
 - Card statuses: `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`
 - `CHECKING` and `SAVINGS` accounts render debit cards.
-- Card limits are edited with the `/card/update` mutation.
+- Card limits are edited with the `/card/update` mutation. Card responses also
+  expose `spendDailyLimit` and `spendMonthlyLimit`, which drive limit usage
+  progress indicators.
 
 Forms use `react-hook-form`. Dialogs and modal overlays should render through React Portal into `document.body`.
 

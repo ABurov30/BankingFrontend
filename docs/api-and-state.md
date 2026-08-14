@@ -51,10 +51,10 @@ values.
 
 Current frontend enum domains:
 
-- `AccountCurrency`: `RUB`, `USD`, `EUR`, `CNY`, `GBP`
+- `AccountCurrency`: `USD`, `EUR`, `CNY`, `GBP`
 - `AccountType`: `CHECKING`, `SAVINGS`
 - `AccountStatus`: `ACTIVE`, `FROZEN`, `CLOSED`
-- `AuthUserStatus`: `ACTIVE`, `BLOCKED`, `PENDING`
+- `AuthUserStatus`: `ACTIVE`, `BLOCKED`, `FORGET_PASSWORD`, `PENDING`
 - `Role`: `USER`, `MANAGER`, `ADMIN`
 - `CardStatus`: `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`
 - `UserProfileStatus`: `ACTIVE`, `BLOCKED`, `PENDING`
@@ -74,7 +74,7 @@ Current frontend enum domains:
 - Current user info.
 - Manager all-users list.
 - Manager single-user details.
-- User lookup by email with accounts for external transfers.
+- User lookup by email with accounts-with-cards for external transfers.
 - Normalization from backend auth/user response shape into `UserInfo`.
 
 `accountApi.ts` owns account operations:
@@ -94,6 +94,14 @@ Current frontend enum domains:
 
 - Get transactions by user ID.
 - Create transfer transaction.
+
+`CreateTransactionRequestDto` requires `sourceAccountId`, `sourceCardId`,
+`targetAccountId`, `amount`, `currency`, and `idempotencyKey`. Transfer flows
+must resolve an active source card for the selected source account before
+calling the mutation. The selected source card identifies the payment
+instrument, but available funds are still calculated from the linked source
+account. In the UI, `sourceAccountId` is derived from the selected source card
+for transfer operations.
 
 `notificationApi.ts` owns notification operations:
 
@@ -179,11 +187,23 @@ The hook:
 Money formatting must use currency code plus amount:
 
 ```text
-RUB 0.00
 USD 0.00
+EUR 0.00
 ```
 
 Do not render currency symbols such as `$`.
 
 Use `src/lib/formatMoney.ts` and `src/lib/getAvailableFunds.ts` for shared
 money and balance calculations.
+
+## Card Limit Usage Fields
+
+Card response DTOs include:
+
+- `dailyLimit`
+- `monthlyLimit`
+- `spendDailyLimit`
+- `spendMonthlyLimit`
+
+The card limits UI uses the spent fields to calculate usage progress against
+the configured daily and monthly limits.

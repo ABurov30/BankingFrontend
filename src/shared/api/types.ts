@@ -34,9 +34,10 @@ export type GetAccountResponseDto = Omit<
 }
 export type GetAccountWithCardsResponseDto = Omit<
   ApiSchema['GetAccountWithCardsResponseDto'],
-  'account'
+  'account' | 'cards'
 > & {
   account?: GetAccountResponseDto
+  cards?: GetCardByAccountIdResponseDto[]
 }
 export type GetCardByAccountIdResponseDto =
   ApiSchema['GetCardByAccountIdResponseDto']
@@ -48,8 +49,13 @@ export type NotificationResponseDto = ApiSchema['NotificationResponseDto']
 export type MarkNotificationsAsReadedRequestDto =
   ApiSchema['MarkNotificationsAsReadedRequestDto']
 export type GetUserInfoResponseDto = ApiSchema['GetUserInfoResponseDto']
-export type GetUserInfoWithAccountResponseDto =
-  ApiSchema['GetUserInfoWithAccountResponseDto']
+export type GetUserInfoWithAccountResponseDto = Omit<
+  ApiSchema['GetUserInfoWithAccountResponseDto'],
+  'accounts' | 'userInfo'
+> & {
+  accounts?: GetAccountWithCardsResponseDto[]
+  userInfo?: GetUserInfoResponseDto
+}
 export type GetUserInfoWithAuthInfoResponseDto =
   ApiSchema['GetUserInfoWithAuthInfoResponseDto']
 export type VerifyAuthUserByCodeRequestDto =
@@ -60,10 +66,10 @@ export type ChangeAuthUserRoleRequestDto =
 export type BlockAuthUserRequestDto = ApiSchema['BlockAuthUserRequestDto']
 export type UnlockAuthUserRequestDto = ApiSchema['UnlockAuthUserRequestDto']
 
-export type SignupOperation = ApiOperation['Signup']
-export type LoginOperation = ApiOperation['Login']
-export type LogoutOperation = ApiOperation['Logout']
-export type RefreshOperation = ApiOperation['Refresh']
+export type SignupOperation = ApiOperation['signup']
+export type LoginOperation = ApiOperation['login']
+export type LogoutOperation = ApiOperation['logout']
+export type RefreshOperation = ApiOperation['refresh']
 export type GetUserInfoOperation = ApiOperation['getUserInfo']
 export type GetUserInfoWithAccountsByEmailOperation =
   ApiOperation['getUserInfoWithAccountsByEmail']
@@ -85,12 +91,12 @@ export type CreateCardOperation = ApiOperation['createCard']
 export type UpdateCardOperation = ApiOperation['updateCard']
 export type GetNotificationsOperation = ApiOperation['getNotifications']
 export type MarkNotificationsAsReadedOperation = ApiOperation['markAsReaded']
-export type VerifyUserOperation = ApiOperation['VerifyUser']
-export type VerifyUserByManagerOperation = ApiOperation['VerifyUserByManager']
-export type UnlockUserByManagerOperation = ApiOperation['UnlockUserByManager']
-export type BlockUserByManagerOperation = ApiOperation['BlockUserByManager']
-export type ChangePasswordOperation = ApiOperation['ChangePassword']
-export type ChangeAuthUserRoleOperation = ApiOperation['ChangeAuthUserRole']
+export type VerifyUserOperation = ApiOperation['verifyUser']
+export type VerifyUserByManagerOperation = ApiOperation['verifyUserByManager']
+export type UnlockUserByManagerOperation = ApiOperation['unlockUserByManager']
+export type BlockUserByManagerOperation = ApiOperation['blockUserByManager']
+export type ChangePasswordOperation = ApiOperation['changePassword']
+export type ChangeAuthUserRoleOperation = ApiOperation['changeAuthUserRole']
 
 export type SignupRequest =
   SignupOperation['requestBody']['content']['application/json']
@@ -124,7 +130,7 @@ export type MarkNotificationsAsReadedRequest =
 export type GetUserInfoWithAuthInfoResponse =
   GetUserInfoOperation['responses'][200]['content']['*/*']
 export type GetUserInfoWithAccountsByEmailResponse =
-  GetUserInfoWithAccountsByEmailOperation['responses'][200]['content']['*/*']
+  GetUserInfoWithAccountResponseDto
 export type GetUserInfoByManagerResponse =
   GetUserInfoByManagerOperation['responses'][200]['content']['*/*']
 export type GetAllUserInfoWithAuthInfoResponse =

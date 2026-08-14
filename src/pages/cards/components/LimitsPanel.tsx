@@ -13,6 +13,7 @@ import type {
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from '../styles.module.css'
 import {
+  getLimitUsageWidth,
   getLimitValue,
   LimitActions,
   LimitItem,
@@ -58,7 +59,7 @@ export function LimitsPanel({
           : getLimitValue(card?.dailyLimit),
         currency,
       ),
-      width: card?.dailyLimit ? '100%' : '0%',
+      width: getLimitUsageWidth(card?.spendDailyLimit, card?.dailyLimit),
     },
     {
       colorClassName: styles['cards__card--secondary'],
@@ -71,7 +72,7 @@ export function LimitsPanel({
           : getLimitValue(card?.monthlyLimit),
         currency,
       ),
-      width: card?.monthlyLimit ? '100%' : '0%',
+      width: getLimitUsageWidth(card?.spendMonthlyLimit, card?.monthlyLimit),
     },
   ]
 

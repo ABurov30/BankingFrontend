@@ -8,12 +8,15 @@ import type { GetAccountResponseDto } from '@/shared/api/types'
 import type { TranslationFunction } from '../types'
 import styles from '../styles.module.css'
 
+type AccountPickerMetaVariant = 'balance' | 'currency'
+
 export function AccountPicker({
   accounts,
   disabled = false,
   emptyLabel,
   isLoading = false,
   isOpen,
+  metaVariant = 'balance',
   onOpenChange,
   onSelect,
   selectedAccount,
@@ -25,6 +28,7 @@ export function AccountPicker({
   emptyLabel: string
   isLoading?: boolean
   isOpen: boolean
+  metaVariant?: AccountPickerMetaVariant
   onOpenChange: () => void
   onSelect: (accountId: string) => void
   selectedAccount?: GetAccountResponseDto
@@ -44,6 +48,7 @@ export function AccountPicker({
           account={selectedAccount}
           emptyLabel={emptyLabel}
           isLoading={isLoading}
+          metaVariant={metaVariant}
           t={t}
         />
         <ChevronDown className={styles['transfer-panel__chevron']} />
@@ -60,7 +65,12 @@ export function AccountPicker({
               role="option"
               type="button"
             >
-              <AccountSummary account={account} emptyLabel={emptyLabel} t={t} />
+              <AccountSummary
+                account={account}
+                emptyLabel={emptyLabel}
+                metaVariant={metaVariant}
+                t={t}
+              />
             </button>
           ))}
         </div>
@@ -73,11 +83,13 @@ function AccountSummary({
   account,
   emptyLabel,
   isLoading = false,
+  metaVariant,
   t,
 }: {
   account?: GetAccountResponseDto
   emptyLabel: string
   isLoading?: boolean
+  metaVariant: AccountPickerMetaVariant
   t: TranslationFunction
 }) {
   const availableFunds = getAvailableFunds(account)
@@ -99,12 +111,14 @@ function AccountSummary({
               {account?.accountNumber ?? emptyLabel}
             </p>
             <p className={styles['transfer-panel__account-meta']}>
-              {availableFunds == null
-                ? t('balanceUnavailable')
-                : formatMoney(
-                    availableFunds,
-                    account?.currency ?? AccountCurrency.USD,
-                  )}
+              {metaVariant === 'currency'
+                ? `${t('currency')}: ${account?.currency ?? '--'}`
+                : availableFunds == null
+                  ? t('balanceUnavailable')
+                  : formatMoney(
+                      availableFunds,
+                      account?.currency ?? AccountCurrency.USD,
+                    )}
             </p>
           </>
         )}

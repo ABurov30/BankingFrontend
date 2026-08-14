@@ -95,7 +95,6 @@ Account types:
 
 Account currencies:
 
-- `RUB`
 - `USD`
 - `EUR`
 - `CNY`
@@ -117,6 +116,8 @@ Rules:
 - Interactive status badges should show a chevron.
 - `CHECKING` and `SAVINGS` accounts render `DEBIT` cards.
 - Card limits are edited through the card update mutation.
+- Card limit usage indicators should use `spendDailyLimit` and
+  `spendMonthlyLimit` from card responses against the configured limits.
 
 ## Transfer Panel UI
 
@@ -133,6 +134,16 @@ Supported flows:
 The form is decomposed into focused presentation components under
 `src/components/TransferPanel/components`, while `TransferForm.tsx` keeps the
 workflow and mutation logic.
+
+Transaction creation requires a `sourceCardId`. The transfer flow resolves an
+active card from the selected source account before showing the confirmation
+step. Users choose the source card explicitly; transfer forms should not render
+a separate `From account` selector. The card picker shows account balance from
+the linked source account and card limit information from the selected card.
+Recipient destinations stay account-based: external transfer recipients choose
+an active recipient account, not a recipient card. The recipient account field
+shows the recipient account currency. If no active source card exists, the form
+blocks the transfer and shows a validation message.
 
 ## Toasts
 

@@ -68,10 +68,10 @@ The preferred dev hostname is `buro-bank.ru`.
 
 Current frontend enums:
 
-- `AccountCurrency`: `RUB`, `USD`, `EUR`, `CNY`, `GBP`
+- `AccountCurrency`: `USD`, `EUR`, `CNY`, `GBP`
 - `AccountType`: `CHECKING`, `SAVINGS`
 - `AccountStatus`: `ACTIVE`, `FROZEN`, `CLOSED`
-- `AuthUserStatus`: `ACTIVE`, `BLOCKED`, `PENDING`
+- `AuthUserStatus`: `ACTIVE`, `BLOCKED`, `FORGET_PASSWORD`, `PENDING`
 - `Role`: `USER`, `MANAGER`, `ADMIN`
 - `CardStatus`: `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`
 - `UserProfileStatus`: `ACTIVE`, `BLOCKED`, `PENDING`
@@ -83,13 +83,16 @@ Current frontend enums:
 - Forms should use `react-hook-form`.
 - Modals/dialogs should render via React Portal into `document.body`, with full-screen overlay shadow/backdrop.
 - Custom dropdowns should match the app style; avoid native select elements for visible app controls.
-- Money should be formatted as `CODE amount`, for example `RUB 0.00` or `USD 0.00`. Do not use currency symbols like `$`.
+- Money should be formatted as `CODE amount`, for example `USD 0.00` or `EUR 0.00`. Do not use currency symbols like `$`.
 - Cards:
   - Card status values are only `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`.
   - Do not use a separate "virtual card" style/status.
   - Card status badge is interactive for `ACTIVE`, `BLOCKED`, `FROZEN` and should show a chevron.
+  - Card responses include `spendDailyLimit` and `spendMonthlyLimit`; use them for card limit usage indicators.
   - `CHECKING` and `SAVINGS` accounts render `DEBIT` cards.
 - Account creation opens a form where the user selects account currency and account type.
+- Transaction creation requires a `sourceCardId`; transfer flows must resolve an active card for the selected source account before sending `/transaction/creat-transaction`.
+- Transfer forms should let the user choose the source card explicitly; do not render a separate `From account` selector for transfer flows. Display card balance from the linked source account, include card limit info, keep recipient destination selection account-based, and show the recipient account currency in the recipient account field.
 
 ## Git Safety
 

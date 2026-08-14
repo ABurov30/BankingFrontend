@@ -73,6 +73,10 @@ export function TransferConfirmationDialog({
               confirmation.sourceAccount.accountNumber ?? t('noAccountSelected')
             }
           />
+          <ConfirmationRow
+            label={t('sourceCard')}
+            value={getCardLabel(confirmation.sourceCard)}
+          />
           <ConfirmationRow label={t('to')} value={destinationAccountNumber} />
           {confirmation.recipient ? (
             <ConfirmationRow
@@ -120,4 +124,12 @@ function ConfirmationRow({ label, value }: { label: string; value: string }) {
       <strong>{value}</strong>
     </div>
   )
+}
+
+function getCardLabel(card: TransferConfirmation['sourceCard']) {
+  if (card.pan) {
+    return `Buro card •• ${card.pan.slice(-4)}`
+  }
+
+  return card.cardId ? `Buro card · ${card.cardId.slice(0, 8)}` : '—'
 }
