@@ -22,8 +22,8 @@ authenticated banking workflows for users, managers, and administrators.
 
 The application currently supports:
 
-- Authentication: login, signup, logout, user verification, and password
-  changes.
+- Authentication: login, Google OAuth redirect login, signup, logout, user
+  verification, and password changes.
 - Dashboard views for account and notification summaries.
 - Account management: account list, filtering, creation, freezing, unfreezing,
   top-up, withdraw, and transfers.

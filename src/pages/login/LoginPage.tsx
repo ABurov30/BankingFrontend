@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useAppDispatch } from '@/app/hooks'
 import { showToast } from '@/features/toast/toastSlice'
 import { useLoginMutation } from '@/shared/api/authApi'
+import { getApiEndpointUrl } from '@/shared/api/baseApi'
 import { getApiErrorMessage } from '@/shared/api/error'
 import { useI18n } from '@/shared/i18n/useI18n'
 import { LoginForm, LoginHero, type LoginFormValues } from './components'
@@ -12,6 +14,7 @@ function LoginPage() {
   const dispatch = useAppDispatch()
   const { t } = useI18n()
   const navigate = useNavigate()
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false)
   const [login, { isLoading }] = useLoginMutation()
 
   const onSubmit = async (values: LoginFormValues) => {
@@ -29,11 +32,21 @@ function LoginPage() {
     }
   }
 
+  const onGoogleLogin = () => {
+    setIsGoogleLoginLoading(true)
+    window.location.assign(getApiEndpointUrl('/auth/oauth/google'))
+  }
+
   return (
     <main className={`${styles['login']} ui-enter`}>
       <section className={styles['login__shell']}>
         <LoginHero />
-        <LoginForm isLoading={isLoading} onSubmit={onSubmit} />
+        <LoginForm
+          isGoogleLoginLoading={isGoogleLoginLoading}
+          isLoading={isLoading}
+          onGoogleLogin={onGoogleLogin}
+          onSubmit={onSubmit}
+        />
       </section>
     </main>
   )

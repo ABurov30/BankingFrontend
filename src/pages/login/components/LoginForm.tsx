@@ -10,10 +10,14 @@ import styles from '../styles.module.css'
 export type LoginFormValues = LoginRequest
 
 export function LoginForm({
+  isGoogleLoginLoading,
   isLoading,
+  onGoogleLogin,
   onSubmit,
 }: {
+  isGoogleLoginLoading: boolean
   isLoading: boolean
+  onGoogleLogin: () => void
   onSubmit: (values: LoginFormValues) => void
 }) {
   const { t } = useI18n()
@@ -91,11 +95,35 @@ export function LoginForm({
 
         <button
           className={`${styles['login__submit']} ui-lift`}
-          disabled={isSubmitting || isLoading}
+          disabled={isSubmitting || isLoading || isGoogleLoginLoading}
           type="submit"
         >
           {isLoading ? t('signingIn') : t('signIn')}
         </button>
+
+        <div className={styles['login__divider']}>
+          <span className={styles['login__divider-line']} />
+          <span className={styles['login__divider-label']}>
+            {t('orContinueWith')}
+          </span>
+          <span className={styles['login__divider-line']} />
+        </div>
+
+        <div className={styles['login__social-list']}>
+          <button
+            className={styles['login__social-button']}
+            disabled={isSubmitting || isLoading || isGoogleLoginLoading}
+            onClick={onGoogleLogin}
+            type="button"
+          >
+            <span aria-hidden="true" className={styles['login__google-icon']}>
+              G
+            </span>
+            {isGoogleLoginLoading
+              ? t('redirectingToGoogle')
+              : t('continueWithGoogle')}
+          </button>
+        </div>
 
         <p className={styles['login__signup-copy']}>
           {t('newToBuro')}{' '}

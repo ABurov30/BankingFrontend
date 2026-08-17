@@ -7,8 +7,18 @@ import {
   type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react'
 
+export const apiBaseUrl = import.meta.env.VITE_API_URL ?? '/api'
+
+export function getApiEndpointUrl(path: `/${string}`) {
+  const baseUrl = apiBaseUrl.endsWith('/')
+    ? apiBaseUrl.slice(0, -1)
+    : apiBaseUrl
+
+  return `${baseUrl}${path}`
+}
+
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL ?? '/api',
+  baseUrl: apiBaseUrl,
   credentials: 'include',
   prepareHeaders: (headers) => {
     headers.set('Accept', 'application/json')

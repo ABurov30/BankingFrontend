@@ -468,6 +468,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/auth/oauth/google': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['googleLogin']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/auth/health': {
     parameters: {
       query?: never
@@ -610,25 +626,6 @@ export interface components {
       /** Format: email */
       email: string
     }
-    GetAccountResponseDto: {
-      /** Format: uuid */
-      accountId?: string
-      /** Format: uuid */
-      ownerUserId?: string
-      accountNumber?: string
-      /** @enum {string} */
-      type?: 'CHECKING' | 'SAVINGS'
-      /** @enum {string} */
-      status?: 'ACTIVE' | 'FROZEN' | 'CLOSED'
-      availableBalance?: number
-      reservedBalance?: number
-      /** @enum {string} */
-      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
-    }
-    GetAccountWithCardsResponseDto: {
-      account?: components['schemas']['GetAccountResponseDto']
-      cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
-    }
     GetCardByAccountIdResponseDto: {
       /** Format: uuid */
       cardId?: string
@@ -644,6 +641,23 @@ export interface components {
       spendDailyLimit?: number
       spendMonthlyLimit?: number
     }
+    GetUserInfoAccountResponseDto: {
+      /** Format: uuid */
+      accountId?: string
+      /** Format: uuid */
+      ownerUserId?: string
+      accountNumber?: string
+      /** @enum {string} */
+      type?: 'CHECKING' | 'SAVINGS'
+      /** @enum {string} */
+      status?: 'ACTIVE' | 'FROZEN' | 'CLOSED'
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
+    }
+    GetUserInfoAccountWithCardsResponseDto: {
+      account?: components['schemas']['GetUserInfoAccountResponseDto']
+      cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
+    }
     GetUserInfoResponseDto: {
       /** Format: uuid */
       userProfileId?: string
@@ -657,7 +671,7 @@ export interface components {
     }
     GetUserInfoWithAccountResponseDto: {
       userInfo?: components['schemas']['GetUserInfoResponseDto']
-      accounts?: components['schemas']['GetAccountWithCardsResponseDto'][]
+      accounts?: components['schemas']['GetUserInfoAccountWithCardsResponseDto'][]
     }
     CreateTransactionRequestDto: {
       /** Format: uuid */
@@ -711,6 +725,21 @@ export interface components {
       /** Format: uuid */
       accountId: string
       amount: number
+    }
+    GetAccountResponseDto: {
+      /** Format: uuid */
+      accountId?: string
+      /** Format: uuid */
+      ownerUserId?: string
+      accountNumber?: string
+      /** @enum {string} */
+      type?: 'CHECKING' | 'SAVINGS'
+      /** @enum {string} */
+      status?: 'ACTIVE' | 'FROZEN' | 'CLOSED'
+      availableBalance?: number
+      reservedBalance?: number
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
     CreateAccountRequestDto: {
       /** Format: uuid */
@@ -767,6 +796,10 @@ export interface components {
       title?: string
       body?: string
       type?: string
+    }
+    GetAccountWithCardsResponseDto: {
+      account?: components['schemas']['GetAccountResponseDto']
+      cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
     }
   }
   responses: never
@@ -1422,6 +1455,24 @@ export interface operations {
         content: {
           '*/*': string
         }
+      }
+    }
+  }
+  googleLogin: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }

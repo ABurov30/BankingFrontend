@@ -349,7 +349,7 @@
 }
 .login__social-list {
   gap: calc(var(--spacing, 0.25rem) * 3);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   display: grid;
 }
 .login__social-button {
@@ -387,6 +387,10 @@
 }
 .login__social-button:hover {
   border-color: var(--ui-shell-text-faint);
+}
+.login__social-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 .login__social-button:focus-visible {
   --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0

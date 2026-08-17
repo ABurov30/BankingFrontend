@@ -10,6 +10,8 @@ domain state that must be available outside a single query cache entry.
 Important behavior:
 
 - `baseUrl` is `import.meta.env.VITE_API_URL ?? '/api'`.
+- `getApiEndpointUrl(path)` builds browser navigation URLs from the same base
+  for redirect-based flows such as Google OAuth.
 - Requests include credentials with `credentials: 'include'`.
 - Requests set `Accept: application/json` and `Content-Type:
 application/json`.
@@ -61,9 +63,10 @@ Current frontend enum domains:
 
 ## Endpoint Modules
 
-`authApi.ts` owns authentication and manager/admin auth mutations:
+`authApi.ts` owns authentication and manager/admin auth endpoints:
 
-- Login, logout, refresh, signup, user verification.
+- Login, Google OAuth login redirect, logout, refresh, signup, user
+  verification.
 - Password change.
 - Manager block/unlock/verify user.
 - Admin role changes.

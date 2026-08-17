@@ -57,6 +57,8 @@ Common rules:
 - Validate required values before mutation calls.
 - Surface API failures with `showToast` and `getApiErrorMessage`.
 - Disable submit buttons while mutations are in flight.
+- Redirect-based sign-in actions, such as Google OAuth, should disable related
+  login controls while the browser navigation is being started.
 
 ## Dialogs And Portals
 

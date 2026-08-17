@@ -67,6 +67,13 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Auth'],
     }),
+    googleLogin: builder.query<void, void>({
+      query: () => ({
+        method: 'GET',
+        url: '/auth/oauth/google',
+      }),
+      providesTags: ['Auth'],
+    }),
     login: builder.mutation<void, LoginRequest>({
       query: (body) => ({
         body,
@@ -151,6 +158,7 @@ export const {
   useBlockUserByManagerMutation,
   useChangeAuthUserRoleMutation,
   useChangePasswordMutation,
+  useLazyGoogleLoginQuery,
   useLoginMutation,
   useLogoutMutation,
   useRefreshMutation,

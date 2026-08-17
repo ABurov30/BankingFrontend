@@ -68,6 +68,7 @@ export type UnlockAuthUserRequestDto = ApiSchema['UnlockAuthUserRequestDto']
 
 export type SignupOperation = ApiOperation['signup']
 export type LoginOperation = ApiOperation['login']
+export type GoogleLoginOperation = ApiOperation['googleLogin']
 export type LogoutOperation = ApiOperation['logout']
 export type RefreshOperation = ApiOperation['refresh']
 export type GetUserInfoOperation = ApiOperation['getUserInfo']
