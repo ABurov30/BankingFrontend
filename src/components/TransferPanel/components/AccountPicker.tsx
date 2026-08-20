@@ -1,7 +1,7 @@
 import { ChevronDown, Landmark } from 'lucide-react'
 
 import { Skeleton } from '@/components/Skeleton'
-import { formatMoney } from '@/lib/formatMoney'
+import { formatCurrencySymbol, formatMoney } from '@/lib/formatMoney'
 import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { AccountCurrency } from '@/shared/api/enums'
 import type { GetAccountResponseDto } from '@/shared/api/types'
@@ -112,7 +112,11 @@ function AccountSummary({
             </p>
             <p className={styles['transfer-panel__account-meta']}>
               {metaVariant === 'currency'
-                ? `${t('currency')}: ${account?.currency ?? '--'}`
+                ? `${t('currency')}: ${
+                    account?.currency
+                      ? formatCurrencySymbol(account.currency)
+                      : '--'
+                  }`
                 : availableFunds == null
                   ? t('balanceUnavailable')
                   : formatMoney(

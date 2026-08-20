@@ -132,7 +132,7 @@
   overflow-x: auto;
 }
 .transactions__table-head {
-  min-width: 760px;
+  min-width: 930px;
 }
 .transactions__empty-state {
   padding: 22px;
@@ -155,10 +155,11 @@
   letter-spacing: 0.88px;
   color: var(--ui-shell-text-subtle);
   text-transform: uppercase;
-  grid-template-columns: 2.1fr 1.3fr 1fr 1.1fr 1fr;
+  grid-template-columns: 2.1fr 1.3fr 1fr 1.1fr 1fr 128px;
   padding-inline: 22px;
   display: grid;
 }
+.transactions__actions-head,
 .transactions__amount-head {
   text-align: right;
 }
@@ -295,10 +296,142 @@
   min-height: 65px;
   padding-inline: 22px;
   padding-block: calc(var(--spacing, 0.25rem) * 3.5);
-  grid-template-columns: 2.1fr 1.3fr 1fr 1.1fr 1fr;
+  grid-template-columns: 2.1fr 1.3fr 1fr 1.1fr 1fr 128px;
   display: grid;
 }
 .transactions__row:last-child {
   border-bottom-style: var(--tw-border-style);
   border-bottom-width: 0;
+}
+.transactions__track-button {
+  width: 128px;
+  height: 36px;
+  justify-content: center;
+  align-items: center;
+  justify-self: end;
+  gap: 7px;
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border);
+  background-color: var(--ui-panel-strong);
+  color: var(--ui-shell-text);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: var(--font-weight-bold, 700);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+  display: flex;
+}
+.transactions__track-button:hover:not(:disabled) {
+  border-color: var(--ui-brand);
+  background-color: var(--ui-brand-soft);
+  color: var(--ui-brand);
+}
+.transactions__track-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.transactions__track-icon {
+  width: 15px;
+  height: 15px;
+}
+.transactions__dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background-color: rgba(6, 10, 22, 0.68);
+  backdrop-filter: blur(10px);
+}
+.transactions__dialog {
+  width: min(100%, 560px);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border);
+  background-color: var(--ui-panel);
+  border-radius: 18px;
+  padding: 22px;
+  color: var(--ui-shell-text);
+}
+.transactions__dialog-header {
+  display: grid;
+  grid-template-columns: 42px 1fr 36px;
+  align-items: center;
+  gap: 12px;
+}
+.transactions__dialog-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background-color: var(--ui-brand-soft);
+  color: var(--ui-brand);
+}
+.transactions__dialog-heading {
+  min-width: 0;
+}
+.transactions__dialog-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold, 700);
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+.transactions__dialog-subtitle {
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ui-shell-text-subtle);
+}
+.transactions__dialog-close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background-color: var(--ui-panel-strong);
+  color: var(--ui-shell-text-secondary);
+}
+.transactions__dialog-close:hover {
+  color: var(--ui-shell-text);
+}
+.transactions__dialog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+@media (max-width: 34rem) {
+  .transactions__dialog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.transactions__dialog-grid > div {
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  border-color: var(--ui-shell-border-soft);
+  background-color: var(--ui-panel-strong);
+  border-radius: 14px;
+  padding: 14px;
+}
+.transactions__dialog-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10.5px;
+  font-weight: var(--font-weight-bold, 700);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ui-shell-text-subtle);
+}
+.transactions__dialog-value {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--ui-shell-text);
 }

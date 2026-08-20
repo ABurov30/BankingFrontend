@@ -16,7 +16,8 @@ describe('parseNotificationEvent', () => {
         body: 'Your account was frozen',
         title: 'Account frozen',
       },
-      shouldRefreshAccounts: false,
+      shouldRefreshAccounts: true,
+      shouldRefreshTransactions: false,
     })
   })
 
@@ -33,8 +34,14 @@ describe('parseNotificationEvent', () => {
     expect(first.eventId).toBeUndefined()
     expect(second.eventId).toBeUndefined()
     expect(first.notification).toEqual(second.notification)
-    expect(first.shouldRefreshAccounts).toBe(false)
-    expect(second.shouldRefreshAccounts).toBe(false)
+    expect(first).toMatchObject({
+      shouldRefreshAccounts: true,
+      shouldRefreshTransactions: false,
+    })
+    expect(second).toMatchObject({
+      shouldRefreshAccounts: true,
+      shouldRefreshTransactions: false,
+    })
   })
 
   it('supports plain-text messages while producing a renderable notification', () => {
@@ -45,10 +52,17 @@ describe('parseNotificationEvent', () => {
         title: 'Notification',
       },
       shouldRefreshAccounts: false,
+      shouldRefreshTransactions: false,
     })
   })
 
   it.each([
+    'ACCOUNT_CREATED',
+    'ACCOUNT_FROZEN',
+    'ACCOUNT_UNFROZEN',
+    'CARD_CREATED',
+    'CARD_FROZEN',
+    'CARD_UNFROZEN',
     'TRANSACTION_FAILED',
     'TRANSACTION_COMPLETED',
     'TRANSACTION_RECEIVED',
@@ -59,6 +73,19 @@ describe('parseNotificationEvent', () => {
         body: 'Your account balance has changed',
         title: eventType,
       }).shouldRefreshAccounts,
+    ).toBe(true)
+  })
+
+  it.each([
+    'TRANSACTION_FAILED',
+    'TRANSACTION_COMPLETED',
+    'TRANSACTION_RECEIVED',
+  ])('marks %s events for a transaction refresh', (eventType) => {
+    expect(
+      parseNotificationEvent({
+        body: 'Your transaction state has changed',
+        notificationType: eventType,
+      }).shouldRefreshTransactions,
     ).toBe(true)
   })
 })

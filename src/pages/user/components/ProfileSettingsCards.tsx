@@ -1,3 +1,4 @@
+import type { SocialAccountResponse } from '@/shared/api/types'
 import styles from '../styles.module.css'
 import { PersonalInformationCard } from './PersonalInformationCard'
 import { PreferencesCard, SecurityCard, SignInMethodsCard } from './settings'
@@ -7,10 +8,12 @@ export function ProfileSettingsCards({
   authUserId,
   isLoading = false,
   personalInfo,
+  socialAccounts,
 }: {
   authUserId?: string
   isLoading?: boolean
   personalInfo: PersonalInfoItem[]
+  socialAccounts?: SocialAccountResponse[]
 }) {
   return (
     <div className={styles['user__stats']}>
@@ -24,7 +27,7 @@ export function ProfileSettingsCards({
 
       <div className={styles['user__stat-card']}>
         <PreferencesCard />
-        <SignInMethodsCard />
+        <SignInMethodsCard socialAccounts={socialAccounts} />
       </div>
     </div>
   )

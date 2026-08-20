@@ -1,6 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
 import { skipToken } from '@reduxjs/toolkit/query'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import {
@@ -9,14 +9,21 @@ import {
 } from '@/features/rightPanel/rightPanelSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { useGetTransactionsByUserIdQuery } from '@/shared/api/transactionApi'
+import type { TransactionResponseDto } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
-import { Filters, TransactionsTable } from './components'
+import {
+  Filters,
+  TransactionStatusDialog,
+  TransactionsTable,
+} from './components'
 import styles from './styles.module.css'
 
 function TransactionsPage() {
   const dispatch = useAppDispatch()
   const { t } = useI18n()
   const user = useAppSelector(selectCurrentUser)
+  const [trackedTransaction, setTrackedTransaction] =
+    useState<TransactionResponseDto | null>(null)
   const { data: transactions = [], isFetching } =
     useGetTransactionsByUserIdQuery(user?.userProfileId ?? skipToken)
 
@@ -46,10 +53,18 @@ function TransactionsPage() {
           <Filters />
           <TransactionsTable
             isLoading={isFetching}
+            onTrackTransaction={setTrackedTransaction}
             transactions={transactions}
           />
         </div>
       </div>
+
+      {trackedTransaction ? (
+        <TransactionStatusDialog
+          onClose={() => setTrackedTransaction(null)}
+          transaction={trackedTransaction}
+        />
+      ) : null}
     </section>
   )
 }

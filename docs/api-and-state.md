@@ -35,6 +35,10 @@ When a request returns `401`:
    - `user/clearCurrentUser`
 5. The browser redirects to `/login` unless it is already there.
 
+When the current user profile request `GET /user/user-info` returns `500`, the
+same session-expired cleanup and `/login` redirect run immediately without a
+refresh attempt.
+
 Do not bypass this base API for normal backend calls.
 
 ## Generated API Contracts
@@ -75,6 +79,8 @@ Current frontend enum domains:
 `userApi.ts` owns user profile reads and recipient lookup:
 
 - Current user info.
+- Social sign-in accounts from the auth/user wrapper are normalized into the
+  current `UserInfo` model.
 - Manager all-users list.
 - Manager single-user details.
 - User lookup by email with accounts-with-cards for external transfers.
@@ -181,20 +187,49 @@ The hook:
 - Subscribes to `/user/queue/notifications`.
 - Parses JSON and plain text events.
 - De-duplicates events by event ID.
-- Optionally refreshes accounts when the event says account data changed.
+- Invalidates and refetches account/card state for account, card, and
+  transaction notification types that can change balances, account status, card
+  status, or card limit usage.
+- Invalidates and refetches current user transactions for transaction status
+  notification types.
 - Adds live notifications to the RTK Query notification cache.
 - Shows a success toast for received notifications.
 
-## Data Formatting Rules
+## Transaction Status WebSocket
 
-Money formatting must use currency code plus amount:
+`src/pages/transactions/components/TransactionStatusDialog.tsx` opens a STOMP
+connection while the transaction tracking modal is mounted.
+
+Default websocket URL:
 
 ```text
-USD 0.00
-EUR 0.00
+ws(s)://<current-host>/api/ws
 ```
 
-Do not render currency symbols such as `$`.
+Override with `VITE_TRANSACTIONS_WS_URL`. If it is not set, the dialog falls
+back to `VITE_NOTIFICATIONS_WS_URL`.
+
+The dialog subscribes to:
+
+```text
+/user/queue/transactions/{transactionId}
+```
+
+Incoming JSON payloads are merged into the selected transaction snapshot so the
+modal can show live status, amount, currency, source account, and target account
+updates.
+
+## Data Formatting Rules
+
+Money formatting must use currency symbol plus amount:
+
+```text
+$ 0.00
+€ 0.00
+```
+
+Keep API/runtime currency enum values as `USD`, `EUR`, `CNY`, and `GBP`, but
+render user-facing currency labels as symbols.
 
 Use `src/lib/formatMoney.ts` and `src/lib/getAvailableFunds.ts` for shared
 money and balance calculations.

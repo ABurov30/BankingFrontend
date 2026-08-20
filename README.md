@@ -35,15 +35,15 @@ npm run api:types
 npm run dev
 ```
 
-Starts the local Vite dev server at `https://buro-bank.ru:5173`.
+Starts the local Vite dev server at `http://localhost:5173`.
 
-For the local domain to resolve, add this entry to `/etc/hosts` once:
+To use the local domain, add this entry to `/etc/hosts` once:
 
 ```text
 127.0.0.1 buro-bank.ru
 ```
 
-To open the dev app without a port at `https://buro-bank.ru`, run Vite and the dev Nginx proxy in separate terminals:
+To open the dev app through `https://buro-bank.ru`, run Vite and the dev Nginx proxy in separate terminals:
 
 ```bash
 npm run dev:cert
@@ -121,14 +121,15 @@ On unauthorized responses the base query first tries `POST /auth/refresh`. If re
 
 The UI should not use mock banking data. If the API does not return data, show an empty state.
 
-Money is displayed as currency code plus amount:
+Money is displayed as currency symbol plus amount:
 
 ```text
-USD 0.00
-EUR 0.00
+$ 0.00
+€ 0.00
 ```
 
-Do not use currency symbols like `$`.
+Keep API/runtime currency enum values as `USD`, `EUR`, `CNY`, and `GBP`, but
+render user-facing currency labels as symbols.
 
 ## Cards And Accounts
 

@@ -1,6 +1,7 @@
 import { Landmark, WalletCards } from 'lucide-react'
 
 import { Skeleton } from '@/components/Skeleton'
+import { formatCurrencySymbol } from '@/lib/formatMoney'
 import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { cn } from '@/lib/utils'
 import { AccountCurrency, AccountStatus, AccountType } from '@/shared/api/enums'
@@ -74,7 +75,10 @@ export function AccountsGrid({
                     {getAccountName(account.type)}
                   </h2>
                   <p className={styles['dashboard__account-meta']}>
-                    {account.currency ?? AccountCurrency.USD} · •• {suffix}
+                    {formatCurrencySymbol(
+                      account.currency ?? AccountCurrency.USD,
+                    )}{' '}
+                    · •• {suffix}
                   </p>
                 </div>
               </div>

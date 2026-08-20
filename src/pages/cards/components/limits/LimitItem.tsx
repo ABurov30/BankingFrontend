@@ -1,6 +1,8 @@
 import type { FieldError, UseFormRegister } from 'react-hook-form'
 
+import { formatCurrencySymbol } from '@/lib/formatMoney'
 import { cn } from '@/lib/utils'
+import type { AccountCurrency } from '@/shared/api/enums'
 import type { LimitsFormValues, LimitsTranslationFunction } from './types'
 import styles from '../../styles.module.css'
 
@@ -18,7 +20,7 @@ export function LimitItem({
   width,
 }: {
   colorClassName: string
-  currency: string
+  currency: AccountCurrency
   disabled: boolean
   error?: FieldError
   fieldName: keyof LimitsFormValues
@@ -38,7 +40,9 @@ export function LimitItem({
       {isEditing ? (
         <>
           <label className={styles['cards__limit-field']}>
-            <span className={styles['cards__limit-currency']}>{currency}</span>
+            <span className={styles['cards__limit-currency']}>
+              {formatCurrencySymbol(currency)}
+            </span>
             <input
               className={styles['cards__limit-input']}
               disabled={disabled}

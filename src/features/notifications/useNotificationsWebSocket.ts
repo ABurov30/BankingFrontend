@@ -7,10 +7,12 @@ import { invalidateAccounts } from '@/features/accounts/accountsSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
 import { accountApi } from '@/shared/api/accountApi'
+import { baseApi } from '@/shared/api/baseApi'
 import {
   addLiveNotificationToCache,
   useGetNotificationsQuery,
 } from '@/shared/api/notificationApi'
+import { transactionApi } from '@/shared/api/transactionApi'
 import { parseNotificationEvent } from './notificationEvent'
 
 const brokerURL =
@@ -34,6 +36,27 @@ async function refreshAccounts(
     await request.unwrap()
   } catch {
     // Keep the existing account snapshot if the refresh request fails.
+  } finally {
+    request.unsubscribe()
+  }
+}
+
+async function refreshTransactions(
+  dispatch: typeof import('@/app/store').store.dispatch,
+  userProfileId?: string,
+) {
+  if (!userProfileId) return
+
+  const request = dispatch(
+    transactionApi.endpoints.getTransactionsByUserId.initiate(userProfileId, {
+      forceRefetch: true,
+    }),
+  )
+
+  try {
+    await request.unwrap()
+  } catch {
+    // Keep the existing transaction cache if the refresh request fails.
   } finally {
     request.unsubscribe()
   }
@@ -81,8 +104,12 @@ export function useNotificationsWebSocket() {
             // Plain-text notifications are valid too.
           }
 
-          const { eventId, notification, shouldRefreshAccounts } =
-            parseNotificationEvent(payload)
+          const {
+            eventId,
+            notification,
+            shouldRefreshAccounts,
+            shouldRefreshTransactions,
+          } = parseNotificationEvent(payload)
 
           if (eventId && receivedEventIdsRef.current.has(eventId)) {
             return
@@ -93,7 +120,13 @@ export function useNotificationsWebSocket() {
           }
 
           if (shouldRefreshAccounts) {
+            dispatch(baseApi.util.invalidateTags(['Account', 'Card']))
             void refreshAccounts(dispatch, currentUser.userProfileId)
+          }
+
+          if (shouldRefreshTransactions) {
+            dispatch(baseApi.util.invalidateTags(['Transaction']))
+            void refreshTransactions(dispatch, currentUser.userProfileId)
           }
 
           dispatch(addLiveNotificationToCache(notification))

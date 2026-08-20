@@ -6,10 +6,23 @@ export type NotificationEvent = {
   eventId?: string
   notification: NotificationResponseDto
   shouldRefreshAccounts: boolean
+  shouldRefreshTransactions: boolean
 }
 
 const accountRefreshEventTypes = new Set([
+  'ACCOUNT_CREATED',
+  'ACCOUNT_FROZEN',
+  'ACCOUNT_UNFROZEN',
+  'CARD_CREATED',
+  'CARD_FROZEN',
+  'CARD_UNFROZEN',
   'FUNDS_RECEIVED',
+  'TRANSACTION_COMPLETED',
+  'TRANSACTION_FAILED',
+  'TRANSACTION_RECEIVED',
+])
+
+const transactionRefreshEventTypes = new Set([
   'TRANSACTION_COMPLETED',
   'TRANSACTION_FAILED',
   'TRANSACTION_RECEIVED',
@@ -40,6 +53,12 @@ export function parseNotificationEvent(payload: unknown): NotificationEvent {
   const source = toSource(payload)
   const fallbackBody =
     typeof payload === 'string' ? payload : JSON.stringify(payload)
+  const eventTypes = [
+    source?.eventType,
+    source?.notificationType,
+    source?.type,
+    source?.title,
+  ].map(normalizeEventType)
 
   return {
     eventId:
@@ -59,13 +78,11 @@ export function parseNotificationEvent(payload: unknown): NotificationEvent {
         asText(source?.type) ??
         'Notification',
     },
-    shouldRefreshAccounts: [
-      source?.eventType,
-      source?.notificationType,
-      source?.type,
-      source?.title,
-    ].some((eventType) =>
-      accountRefreshEventTypes.has(normalizeEventType(eventType) ?? ''),
+    shouldRefreshAccounts: eventTypes.some((eventType) =>
+      accountRefreshEventTypes.has(eventType ?? ''),
+    ),
+    shouldRefreshTransactions: eventTypes.some((eventType) =>
+      transactionRefreshEventTypes.has(eventType ?? ''),
     ),
   }
 }

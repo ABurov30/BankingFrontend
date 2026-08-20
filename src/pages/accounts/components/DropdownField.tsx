@@ -9,6 +9,7 @@ export function DropdownField<Value extends string>({
   onOpenChange,
   onSelect,
   options,
+  renderOption = (option) => option,
   value,
 }: {
   isOpen: boolean
@@ -16,6 +17,7 @@ export function DropdownField<Value extends string>({
   onOpenChange: () => void
   onSelect: (value: Value) => void
   options: Value[]
+  renderOption?: (value: Value) => string
   value: Value
 }) {
   return (
@@ -28,7 +30,7 @@ export function DropdownField<Value extends string>({
           onClick={onOpenChange}
           type="button"
         >
-          {value}
+          {renderOption(value)}
           <ChevronDown className={styles['accounts__status--review']} />
         </button>
 
@@ -45,9 +47,9 @@ export function DropdownField<Value extends string>({
                 key={option}
                 onClick={() => onSelect(option)}
                 role="option"
-                type="button"
-              >
-                {option}
+              type="button"
+            >
+                {renderOption(option)}
               </button>
             ))}
           </div>

@@ -1,5 +1,6 @@
 import type { FieldError, UseFormRegister } from 'react-hook-form'
 
+import { formatCurrencySymbol } from '@/lib/formatMoney'
 import type { GetAccountResponseDto } from '@/shared/api/types'
 import type { TransferFormValues, TranslationFunction } from '../types'
 import { Field } from './Field'
@@ -35,7 +36,9 @@ export function AmountField({
             })}
           />
           <span className={styles['transfer-panel__currency-badge']}>
-            {sourceAccount?.currency ?? '--'}
+            {sourceAccount?.currency
+              ? formatCurrencySymbol(sourceAccount.currency)
+              : '--'}
           </span>
         </div>
       </div>

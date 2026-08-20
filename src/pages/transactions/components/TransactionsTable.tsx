@@ -1,4 +1,4 @@
-import { ArrowLeftRight } from 'lucide-react'
+import { ArrowLeftRight, Radio } from 'lucide-react'
 
 import { formatMoney } from '@/lib/formatMoney'
 import { type TransactionStatus } from '@/shared/api/enums'
@@ -8,9 +8,11 @@ import styles from '../styles.module.css'
 
 export function TransactionsTable({
   isLoading = false,
+  onTrackTransaction,
   transactions = [],
 }: {
   isLoading?: boolean
+  onTrackTransaction?: (transaction: TransactionResponseDto) => void
   transactions?: TransactionResponseDto[]
 }) {
   const { t } = useI18n()
@@ -26,6 +28,9 @@ export function TransactionsTable({
             <span>{t('status')}</span>
             <span className={styles['transactions__amount-head']}>
               {t('amount')}
+            </span>
+            <span className={styles['transactions__actions-head']}>
+              {t('actions')}
             </span>
           </div>
 
@@ -70,6 +75,15 @@ export function TransactionsTable({
                 >
                   {formatMoney(transaction.amount, transaction.currency)}
                 </strong>
+                <button
+                  className={styles['transactions__track-button']}
+                  disabled={!transaction.transactionId}
+                  onClick={() => onTrackTransaction?.(transaction)}
+                  type="button"
+                >
+                  <Radio className={styles['transactions__track-icon']} />
+                  {t('track')}
+                </button>
               </div>
             ))
           ) : (
@@ -85,6 +99,7 @@ export function TransactionsTable({
 
 function getTransactionKey(transaction: TransactionResponseDto, index: number) {
   return [
+    transaction.transactionId,
     transaction.createdAt,
     transaction.sourceAccount?.accountId,
     transaction.targetAccount?.accountId,

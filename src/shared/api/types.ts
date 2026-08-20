@@ -58,6 +58,7 @@ export type GetUserInfoWithAccountResponseDto = Omit<
 }
 export type GetUserInfoWithAuthInfoResponseDto =
   ApiSchema['GetUserInfoWithAuthInfoResponseDto']
+export type SocialAccountResponse = ApiSchema['SocialAccountResponse']
 export type VerifyAuthUserByCodeRequestDto =
   ApiSchema['VerifyAuthUserByCodeRequestDto']
 export type ChangePasswordRequestDto = ApiSchema['ChangePasswordRequestDto']
@@ -141,6 +142,7 @@ export type GetAllUserInfoWithAuthInfoResponse =
 export type UserInfo = Omit<GetUserInfoResponseDto, 'status'> & {
   authUserId?: GetUserInfoResponseDto['autUserId']
   role?: GetUserInfoWithAuthInfoResponseDto['role']
+  socialAccounts?: GetUserInfoWithAuthInfoResponseDto['socialAccounts']
   status?: GetUserInfoWithAuthInfoResponseDto['status']
 }
 export type CreateAccountResponse = GetAccountResponseDto

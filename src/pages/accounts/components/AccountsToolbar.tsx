@@ -3,6 +3,7 @@ import {
   accountStatusOptions,
   accountTypeOptions,
 } from '@/shared/api/enums'
+import { formatCurrencySymbol } from '@/lib/formatMoney'
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from '../styles.module.css'
 import { FilterButton } from './FilterButton'
@@ -54,6 +55,9 @@ export function AccountsToolbar({
           label={t('currency')}
           onSelect={(currency) => onFiltersChange({ ...filters, currency })}
           options={accountCurrencyFilterOptions}
+          renderOption={(currency) =>
+            currency === 'ALL' ? t('all') : formatCurrencySymbol(currency)
+          }
           value={filters.currency}
         />
       </div>

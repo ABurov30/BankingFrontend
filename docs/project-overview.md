@@ -15,7 +15,8 @@ authenticated banking workflows for users, managers, and administrators.
 - React Hook Form for form state and validation.
 - CSS modules plus global theme variables from `src/styles.css`.
 - `lucide-react` for iconography.
-- `@stomp/stompjs` for authenticated notification websocket delivery.
+- `@stomp/stompjs` for authenticated notification and transaction status
+  websocket delivery.
 - Vitest and Testing Library for tests.
 
 ## Application Scope
@@ -28,10 +29,11 @@ The application currently supports:
 - Account management: account list, filtering, creation, freezing, unfreezing,
   top-up, withdraw, and transfers.
 - Card management: card issue flow, status changes, and daily/monthly limits.
-- Transactions list and transfer creation.
+- Transactions list, transfer creation, and per-transaction status tracking.
 - Notifications list, read-state mutation, websocket updates, and toast
   notifications.
-- Profile page with personal data, security settings, and preferences.
+- Profile page with personal data, security settings, preferences, and linked
+  sign-in methods.
 - Manager/admin user management pages.
 - Admin service health page.
 
@@ -56,8 +58,8 @@ src/
 
 Root-level operational files:
 
-- `vite.config.ts` configures React, HTTPS dev server behavior, `/api` proxying,
-  and the `@` path alias.
+- `vite.config.ts` configures React, localhost development, optional HTTPS
+  local-domain behavior, `/api` proxying, and the `@` path alias.
 - `vitest.config.ts` configures the jsdom test environment.
 - `Dockerfile` builds the app and serves it with nginx.
 - `nginx.conf` serves the production SPA and proxies `/api` to the backend.
@@ -92,9 +94,9 @@ The catch-all route renders the not-found page.
 
 ## Runtime URLs
 
-The preferred local hostname is `buro-bank.ru`.
+The default local hostname is `localhost`.
 
-- `npm run dev` starts Vite at `https://buro-bank.ru:5173`.
+- `npm run dev` starts Vite at `http://localhost:5173`.
 - `npm run dev:domain` starts Vite with proxy-aware HMR for the local nginx
   domain proxy.
 - `npm run dev:nginx` runs the local HTTPS nginx proxy at

@@ -23,7 +23,7 @@ describe('account row mapping', () => {
     expect(isAccountRowModel(row)).toBe(true)
     expect(row).toMatchObject({
       account: 'Savings account',
-      balance: 'USD 10.00',
+      balance: '$ 10.00',
       enabled: false,
       number: '•• 0001',
     })

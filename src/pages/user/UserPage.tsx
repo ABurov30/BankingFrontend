@@ -33,6 +33,7 @@ function UserPage() {
         authUserId={user?.authUserId}
         isLoading={isLoading}
         personalInfo={personalInfo}
+        socialAccounts={user?.socialAccounts}
       />
     </section>
   )

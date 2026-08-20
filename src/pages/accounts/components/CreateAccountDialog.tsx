@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useForm } from 'react-hook-form'
 
+import { formatCurrencySymbol } from '@/lib/formatMoney'
 import {
   AccountCurrency,
   AccountType,
@@ -98,6 +99,7 @@ export function CreateAccountDialog({
           }
           onSelect={selectAccountCurrency}
           options={accountCurrencyOptions}
+          renderOption={formatCurrencySymbol}
           value={selectedCurrency}
         />
 

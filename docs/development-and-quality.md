@@ -25,23 +25,21 @@ when local overrides are needed.
 Important variables:
 
 - `VITE_API_URL`: API base URL used by RTK Query. Defaults to `/api`.
+- `VITE_DEV_HOST`: set to `buro-bank.ru` to use the local HTTPS domain mode.
 - `VITE_DEV_PROXY`: when set to `true`, Vite HMR uses port `443` for the local
   nginx domain proxy.
 - `VITE_NOTIFICATIONS_WS_URL`: optional websocket URL override for
   notifications.
+- `VITE_TRANSACTIONS_WS_URL`: optional websocket URL override for transaction
+  status tracking. Falls back to `VITE_NOTIFICATIONS_WS_URL`, then
+  `ws(s)://<current-host>/api/ws`.
 
-## Local Domain
+## Local Development
 
-Preferred local hostname:
-
-```text
-buro-bank.ru
-```
-
-`/etc/hosts` should contain:
+Default local URL:
 
 ```text
-127.0.0.1 buro-bank.ru
+http://localhost:5173
 ```
 
 Start Vite:
@@ -50,13 +48,13 @@ Start Vite:
 npm run dev
 ```
 
-The app opens at:
+For the optional local domain, `/etc/hosts` should contain:
 
 ```text
-https://buro-bank.ru:5173
+127.0.0.1 buro-bank.ru
 ```
 
-To use `https://buro-bank.ru` without a port:
+To use `https://buro-bank.ru`:
 
 ```bash
 npm run dev:cert
@@ -67,6 +65,18 @@ Run the dev nginx proxy in a separate terminal:
 
 ```bash
 npm run dev:nginx
+```
+
+The app opens through nginx at:
+
+```text
+https://buro-bank.ru
+```
+
+Vite itself runs at:
+
+```text
+https://buro-bank.ru:5173
 ```
 
 ## Scripts

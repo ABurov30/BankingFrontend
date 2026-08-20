@@ -6,7 +6,7 @@
   "scripts": {
     "api:types": "openapi-typescript http://localhost:8080/v3/api-docs -o src/shared/api/schema.ts && prettier --write src/shared/api/schema.ts",
     "dev": "vite",
-    "dev:domain": "VITE_DEV_PROXY=true vite",
+    "dev:domain": "VITE_DEV_HOST=buro-bank.ru VITE_DEV_PROXY=true vite",
     "dev:cert": "mkdir -p .certs && openssl req -x509 -newkey rsa:2048 -nodes -keyout .certs/buro-bank.ru.key -out .certs/buro-bank.ru.crt -days 365 -subj \"/CN=buro-bank.ru\" -addext \"subjectAltName=DNS:buro-bank.ru\"",
     "dev:nginx": "docker run --rm --name buro-frontend-dev-nginx -p 443:443 -v \"$PWD/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro\" -v \"$PWD/.certs:/etc/nginx/certs:ro\" nginx:1.27-alpine",
     "build": "tsc -b && vite build",

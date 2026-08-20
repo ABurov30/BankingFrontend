@@ -36,6 +36,10 @@ function shouldTryRefresh(args: string | FetchArgs) {
   return !['/auth/login', '/auth/logout', '/auth/refresh'].includes(url)
 }
 
+function isCurrentUserInfoRequest(args: string | FetchArgs) {
+  return getRequestUrl(args) === '/user/user-info'
+}
+
 type ApiRequest = string | FetchArgs
 type ApiBaseQuery = BaseQueryFn<ApiRequest, unknown, FetchBaseQueryError>
 type SessionExpiredHandler = (api: BaseQueryApi) => void
@@ -114,6 +118,13 @@ export function createBaseQueryWithAuthRecovery(
       } else {
         handleSessionExpired(api)
       }
+    }
+
+    if (
+      result.error?.status === 500 &&
+      isCurrentUserInfoRequest(args)
+    ) {
+      handleSessionExpired(api)
     } else if (result.error?.status === 401) {
       handleSessionExpired(api)
     }

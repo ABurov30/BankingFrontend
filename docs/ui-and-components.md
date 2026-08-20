@@ -59,6 +59,8 @@ Common rules:
 - Disable submit buttons while mutations are in flight.
 - Redirect-based sign-in actions, such as Google OAuth, should disable related
   login controls while the browser navigation is being started.
+- Profile sign-in method cards should render linked social provider/email data
+  from the normalized current user instead of placeholder rows.
 
 ## Dialogs And Portals
 
@@ -97,10 +99,10 @@ Account types:
 
 Account currencies:
 
-- `USD`
-- `EUR`
-- `CNY`
-- `GBP`
+- `USD` renders as `$`
+- `EUR` renders as `€`
+- `CNY` renders as `¥`
+- `GBP` renders as `£`
 
 ## Cards UI Rules
 
@@ -146,6 +148,11 @@ Recipient destinations stay account-based: external transfer recipients choose
 an active recipient account, not a recipient card. The recipient account field
 shows the recipient account currency. If no active source card exists, the form
 blocks the transfer and shows a validation message.
+
+Each transaction row on the transactions page exposes a track action when the
+row has a `transactionId`. The track action opens a portal modal that connects
+to the authenticated STOMP websocket and displays live status updates for that
+specific transaction.
 
 ## Toasts
 

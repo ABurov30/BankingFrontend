@@ -500,6 +500,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/asyncapi.yaml': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['asyncApiYaml']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/account/manager/all-accounts': {
     parameters: {
       query?: never
@@ -773,8 +789,16 @@ export interface components {
       role?: 'USER' | 'MANAGER' | 'ADMIN'
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'PENDING' | 'FORGET_PASSWORD'
+      socialAccounts?: components['schemas']['SocialAccountResponse'][]
+    }
+    SocialAccountResponse: {
+      /** @enum {string} */
+      provider?: 'GOOGLE'
+      email?: string
     }
     TransactionResponseDto: {
+      /** Format: uuid */
+      transactionId?: string
       amount?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
@@ -1477,6 +1501,26 @@ export interface operations {
     }
   }
   getAuthHealth: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': string
+        }
+      }
+    }
+  }
+  asyncApiYaml: {
     parameters: {
       query?: never
       header?: never

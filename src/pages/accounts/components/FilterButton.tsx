@@ -9,17 +9,21 @@ export function FilterButton<Value extends string>({
   label,
   onSelect,
   options,
+  renderOption,
   value,
 }: {
   label: string
   onSelect: (value: Value) => void
   options: Value[]
+  renderOption?: (value: Value) => string
   value: Value
 }) {
   const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const isActive = value !== 'ALL'
   const allLabel = t('all')
+  const getOptionLabel = (option: Value) =>
+    option === 'ALL' ? allLabel : (renderOption?.(option) ?? option)
 
   return (
     <div className={styles['accounts__filter-menu']}>
@@ -34,7 +38,7 @@ export function FilterButton<Value extends string>({
         onClick={() => setIsOpen((open) => !open)}
         type="button"
       >
-        {label}: {value === 'ALL' ? allLabel : value}
+        {label}: {getOptionLabel(value)}
         <ChevronDown
           className={cn(
             styles['accounts__status--review'],
@@ -63,7 +67,7 @@ export function FilterButton<Value extends string>({
               role="option"
               type="button"
             >
-              {option === 'ALL' ? allLabel : option}
+              {getOptionLabel(option)}
             </button>
           ))}
         </div>

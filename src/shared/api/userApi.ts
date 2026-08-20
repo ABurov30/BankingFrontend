@@ -9,12 +9,13 @@ import type {
 } from './types'
 
 function normalizeUser(response: GetUserInfoWithAuthInfoResponse): UserInfo {
-  const { role, status, userInfo } = response
+  const { role, socialAccounts, status, userInfo } = response
 
   return {
     ...userInfo,
     authUserId: userInfo?.autUserId,
     role,
+    socialAccounts,
     status,
   }
 }

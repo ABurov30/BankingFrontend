@@ -1,6 +1,6 @@
 import { PiggyBank, WalletCards } from 'lucide-react'
 
-import { formatMoney } from '@/lib/formatMoney'
+import { formatCurrencySymbol, formatMoney } from '@/lib/formatMoney'
 import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { AccountCurrency, AccountStatus, AccountType } from '@/shared/api/enums'
 import type { GetAccountWithCardsResponseDto } from '@/shared/api/types'
@@ -53,7 +53,7 @@ export function mapAccountRow({
     account: `${type.charAt(0)}${type.slice(1).toLowerCase()} account`,
     accountId: account.accountId,
     balance: formatMoney(getAvailableFunds(account), account.currency),
-    currency: account.currency ?? AccountCurrency.USD,
+    currency: formatCurrencySymbol(account.currency ?? AccountCurrency.USD),
     enabled: status === AccountStatus.ACTIVE,
     icon: getAccountIcon(type),
     iconClassName: getIconClassName(type),

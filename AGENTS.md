@@ -35,9 +35,11 @@ After every coding-agent session:
 - If documentation does not need changes, say that it was reviewed and no update was required in the final response.
 - If a required command cannot be run, include the exact reason in the final response.
 
-## Local Domain
+## Local Development
 
-The preferred dev hostname is `buro-bank.ru`.
+The default dev URL is `http://localhost:5173`.
+
+The optional local-domain hostname is `buro-bank.ru`.
 
 `/etc/hosts` should contain:
 
@@ -45,7 +47,7 @@ The preferred dev hostname is `buro-bank.ru`.
 127.0.0.1 buro-bank.ru
 ```
 
-`npm run dev` opens Vite on `https://buro-bank.ru:5173`. To use `https://buro-bank.ru` without a port, use the dev nginx proxy.
+`npm run dev` opens Vite on `http://localhost:5173`. To use `https://buro-bank.ru` without a port, run `npm run dev:domain` and use the dev nginx proxy.
 
 ## API And State
 
@@ -83,7 +85,7 @@ Current frontend enums:
 - Forms should use `react-hook-form`.
 - Modals/dialogs should render via React Portal into `document.body`, with full-screen overlay shadow/backdrop.
 - Custom dropdowns should match the app style; avoid native select elements for visible app controls.
-- Money should be formatted as `CODE amount`, for example `USD 0.00` or `EUR 0.00`. Do not use currency symbols like `$`.
+- Money should keep API/runtime currency enum values as `USD`, `EUR`, `CNY`, and `GBP`, but UI labels should render currency symbols such as `$ 0.00` or `€ 0.00`.
 - Cards:
   - Card status values are only `ACTIVE`, `BLOCKED`, `FROZEN`, `EXPIRED`.
   - Do not use a separate "virtual card" style/status.

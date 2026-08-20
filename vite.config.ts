@@ -4,21 +4,28 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import path from 'node:path'
 
 const devHost = 'buro-bank.ru'
+const localHost = 'localhost'
+const useLocalDomain = process.env.VITE_DEV_HOST === devHost
 const useDevProxy = process.env.VITE_DEV_PROXY === 'true'
+const hmrPort = useDevProxy ? 443 : 5173
 
 export default defineConfig({
-  plugins: [react(), basicSsl()],
+  plugins: [react(), useLocalDomain && basicSsl()],
   server: {
-    allowedHosts: [devHost],
+    allowedHosts: useLocalDomain ? [devHost] : [],
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
-    open: `https://${devHost}:5173`,
-    hmr: {
-      host: devHost,
-      clientPort: useDevProxy ? 443 : 5173,
-      protocol: 'wss',
-    },
+    open: useLocalDomain
+      ? `https://${devHost}:5173`
+      : `http://${localHost}:5173`,
+    hmr: useLocalDomain
+      ? {
+          host: devHost,
+          clientPort: hmrPort,
+          protocol: 'wss',
+        }
+      : undefined,
     proxy: {
       '/api': {
         changeOrigin: true,

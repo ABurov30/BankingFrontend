@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useForm } from 'react-hook-form'
 
-import { formatMoney } from '@/lib/formatMoney'
+import { formatCurrencySymbol, formatMoney } from '@/lib/formatMoney'
 import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { cn } from '@/lib/utils'
 import { AccountCurrency } from '@/shared/api/enums'
@@ -22,7 +22,7 @@ function getAccountLabel({ account }: GetAccountWithCardsResponseDto) {
     ? `•• ${account.accountNumber.slice(-4)}`
     : 'number pending'
 
-  return `${type} · ${currency} · ${number}`
+  return `${type} · ${formatCurrencySymbol(currency)} · ${number}`
 }
 
 export function IssueCardDialog({

@@ -4,13 +4,25 @@ import {
 } from '@/shared/api/enums'
 
 const numberFormatters = new Map<string, Intl.NumberFormat>()
+const currencySymbols = {
+  [AccountCurrency.CNY]: '¥',
+  [AccountCurrency.EUR]: '€',
+  [AccountCurrency.GBP]: '£',
+  [AccountCurrency.USD]: '$',
+} as const satisfies Record<AccountCurrencyValue, string>
 
 export function formatMoney(
   value = 0,
   currency: AccountCurrencyValue = AccountCurrency.USD,
 ) {
   const formatter = getNumberFormatter(currency)
-  return `${currency} ${formatter.format(value)}`
+  return `${formatCurrencySymbol(currency)} ${formatter.format(value)}`
+}
+
+export function formatCurrencySymbol(
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
+  return currencySymbols[currency]
 }
 
 function getNumberFormatter(currency: AccountCurrencyValue) {

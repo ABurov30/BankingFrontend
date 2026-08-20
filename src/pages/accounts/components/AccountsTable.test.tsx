@@ -15,8 +15,8 @@ describe('AccountsTable', () => {
           {
             account: 'Checking account',
             accountId: 'account-1',
-            balance: 'USD 200.00',
-            currency: 'USD',
+            balance: '$ 200.00',
+            currency: '$',
             enabled: true,
             icon: Landmark,
             iconClassName: '',
@@ -32,7 +32,7 @@ describe('AccountsTable', () => {
     )
 
     expect(screen.getByText('Checking account')).toBeTruthy()
-    expect(screen.getByText('USD 200.00')).toBeTruthy()
+    expect(screen.getByText('$ 200.00')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'Freeze' }))
     expect(onFreeze).toHaveBeenCalledWith('account-1')
   })
