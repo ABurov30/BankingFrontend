@@ -35,9 +35,10 @@ When a request returns `401`:
    - `user/clearCurrentUser`
 5. The browser redirects to `/login` unless it is already there.
 
-When the current user profile request `GET /user/user-info` returns `500`, the
-same session-expired cleanup and `/login` redirect run immediately without a
-refresh attempt.
+When the current user profile request `GET /user/user-info` returns any
+non-`2xx` response, the same session-expired cleanup and `/login` redirect run.
+For `401`, the wrapper first tries refresh and redirects only if refresh fails
+or the retried profile request still fails.
 
 Do not bypass this base API for normal backend calls.
 

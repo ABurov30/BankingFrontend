@@ -34,6 +34,10 @@ function serverErrorResult() {
   return { error: { status: 500 } as FetchBaseQueryError }
 }
 
+function notFoundResult() {
+  return { error: { status: 404 } as FetchBaseQueryError }
+}
+
 describe('createBaseQueryWithAuthRecovery', () => {
   it('shares one refresh request across concurrent unauthorized requests', async () => {
     let refreshCalls = 0
@@ -128,6 +132,28 @@ describe('createBaseQueryWithAuthRecovery', () => {
     expect(onSessionExpired).toHaveBeenCalledTimes(1)
   })
 
+  it('redirects to login without refresh when current user info returns not found', async () => {
+    let refreshCalls = 0
+    const query: Query = async (request) => {
+      if (getUrl(request) === '/auth/refresh') {
+        refreshCalls += 1
+        return { data: undefined }
+      }
+
+      return notFoundResult()
+    }
+    const onSessionExpired = vi.fn()
+    const recoveredQuery = createBaseQueryWithAuthRecovery(
+      query,
+      onSessionExpired,
+    )
+
+    await recoveredQuery('/user/user-info', api, {})
+
+    expect(refreshCalls).toBe(0)
+    expect(onSessionExpired).toHaveBeenCalledTimes(1)
+  })
+
   it('redirects to login when refreshed current user info still returns server error', async () => {
     let refreshCalls = 0
     let userInfoCalls = 0
@@ -157,5 +183,39 @@ describe('createBaseQueryWithAuthRecovery', () => {
     expect(refreshCalls).toBe(1)
     expect(userInfoCalls).toBe(2)
     expect(onSessionExpired).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the session when refreshed current user info succeeds', async () => {
+    let refreshCalls = 0
+    let userInfoCalls = 0
+    const query: Query = async (request) => {
+      const url = getUrl(request)
+
+      if (url === '/auth/refresh') {
+        refreshCalls += 1
+        return { data: undefined }
+      }
+
+      if (url === '/user/user-info') {
+        userInfoCalls += 1
+        return userInfoCalls === 1
+          ? unauthorizedResult()
+          : { data: { userProfileId: 'user-1' } }
+      }
+
+      return { data: undefined }
+    }
+    const onSessionExpired = vi.fn()
+    const recoveredQuery = createBaseQueryWithAuthRecovery(
+      query,
+      onSessionExpired,
+    )
+
+    const result = await recoveredQuery('/user/user-info', api, {})
+
+    expect(refreshCalls).toBe(1)
+    expect(userInfoCalls).toBe(2)
+    expect(result).toEqual({ data: { userProfileId: 'user-1' } })
+    expect(onSessionExpired).not.toHaveBeenCalled()
   })
 })

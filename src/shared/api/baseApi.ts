@@ -120,10 +120,7 @@ export function createBaseQueryWithAuthRecovery(
       }
     }
 
-    if (
-      result.error?.status === 500 &&
-      isCurrentUserInfoRequest(args)
-    ) {
+    if (result.error && isCurrentUserInfoRequest(args)) {
       handleSessionExpired(api)
     } else if (result.error?.status === 401) {
       handleSessionExpired(api)
