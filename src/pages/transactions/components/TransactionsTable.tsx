@@ -1,6 +1,7 @@
 import { ArrowLeftRight, Radio } from 'lucide-react'
 
 import { formatMoney } from '@/lib/formatMoney'
+import { minorUnitsToAmount } from '@/lib/moneyAmount'
 import { type TransactionStatus } from '@/shared/api/enums'
 import type { TransactionResponseDto } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
@@ -73,7 +74,10 @@ export function TransactionsTable({
                 <strong
                   className={`${styles['transactions__amount']} ${styles['transactions__amount--negative']}`}
                 >
-                  {formatMoney(transaction.amount, transaction.currency)}
+                  {formatMoney(
+                    minorUnitsToAmount(transaction.minorUnits),
+                    transaction.currency,
+                  )}
                 </strong>
                 <button
                   className={styles['transactions__track-button']}

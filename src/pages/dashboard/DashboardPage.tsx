@@ -5,6 +5,7 @@ import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLo
 import { selectCards } from '@/features/cards/cardsSlice'
 import type { CardWithAccount } from '@/features/cards/cardsSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
+import { getCardLimitTotal } from '@/lib/cardLimits'
 import { CardStatus } from '@/shared/api/enums'
 import { Skeleton } from '@/components/Skeleton'
 import {
@@ -17,13 +18,6 @@ import {
   Topbar,
 } from './components'
 import styles from './styles.module.css'
-
-function getCardLimitTotal(card: {
-  dailyLimit?: number
-  monthlyLimit?: number
-}) {
-  return (card.dailyLimit ?? 0) + (card.monthlyLimit ?? 0)
-}
 
 function getHighestLimitCard(cards: CardWithAccount[]) {
   return cards.reduce<CardWithAccount | null>((highestCard, currentCard) => {

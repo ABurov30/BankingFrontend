@@ -120,8 +120,11 @@ Rules:
 - Interactive status badges should show a chevron.
 - `CHECKING` and `SAVINGS` accounts render `DEBIT` cards.
 - Card limits are edited through the card update mutation.
+- Card limit edit inputs use the same minor-unit money mask as transfer amount
+  inputs and submit integer minor-unit values.
 - Card limit usage indicators should use `spendDailyLimit` and
-  `spendMonthlyLimit` from card responses against the configured limits.
+  `spendMonthlyLimit` from account card responses against the configured
+  major-unit limits.
 
 ## Transfer Panel UI
 
@@ -138,6 +141,12 @@ Supported flows:
 The form is decomposed into focused presentation components under
 `src/components/TransferPanel/components`, while `TransferForm.tsx` keeps the
 workflow and mutation logic.
+
+Amount inputs use a minor-unit money mask: typed digits are interpreted as
+cents, so `20` renders as `00.20` and `1234` renders as `12.34`. Pasted decimal
+values with a dot or comma are normalized through the same mask. The transfer
+panel parses amount input through `src/lib/moneyAmount.ts`; top-up, withdraw,
+and transaction creation send integer minor units to the API.
 
 Transaction creation requires a `sourceCardId`. The transfer flow resolves an
 active card from the selected source account before showing the confirmation

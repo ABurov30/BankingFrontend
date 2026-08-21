@@ -1,5 +1,6 @@
 import { ChevronDown, CreditCard } from 'lucide-react'
 
+import { getCardDailyLimit, getCardMonthlyLimit } from '@/lib/cardLimits'
 import { formatMoney } from '@/lib/formatMoney'
 import { getAvailableFunds } from '@/lib/getAvailableFunds'
 import { AccountCurrency } from '@/shared/api/enums'
@@ -91,8 +92,10 @@ function CardSummary({
         </p>
         {card ? (
           <p className={styles['transfer-panel__account-meta']}>
-            {t('dailyLimit')} {formatMoney(card.dailyLimit ?? 0, currency)} ·{' '}
-            {t('monthlyLimit')} {formatMoney(card.monthlyLimit ?? 0, currency)}
+            {t('dailyLimit')}{' '}
+            {formatMoney(getCardDailyLimit(card), currency)}{' '}
+            · {t('monthlyLimit')}{' '}
+            {formatMoney(getCardMonthlyLimit(card), currency)}
           </p>
         ) : null}
       </div>

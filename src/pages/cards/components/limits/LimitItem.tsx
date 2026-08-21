@@ -1,6 +1,8 @@
+import type { ChangeEventHandler } from 'react'
 import type { FieldError, UseFormRegister } from 'react-hook-form'
 
 import { formatCurrencySymbol } from '@/lib/formatMoney'
+import { formatMinorUnitInput, parseMoneyAmountInput } from '@/lib/moneyAmount'
 import { cn } from '@/lib/utils'
 import type { AccountCurrency } from '@/shared/api/enums'
 import type { LimitsFormValues, LimitsTranslationFunction } from './types'
@@ -31,6 +33,24 @@ export function LimitItem({
   value: string
   width: string
 }) {
+  const limitField = register(fieldName, {
+    required: t('limitRequired'),
+    validate: (value) =>
+      parseMoneyAmountInput(value, { allowZero: true })
+        ? true
+        : t('enterValidAmount'),
+  })
+
+  const handleLimitChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.target.value = formatMinorUnitInput(event.target.value)
+    void limitField.onChange(event)
+
+    requestAnimationFrame(() => {
+      const cursorPosition = event.target.value.length
+      event.target.setSelectionRange(cursorPosition, cursorPosition)
+    })
+  }
+
   return (
     <div className={styles['cards__main']}>
       <div className={styles['cards__limit-row']}>
@@ -46,19 +66,12 @@ export function LimitItem({
             <input
               className={styles['cards__limit-input']}
               disabled={disabled}
-              min="0"
-              step="0.01"
-              type="number"
-              {...register(fieldName, {
-                min: {
-                  message: t('limitCannotBeNegative'),
-                  value: 0,
-                },
-                required: t('limitRequired'),
-                valueAsNumber: true,
-                validate: (value) =>
-                  Number.isFinite(value) || t('enterValidAmount'),
-              })}
+              inputMode="numeric"
+              pattern="[0-9]+[.][0-9]{2}"
+              placeholder="0.00"
+              type="text"
+              {...limitField}
+              onChange={handleLimitChange}
             />
           </label>
           {error?.message ? (

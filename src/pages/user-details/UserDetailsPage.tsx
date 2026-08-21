@@ -6,6 +6,10 @@ import { useAppDispatch } from '@/app/hooks'
 import { PageLoader } from '@/components/PageLoader'
 import { showToast } from '@/features/toast/toastSlice'
 import {
+  getCardDailyLimitMinorUnits,
+  getCardMonthlyLimitMinorUnits,
+} from '@/lib/cardLimits'
+import {
   useFreezeAccountMutation,
   useGetAccountsWithCardsByOwnerIdQuery,
   useUnfreezeAccountMutation,
@@ -76,8 +80,8 @@ function UserDetailsPage() {
       await updateCard({
         accountId: card.accountId,
         cardId: card.cardId,
-        dailyLimit: card.dailyLimit ?? 0,
-        monthlyLimit: card.monthlyLimit ?? 0,
+        dailyLimitMinorUnits: getCardDailyLimitMinorUnits(card),
+        monthlyLimitMinorUnits: getCardMonthlyLimitMinorUnits(card),
         status,
       }).unwrap()
       await refetchAccounts()

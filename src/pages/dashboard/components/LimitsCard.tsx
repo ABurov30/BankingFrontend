@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { getCardDailyLimit, getCardMonthlyLimit } from '@/lib/cardLimits'
 import { AccountCurrency } from '@/shared/api/enums'
 import type {
   GetAccountWithCardsResponseDto,
@@ -22,13 +23,13 @@ export function LimitsCard({
     <section className={styles['dashboard__limits-card']}>
       <LimitRow
         label={t('dailyLimit')}
-        value={formatMoney(card?.dailyLimit, currency)}
+        value={formatMoney(getCardDailyLimit(card), currency)}
         widthClassName={styles['dashboard__limit-fill--daily']}
       />
       <LimitRow
         barClassName={styles['dashboard__limit-fill--warning']}
         label={t('monthlyLimit')}
-        value={formatMoney(card?.monthlyLimit, currency)}
+        value={formatMoney(getCardMonthlyLimit(card), currency)}
         widthClassName={styles['dashboard__limit-fill--online']}
       />
     </section>

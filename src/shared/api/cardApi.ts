@@ -1,6 +1,7 @@
 import { invalidateAccounts } from '@/features/accounts/accountsSlice'
 import { syncCardUpdate } from '@/features/accounts/syncAccounts'
 import { updateCard as updateCardState } from '@/features/cards/cardsSlice'
+import { mapCardLimitResponse } from '@/lib/cardLimits'
 
 import { baseApi } from './baseApi'
 import type {
@@ -32,8 +33,9 @@ export const cardApi = baseApi.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
-          syncCardUpdate(dispatch, data)
-          dispatch(updateCardState(data))
+          const card = mapCardLimitResponse(data)
+          syncCardUpdate(dispatch, card)
+          dispatch(updateCardState(card))
         } catch {
           // RTK Query exposes the failed mutation to the caller.
         }

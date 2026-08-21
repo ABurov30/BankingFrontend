@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
-import { getLimitUsageWidth, getLimitValue } from './utils'
+import { getLimitInputValue, getLimitUsageWidth, getLimitValue } from './utils'
 
 describe('card limit utilities', () => {
   it('normalizes missing limits', () => {
     expect(getLimitValue()).toBe(0)
     expect(getLimitValue(250)).toBe(250)
+  })
+
+  it('formats limit input values from major units', () => {
+    expect(getLimitInputValue()).toBe('00.00')
+    expect(getLimitInputValue(250)).toBe('250.00')
   })
 
   it('calculates spent limit width safely', () => {

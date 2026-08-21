@@ -8,6 +8,7 @@ import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLo
 import { closeRightPanel } from '@/features/rightPanel/rightPanelSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
+import { parseMoneyAmountInput } from '@/lib/moneyAmount'
 import {
   useTopUpAccountMutation,
   useWithdrawAccountMutation,
@@ -369,12 +370,14 @@ export function TransferForm() {
   const submit = async (values: TransferFormValues) => {
     if (!operation) return
 
-    const amount = Number(values.amount)
+    const parsedAmount = parseMoneyAmountInput(values.amount)
 
-    if (!Number.isFinite(amount) || amount <= 0) {
+    if (!parsedAmount) {
       setError('amount', { message: t('enterValidAmount') })
       return
     }
+
+    const { amount, minorUnits } = parsedAmount
 
     if (!sourceAccount) {
       setError(isTransfer ? 'sourceCardId' : 'sourceAccountId', {
@@ -388,12 +391,12 @@ export function TransferForm() {
         if (operation === 'TOP_UP') {
           await topUpAccount({
             accountId: sourceAccount.accountId!,
-            amount,
+            minorUnits,
           }).unwrap()
         } else {
           await withdrawAccount({
             accountId: sourceAccount.accountId!,
-            amount,
+            minorUnits,
           }).unwrap()
         }
 
@@ -441,6 +444,7 @@ export function TransferForm() {
         amount,
         destinationAccount,
         idempotencyKey: crypto.randomUUID(),
+        minorUnits,
         sourceAccount,
         sourceCard: transferSourceCard,
         sourceCardId: transferSourceCardId,
@@ -462,6 +466,7 @@ export function TransferForm() {
       amount,
       destinationAccount: recipientAccount,
       idempotencyKey: crypto.randomUUID(),
+      minorUnits,
       recipient,
       sourceAccount,
       sourceCard: transferSourceCard,
@@ -492,9 +497,9 @@ export function TransferForm() {
 
     try {
       await createTransaction({
-        amount: confirmation.amount,
         currency: sourceAccount.currency,
         idempotencyKey: confirmation.idempotencyKey,
+        minorUnits: confirmation.minorUnits,
         sourceAccountId: sourceAccount.accountId,
         sourceCardId: confirmation.sourceCardId,
         targetAccountId: destinationAccount.accountId,

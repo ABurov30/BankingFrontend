@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { formatMoney } from '@/lib/formatMoney'
+import { minorUnitsToAmount } from '@/lib/moneyAmount'
 import type { TransactionResponseDto } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
 import styles from '../styles.module.css'
@@ -119,7 +120,10 @@ export function TransactionStatusDialog({
               {t('amount')}
             </span>
             <strong className={styles['transactions__dialog-value']}>
-              {formatMoney(liveTransaction.amount, liveTransaction.currency)}
+              {formatMoney(
+                minorUnitsToAmount(liveTransaction.minorUnits),
+                liveTransaction.currency,
+              )}
             </strong>
           </div>
           <div>

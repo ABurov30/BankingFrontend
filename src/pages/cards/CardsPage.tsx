@@ -5,6 +5,10 @@ import { selectAccounts } from '@/features/accounts/accountsSlice'
 import { selectCards } from '@/features/cards/cardsSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
+import {
+  getCardDailyLimitMinorUnits,
+  getCardMonthlyLimitMinorUnits,
+} from '@/lib/cardLimits'
 import { useLazyGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
 import {
   useCreateCardMutation,
@@ -105,8 +109,8 @@ function CardsPage() {
       await updateCard({
         accountId: card.accountId,
         cardId: card.cardId,
-        dailyLimit: card.dailyLimit ?? 0,
-        monthlyLimit: card.monthlyLimit ?? 0,
+        dailyLimitMinorUnits: getCardDailyLimitMinorUnits(card),
+        monthlyLimitMinorUnits: getCardMonthlyLimitMinorUnits(card),
         status,
       }).unwrap()
       if (status === CardStatus.BLOCKED) {

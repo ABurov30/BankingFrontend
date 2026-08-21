@@ -26,6 +26,7 @@ export type TransferConfirmation = {
   amount: number
   destinationAccount: GetAccountResponseDto
   idempotencyKey: string
+  minorUnits: number
   recipient?: GetUserInfoResponseDto
   sourceAccount: GetAccountResponseDto
   sourceCard: GetCardByAccountIdResponseDto

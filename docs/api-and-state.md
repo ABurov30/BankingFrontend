@@ -106,12 +106,16 @@ Current frontend enum domains:
 - Create transfer transaction.
 
 `CreateTransactionRequestDto` requires `sourceAccountId`, `sourceCardId`,
-`targetAccountId`, `amount`, `currency`, and `idempotencyKey`. Transfer flows
-must resolve an active source card for the selected source account before
+`targetAccountId`, `minorUnits`, `currency`, and `idempotencyKey`. Transfer
+flows must resolve an active source card for the selected source account before
 calling the mutation. The selected source card identifies the payment
 instrument, but available funds are still calculated from the linked source
 account. In the UI, `sourceAccountId` is derived from the selected source card
-for transfer operations.
+for transfer operations. Amount input is parsed through
+`src/lib/moneyAmount.ts`: masked values such as `00.20`, `00.02`, `20.00`,
+and `02.00` are sent to transaction creation as integer `minorUnits` values
+`20`, `2`, `2000`, and `200`. Top-up and withdraw also send integer
+`minorUnits` to the account endpoints.
 
 `notificationApi.ts` owns notification operations:
 
@@ -217,8 +221,8 @@ The dialog subscribes to:
 ```
 
 Incoming JSON payloads are merged into the selected transaction snapshot so the
-modal can show live status, amount, currency, source account, and target account
-updates.
+modal can show live status, `minorUnits`, currency, source account, and target
+account updates.
 
 ## Data Formatting Rules
 
@@ -232,8 +236,10 @@ $ 0.00
 Keep API/runtime currency enum values as `USD`, `EUR`, `CNY`, and `GBP`, but
 render user-facing currency labels as symbols.
 
-Use `src/lib/formatMoney.ts` and `src/lib/getAvailableFunds.ts` for shared
-money and balance calculations.
+Use `src/lib/formatMoney.ts`, `src/lib/moneyAmount.ts`,
+`src/lib/cardLimits.ts`, and `src/lib/getAvailableFunds.ts` for shared money
+formatting, amount parsing, card-limit unit conversion, and balance
+calculations.
 
 ## Card Limit Usage Fields
 
@@ -245,4 +251,9 @@ Card response DTOs include:
 - `spendMonthlyLimit`
 
 The card limits UI uses the spent fields to calculate usage progress against
-the configured daily and monthly limits.
+the configured daily and monthly limits. User-facing limit values are displayed
+in the major currency units returned by `/account/accounts/{ownerUserId}`.
+Card limit edit inputs use the shared minor-unit money mask from
+`src/lib/moneyAmount.ts`, and card update requests send integer minor units.
+Use `src/lib/cardLimits.ts` when preserving existing card limits for status
+updates because the update endpoint still accepts minor-unit request fields.

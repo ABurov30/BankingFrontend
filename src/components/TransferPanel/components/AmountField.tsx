@@ -1,6 +1,8 @@
+import type { ChangeEventHandler } from 'react'
 import type { FieldError, UseFormRegister } from 'react-hook-form'
 
 import { formatCurrencySymbol } from '@/lib/formatMoney'
+import { formatMinorUnitInput, parseMoneyAmountInput } from '@/lib/moneyAmount'
 import type { GetAccountResponseDto } from '@/shared/api/types'
 import type { TransferFormValues, TranslationFunction } from '../types'
 import { Field } from './Field'
@@ -17,6 +19,22 @@ export function AmountField({
   sourceAccount?: GetAccountResponseDto
   t: TranslationFunction
 }) {
+  const amountField = register('amount', {
+    required: t('enterValidAmount'),
+    validate: (value) =>
+      parseMoneyAmountInput(value) ? true : t('enterValidAmount'),
+  })
+
+  const handleAmountChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.target.value = formatMinorUnitInput(event.target.value)
+    void amountField.onChange(event)
+
+    requestAnimationFrame(() => {
+      const cursorPosition = event.target.value.length
+      event.target.setSelectionRange(cursorPosition, cursorPosition)
+    })
+  }
+
   return (
     <Field label={t('amount')}>
       <div className={styles['transfer-panel__amount-card']}>
@@ -25,15 +43,12 @@ export function AmountField({
             aria-invalid={Boolean(amountError)}
             aria-label={t('amount')}
             className={styles['transfer-panel__amount-input']}
-            inputMode="decimal"
-            min="0.01"
-            placeholder="0"
-            step="0.01"
-            type="number"
-            {...register('amount', {
-              required: t('enterValidAmount'),
-              validate: (value) => Number(value) > 0 || t('enterValidAmount'),
-            })}
+            inputMode="numeric"
+            pattern="[0-9]+[.][0-9]{2}"
+            placeholder="0.00"
+            type="text"
+            {...amountField}
+            onChange={handleAmountChange}
           />
           <span className={styles['transfer-panel__currency-badge']}>
             {sourceAccount?.currency

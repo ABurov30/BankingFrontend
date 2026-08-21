@@ -31,9 +31,9 @@ describe('transaction components', () => {
         onTrackTransaction={handleTrackTransaction}
         transactions={[
           {
-            amount: 123.45,
             createdAt: '2026-08-11T12:00:00Z',
             currency: 'USD',
+            minorUnits: 12345,
             sourceAccount: { accountNumber: '4081781000000001' },
             status: 'COMPLETED',
             targetAccount: { accountNumber: '4081781000000002' },
@@ -58,9 +58,9 @@ describe('transaction components', () => {
         onTrackTransaction={handleTrackTransaction}
         transactions={[
           {
-            amount: 123.45,
             createdAt: '2026-08-11T12:00:00Z',
             currency: 'USD',
+            minorUnits: 12345,
             status: 'FUNDS_RESERVED',
             transactionId: '11111111-1111-1111-1111-111111111111',
           },

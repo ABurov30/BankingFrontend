@@ -8,6 +8,7 @@ import {
 } from '@/shared/api/enums'
 import type { GetCardByAccountIdResponseDto } from '@/shared/api/types'
 import { useI18n } from '@/shared/i18n/useI18n'
+import { getCardDailyLimit, getCardMonthlyLimit } from '@/lib/cardLimits'
 import { formatMoney } from '@/lib/formatMoney'
 import styles from '../styles.module.css'
 
@@ -43,10 +44,12 @@ export function UserCardItem({
       </div>
       <div className={styles['user-details__limits']}>
         <span>
-          {t('dailyLimit')}: {formatMoney(card.dailyLimit, currency)}
+          {t('dailyLimit')}:{' '}
+          {formatMoney(getCardDailyLimit(card), currency)}
         </span>
         <span>
-          {t('monthlyLimit')}: {formatMoney(card.monthlyLimit, currency)}
+          {t('monthlyLimit')}:{' '}
+          {formatMoney(getCardMonthlyLimit(card), currency)}
         </span>
       </div>
       {canFreeze ? (

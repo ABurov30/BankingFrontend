@@ -591,8 +591,8 @@ export interface components {
       cardId: string
       /** @enum {string} */
       status: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
-      dailyLimit: number
-      monthlyLimit: number
+      dailyLimitMinorUnits: number
+      monthlyLimitMinorUnits: number
     }
     UpdateCardResponseDto: {
       /** Format: uuid */
@@ -602,12 +602,14 @@ export interface components {
       pan?: string
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
-      dailyLimit?: number
-      monthlyLimit?: number
+      dailyLimitMinorUnits?: number
+      monthlyLimitMinorUnits?: number
       /** Format: date-time */
       expiresAt?: string
-      spendDailyLimit?: number
-      spendMonthlyLimit?: number
+      spendDailyLimitMinorUnits?: number
+      spendMonthlyLimitMinorUnits?: number
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
     VerifyAuthUserByCodeRequestDto: {
       /** Format: uuid */
@@ -656,6 +658,8 @@ export interface components {
       expiresAt?: string
       spendDailyLimit?: number
       spendMonthlyLimit?: number
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
     GetUserInfoAccountResponseDto: {
       /** Format: uuid */
@@ -696,7 +700,7 @@ export interface components {
       sourceCardId: string
       /** Format: uuid */
       targetAccountId: string
-      amount: number
+      minorUnits: number
       /** @enum {string} */
       currency: 'USD' | 'EUR' | 'CNY' | 'GBP'
       /** Format: uuid */
@@ -714,12 +718,14 @@ export interface components {
       pan?: string
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
-      dailyLimit?: number
-      monthlyLimit?: number
+      dailyLimitMinorUnits?: number
+      monthlyLimitMinorUnits?: number
       /** Format: date-time */
       expiresAt?: string
-      spendDailyLimit?: number
-      spendMonthlyLimit?: number
+      spendDailyLimitMinorUnits?: number
+      spendMonthlyLimitMinorUnits?: number
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
     SignupRequestDto: {
       /** Format: email */
@@ -740,7 +746,7 @@ export interface components {
     UpdateAccountBalanceRequestDto: {
       /** Format: uuid */
       accountId: string
-      amount: number
+      minorUnits: number
     }
     GetAccountResponseDto: {
       /** Format: uuid */
@@ -799,7 +805,7 @@ export interface components {
     TransactionResponseDto: {
       /** Format: uuid */
       transactionId?: string
-      amount?: number
+      minorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
       /** @enum {string} */
