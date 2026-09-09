@@ -226,6 +226,10 @@ account updates.
 
 ## Data Formatting Rules
 
+The frontend stores and passes money values from API-facing account, card, and
+transaction data as integer minor units. User-facing controls display and parse
+major-unit strings such as `111.22`, then submit `11122` to the API.
+
 Money formatting must use currency symbol plus amount:
 
 ```text
@@ -234,26 +238,30 @@ $ 0.00
 ```
 
 Keep API/runtime currency enum values as `USD`, `EUR`, `CNY`, and `GBP`, but
-render user-facing currency labels as symbols.
+render user-facing currency labels as symbols. Currency fraction precision is
+defined by `AccountCurrencyMinorUnit` in `src/shared/api/enums.ts`; shared
+formatting and parsing helpers must use that metadata instead of hard-coding
+two decimal places.
 
 Use `src/lib/formatMoney.ts`, `src/lib/moneyAmount.ts`,
 `src/lib/cardLimits.ts`, and `src/lib/getAvailableFunds.ts` for shared money
-formatting, amount parsing, card-limit unit conversion, and balance
-calculations.
+formatting, amount parsing, card-limit minor-unit access, and balance
+calculations. `formatMoney` expects minor units and renders a formatted
+major-unit amount.
 
 ## Card Limit Usage Fields
 
 Card response DTOs include:
 
-- `dailyLimit`
-- `monthlyLimit`
-- `spendDailyLimit`
-- `spendMonthlyLimit`
+- `dailyLimitMinorUnits`
+- `monthlyLimitMinorUnits`
+- `spendDailyLimitMinorUnits`
+- `spendMonthlyLimitMinorUnits`
 
 The card limits UI uses the spent fields to calculate usage progress against
-the configured daily and monthly limits. User-facing limit values are displayed
-in the major currency units returned by `/account/accounts/{ownerUserId}`.
-Card limit edit inputs use the shared minor-unit money mask from
-`src/lib/moneyAmount.ts`, and card update requests send integer minor units.
-Use `src/lib/cardLimits.ts` when preserving existing card limits for status
-updates because the update endpoint still accepts minor-unit request fields.
+the configured daily and monthly limits. Limit values are kept in minor units
+inside the app and rendered as major-unit strings for users. Card limit edit
+inputs use the shared minor-unit money mask from `src/lib/moneyAmount.ts`, and
+card update requests send integer minor units. Use `src/lib/cardLimits.ts`
+when preserving existing card limits for status updates because the update
+endpoint accepts minor-unit request fields.

@@ -2,8 +2,14 @@ import type { ChangeEventHandler } from 'react'
 import type { FieldError, UseFormRegister } from 'react-hook-form'
 
 import { formatCurrencySymbol } from '@/lib/formatMoney'
-import { formatMinorUnitInput, parseMoneyAmountInput } from '@/lib/moneyAmount'
+import {
+  formatMinorUnitInput,
+  getMoneyAmountInputPattern,
+  getMoneyAmountInputPlaceholder,
+  parseMoneyAmountInput,
+} from '@/lib/moneyAmount'
 import type { GetAccountResponseDto } from '@/shared/api/types'
+import { AccountCurrency } from '@/shared/api/enums'
 import type { TransferFormValues, TranslationFunction } from '../types'
 import { Field } from './Field'
 import styles from '../styles.module.css'
@@ -19,14 +25,19 @@ export function AmountField({
   sourceAccount?: GetAccountResponseDto
   t: TranslationFunction
 }) {
+  const currency = sourceAccount?.currency ?? AccountCurrency.USD
   const amountField = register('amount', {
     required: t('enterValidAmount'),
     validate: (value) =>
-      parseMoneyAmountInput(value) ? true : t('enterValidAmount'),
+      parseMoneyAmountInput(value, {
+        currency,
+      })
+        ? true
+        : t('enterValidAmount'),
   })
 
   const handleAmountChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.target.value = formatMinorUnitInput(event.target.value)
+    event.target.value = formatMinorUnitInput(event.target.value, currency)
     void amountField.onChange(event)
 
     requestAnimationFrame(() => {
@@ -44,8 +55,8 @@ export function AmountField({
             aria-label={t('amount')}
             className={styles['transfer-panel__amount-input']}
             inputMode="numeric"
-            pattern="[0-9]+[.][0-9]{2}"
-            placeholder="0.00"
+            pattern={getMoneyAmountInputPattern(currency)}
+            placeholder={getMoneyAmountInputPlaceholder(currency)}
             type="text"
             {...amountField}
             onChange={handleAmountChange}

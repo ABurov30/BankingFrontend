@@ -12,8 +12,8 @@ describe('account row mapping', () => {
       account: {
         accountId: 'account-1',
         accountNumber: '4081781000000001',
-        availableBalance: 12.5,
-        reservedBalance: 2.5,
+        availableBalanceMinorUnits: 1250,
+        reservedBalanceMinorUnits: 250,
         currency: 'USD',
         status: 'FROZEN',
         type: 'SAVINGS',

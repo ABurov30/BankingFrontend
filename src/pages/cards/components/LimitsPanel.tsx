@@ -29,10 +29,14 @@ import {
 } from './limits'
 import { formatMoney } from './utils'
 
-function getEditedLimitValue(value: string, fallbackAmount?: number) {
+function getEditedLimitValue(
+  value: string,
+  fallbackMinorUnits: number | undefined,
+  currency: AccountCurrency,
+) {
   return (
-    parseMoneyAmountInput(value, { allowZero: true })?.amount ??
-    getLimitValue(fallbackAmount)
+    parseMoneyAmountInput(value, { allowZero: true, currency })?.minorUnits ??
+    getLimitValue(fallbackMinorUnits)
   )
 }
 
@@ -57,8 +61,8 @@ export function LimitsPanel({
     watch,
   } = useForm<LimitsFormValues>({
     defaultValues: {
-      dailyLimit: getLimitInputValue(getCardDailyLimit(card)),
-      monthlyLimit: getLimitInputValue(getCardMonthlyLimit(card)),
+      dailyLimit: getLimitInputValue(getCardDailyLimit(card), currency),
+      monthlyLimit: getLimitInputValue(getCardMonthlyLimit(card), currency),
     },
   })
   const dailyLimit = watch('dailyLimit')
@@ -71,7 +75,7 @@ export function LimitsPanel({
       label: t('dailyLimit'),
       value: formatMoney(
         isEditingLimits
-          ? getEditedLimitValue(dailyLimit, getCardDailyLimit(card))
+          ? getEditedLimitValue(dailyLimit, getCardDailyLimit(card), currency)
           : getLimitValue(getCardDailyLimit(card)),
         currency,
       ),
@@ -87,7 +91,11 @@ export function LimitsPanel({
       label: t('monthlyLimit'),
       value: formatMoney(
         isEditingLimits
-          ? getEditedLimitValue(monthlyLimit, getCardMonthlyLimit(card))
+          ? getEditedLimitValue(
+              monthlyLimit,
+              getCardMonthlyLimit(card),
+              currency,
+            )
           : getLimitValue(getCardMonthlyLimit(card)),
         currency,
       ),
@@ -100,10 +108,10 @@ export function LimitsPanel({
 
   useEffect(() => {
     reset({
-      dailyLimit: getLimitInputValue(getCardDailyLimit(card)),
-      monthlyLimit: getLimitInputValue(getCardMonthlyLimit(card)),
+      dailyLimit: getLimitInputValue(getCardDailyLimit(card), currency),
+      monthlyLimit: getLimitInputValue(getCardMonthlyLimit(card), currency),
     })
-  }, [card, reset])
+  }, [card, currency, reset])
 
   const handleSaveLimits = async (values: LimitsFormValues) => {
     if (!card?.cardId || !card.accountId) {
@@ -112,9 +120,11 @@ export function LimitsPanel({
 
     const dailyLimit = parseMoneyAmountInput(values.dailyLimit, {
       allowZero: true,
+      currency,
     })
     const monthlyLimit = parseMoneyAmountInput(values.monthlyLimit, {
       allowZero: true,
+      currency,
     })
 
     if (!dailyLimit) {
@@ -192,8 +202,11 @@ export function LimitsPanel({
           isUpdating={isUpdatingLimits}
           onCancel={() => {
             reset({
-              dailyLimit: getLimitInputValue(getCardDailyLimit(card)),
-              monthlyLimit: getLimitInputValue(getCardMonthlyLimit(card)),
+              dailyLimit: getLimitInputValue(getCardDailyLimit(card), currency),
+              monthlyLimit: getLimitInputValue(
+                getCardMonthlyLimit(card),
+                currency,
+              ),
             })
             setIsEditingLimits(false)
           }}

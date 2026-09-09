@@ -27,6 +27,13 @@ export const AccountCurrency = {
   USD: 'USD',
 } as const satisfies Record<AccountCurrency, AccountCurrency>
 
+export const AccountCurrencyMinorUnit = {
+  [AccountCurrency.CNY]: 2,
+  [AccountCurrency.EUR]: 2,
+  [AccountCurrency.GBP]: 2,
+  [AccountCurrency.USD]: 2,
+} as const satisfies Record<AccountCurrency, number>
+
 export const AccountType = {
   CHECKING: 'CHECKING',
   SAVINGS: 'SAVINGS',

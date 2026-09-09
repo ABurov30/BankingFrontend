@@ -370,14 +370,16 @@ export function TransferForm() {
   const submit = async (values: TransferFormValues) => {
     if (!operation) return
 
-    const parsedAmount = parseMoneyAmountInput(values.amount)
+    const parsedAmount = parseMoneyAmountInput(values.amount, {
+      currency: sourceAccount?.currency,
+    })
 
     if (!parsedAmount) {
       setError('amount', { message: t('enterValidAmount') })
       return
     }
 
-    const { amount, minorUnits } = parsedAmount
+    const { minorUnits } = parsedAmount
 
     if (!sourceAccount) {
       setError(isTransfer ? 'sourceCardId' : 'sourceAccountId', {
@@ -441,7 +443,6 @@ export function TransferForm() {
       }
 
       setConfirmation({
-        amount,
         destinationAccount,
         idempotencyKey: crypto.randomUUID(),
         minorUnits,
@@ -463,7 +464,6 @@ export function TransferForm() {
     }
 
     setConfirmation({
-      amount,
       destinationAccount: recipientAccount,
       idempotencyKey: crypto.randomUUID(),
       minorUnits,

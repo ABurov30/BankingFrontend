@@ -591,7 +591,9 @@ export interface components {
       cardId: string
       /** @enum {string} */
       status: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
+      /** Format: int64 */
       dailyLimitMinorUnits: number
+      /** Format: int64 */
       monthlyLimitMinorUnits: number
     }
     UpdateCardResponseDto: {
@@ -602,11 +604,15 @@ export interface components {
       pan?: string
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
+      /** Format: int64 */
       dailyLimitMinorUnits?: number
+      /** Format: int64 */
       monthlyLimitMinorUnits?: number
       /** Format: date-time */
       expiresAt?: string
+      /** Format: int64 */
       spendDailyLimitMinorUnits?: number
+      /** Format: int64 */
       spendMonthlyLimitMinorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
@@ -652,12 +658,16 @@ export interface components {
       pan?: string
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
-      dailyLimit?: number
-      monthlyLimit?: number
+      /** Format: int64 */
+      dailyLimitMinorUnits?: number
+      /** Format: int64 */
+      monthlyLimitMinorUnits?: number
       /** Format: date-time */
       expiresAt?: string
-      spendDailyLimit?: number
-      spendMonthlyLimit?: number
+      /** Format: int64 */
+      spendDailyLimitMinorUnits?: number
+      /** Format: int64 */
+      spendMonthlyLimitMinorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
@@ -700,6 +710,7 @@ export interface components {
       sourceCardId: string
       /** Format: uuid */
       targetAccountId: string
+      /** Format: int64 */
       minorUnits: number
       /** @enum {string} */
       currency: 'USD' | 'EUR' | 'CNY' | 'GBP'
@@ -718,11 +729,15 @@ export interface components {
       pan?: string
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
+      /** Format: int64 */
       dailyLimitMinorUnits?: number
+      /** Format: int64 */
       monthlyLimitMinorUnits?: number
       /** Format: date-time */
       expiresAt?: string
+      /** Format: int64 */
       spendDailyLimitMinorUnits?: number
+      /** Format: int64 */
       spendMonthlyLimitMinorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
@@ -746,6 +761,7 @@ export interface components {
     UpdateAccountBalanceRequestDto: {
       /** Format: uuid */
       accountId: string
+      /** Format: int64 */
       minorUnits: number
     }
     GetAccountResponseDto: {
@@ -758,8 +774,10 @@ export interface components {
       type?: 'CHECKING' | 'SAVINGS'
       /** @enum {string} */
       status?: 'ACTIVE' | 'FROZEN' | 'CLOSED'
-      availableBalance?: number
-      reservedBalance?: number
+      /** Format: int64 */
+      availableBalanceMinorUnits?: number
+      /** Format: int64 */
+      reservedBalanceMinorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
@@ -781,8 +799,10 @@ export interface components {
       type?: 'CHECKING' | 'SAVINGS'
       /** @enum {string} */
       status?: 'ACTIVE' | 'FROZEN' | 'CLOSED'
-      availableBalance?: number
-      reservedBalance?: number
+      /** Format: int64 */
+      availableBalanceMinorUnits?: number
+      /** Format: int64 */
+      reservedBalanceMinorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
@@ -805,6 +825,7 @@ export interface components {
     TransactionResponseDto: {
       /** Format: uuid */
       transactionId?: string
+      /** Format: int64 */
       minorUnits?: number
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'

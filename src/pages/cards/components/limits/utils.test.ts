@@ -8,9 +8,9 @@ describe('card limit utilities', () => {
     expect(getLimitValue(250)).toBe(250)
   })
 
-  it('formats limit input values from major units', () => {
+  it('formats limit input values from minor units', () => {
     expect(getLimitInputValue()).toBe('00.00')
-    expect(getLimitInputValue(250)).toBe('250.00')
+    expect(getLimitInputValue(25_000)).toBe('250.00')
   })
 
   it('calculates spent limit width safely', () => {

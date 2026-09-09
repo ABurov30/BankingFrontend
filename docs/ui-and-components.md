@@ -142,11 +142,12 @@ The form is decomposed into focused presentation components under
 `src/components/TransferPanel/components`, while `TransferForm.tsx` keeps the
 workflow and mutation logic.
 
-Amount inputs use a minor-unit money mask: typed digits are interpreted as
-cents, so `20` renders as `00.20` and `1234` renders as `12.34`. Pasted decimal
-values with a dot or comma are normalized through the same mask. The transfer
-panel parses amount input through `src/lib/moneyAmount.ts`; top-up, withdraw,
-and transaction creation send integer minor units to the API.
+Amount inputs use a minor-unit money mask: typed digits are interpreted through
+the selected currency's configured minor-unit precision, so USD `20` renders
+as `00.20` and `1234` renders as `12.34`. Pasted decimal values with a dot or
+comma are normalized through the same mask. The transfer panel parses amount
+input through `src/lib/moneyAmount.ts`; top-up, withdraw, and transaction
+creation send integer minor units to the API.
 
 Transaction creation requires a `sourceCardId`. The transfer flow resolves an
 active card from the selected source account before showing the confirmation

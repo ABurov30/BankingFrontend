@@ -87,7 +87,7 @@ export function TransferConfirmationDialog({
           <ConfirmationRow
             label={t('amount')}
             value={formatMoney(
-              confirmation.amount,
+              confirmation.minorUnits,
               confirmation.sourceAccount.currency ?? AccountCurrency.USD,
             )}
           />

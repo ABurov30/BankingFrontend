@@ -1,11 +1,15 @@
-import { amountToMinorUnits, formatMinorUnitInput } from '@/lib/moneyAmount'
+import { formatMinorUnitInput } from '@/lib/moneyAmount'
+import { AccountCurrency, type AccountCurrency as AccountCurrencyValue } from '@/shared/api/enums'
 
 export function getLimitValue(value?: number) {
   return Number.isFinite(value) ? value ?? 0 : 0
 }
 
-export function getLimitInputValue(value = 0) {
-  return formatMinorUnitInput(String(Math.max(0, amountToMinorUnits(value))))
+export function getLimitInputValue(
+  value = 0,
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
+  return formatMinorUnitInput(String(Math.max(0, value)), currency)
 }
 
 export function getLimitUsageWidth(spent?: number, limit?: number) {

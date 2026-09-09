@@ -2,7 +2,12 @@ import type { ChangeEventHandler } from 'react'
 import type { FieldError, UseFormRegister } from 'react-hook-form'
 
 import { formatCurrencySymbol } from '@/lib/formatMoney'
-import { formatMinorUnitInput, parseMoneyAmountInput } from '@/lib/moneyAmount'
+import {
+  formatMinorUnitInput,
+  getMoneyAmountInputPattern,
+  getMoneyAmountInputPlaceholder,
+  parseMoneyAmountInput,
+} from '@/lib/moneyAmount'
 import { cn } from '@/lib/utils'
 import type { AccountCurrency } from '@/shared/api/enums'
 import type { LimitsFormValues, LimitsTranslationFunction } from './types'
@@ -36,13 +41,13 @@ export function LimitItem({
   const limitField = register(fieldName, {
     required: t('limitRequired'),
     validate: (value) =>
-      parseMoneyAmountInput(value, { allowZero: true })
+      parseMoneyAmountInput(value, { allowZero: true, currency })
         ? true
         : t('enterValidAmount'),
   })
 
   const handleLimitChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    event.target.value = formatMinorUnitInput(event.target.value)
+    event.target.value = formatMinorUnitInput(event.target.value, currency)
     void limitField.onChange(event)
 
     requestAnimationFrame(() => {
@@ -67,8 +72,8 @@ export function LimitItem({
               className={styles['cards__limit-input']}
               disabled={disabled}
               inputMode="numeric"
-              pattern="[0-9]+[.][0-9]{2}"
-              placeholder="0.00"
+              pattern={getMoneyAmountInputPattern(currency)}
+              placeholder={getMoneyAmountInputPlaceholder(currency)}
               type="text"
               {...limitField}
               onChange={handleLimitChange}

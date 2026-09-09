@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest'
 import { formatMoney } from './formatMoney'
 
 describe('formatMoney', () => {
-  it('formats an amount with the currency symbol and two fraction digits', () => {
-    expect(formatMoney(1234.5, 'USD')).toBe('$ 1,234.50')
+  it('formats minor units with the currency symbol and configured fraction digits', () => {
+    expect(formatMoney(123450, 'USD')).toBe('$ 1,234.50')
   })
 
   it('uses zero and USD when values are omitted', () => {

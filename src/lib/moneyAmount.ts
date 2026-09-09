@@ -1,3 +1,9 @@
+import {
+  AccountCurrency,
+  AccountCurrencyMinorUnit,
+  type AccountCurrency as AccountCurrencyValue,
+} from '@/shared/api/enums'
+
 export type ParsedMoneyAmount = {
   amount: number
   minorUnits: number
@@ -5,12 +11,15 @@ export type ParsedMoneyAmount = {
 
 type ParseMoneyAmountOptions = {
   allowZero?: boolean
+  currency?: AccountCurrencyValue
 }
 
-const moneyAmountPattern = /^\d+(?:[,.]\d{0,2})?$/
-
-export function formatMinorUnitInput(value: string) {
+export function formatMinorUnitInput(
+  value: string,
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
   const digits = value.replace(/\D/g, '')
+  const minorUnit = getCurrencyMinorUnit(currency)
 
   if (!digits) {
     return ''
@@ -22,17 +31,27 @@ export function formatMinorUnitInput(value: string) {
     return value
   }
 
-  const wholeUnits = Math.floor(minorUnits / 100)
-  const fractionUnits = minorUnits % 100
+  const factor = getMinorUnitFactor(currency)
+  const wholeUnits = Math.floor(minorUnits / factor)
+  const fractionUnits = minorUnits % factor
 
-  return `${String(wholeUnits).padStart(2, '0')}.${String(fractionUnits).padStart(2, '0')}`
+  if (minorUnit === 0) {
+    return String(wholeUnits)
+  }
+
+  return `${String(wholeUnits).padStart(2, '0')}.${String(fractionUnits).padStart(minorUnit, '0')}`
 }
 
 export function parseMoneyAmountInput(
   value: string,
-  { allowZero = false }: ParseMoneyAmountOptions = {},
+  {
+    allowZero = false,
+    currency = AccountCurrency.USD,
+  }: ParseMoneyAmountOptions = {},
 ): ParsedMoneyAmount | null {
   const normalizedValue = value.trim().replace(',', '.')
+  const minorUnit = getCurrencyMinorUnit(currency)
+  const moneyAmountPattern = getMoneyAmountPattern(minorUnit)
 
   if (!moneyAmountPattern.test(normalizedValue)) {
     return null
@@ -40,7 +59,7 @@ export function parseMoneyAmountInput(
 
   const [wholePart, fractionPart = ''] = normalizedValue.split('.')
   const wholeUnits = Number(wholePart)
-  const fractionUnits = Number(fractionPart.padEnd(2, '0'))
+  const fractionUnits = Number(fractionPart.padEnd(minorUnit, '0'))
 
   if (
     !Number.isSafeInteger(wholeUnits) ||
@@ -49,7 +68,8 @@ export function parseMoneyAmountInput(
     return null
   }
 
-  const minorUnits = wholeUnits * 100 + fractionUnits
+  const factor = getMinorUnitFactor(currency)
+  const minorUnits = wholeUnits * factor + fractionUnits
 
   if (
     !Number.isSafeInteger(minorUnits) ||
@@ -60,17 +80,20 @@ export function parseMoneyAmountInput(
   }
 
   return {
-    amount: minorUnits / 100,
+    amount: minorUnits / factor,
     minorUnits,
   }
 }
 
-export function amountToMinorUnits(amount = 0) {
+export function amountToMinorUnits(
+  amount = 0,
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
   if (!Number.isFinite(amount)) {
     return 0
   }
 
-  return Math.round(amount * 100)
+  return Math.round(amount * getMinorUnitFactor(currency))
 }
 
 export function normalizeMinorUnits(value = 0) {
@@ -85,6 +108,51 @@ export function normalizeMinorUnits(value = 0) {
   return amountToMinorUnits(value)
 }
 
-export function minorUnitsToAmount(minorUnits = 0) {
-  return normalizeMinorUnits(minorUnits) / 100
+export function minorUnitsToAmount(
+  minorUnits = 0,
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
+  return normalizeMinorUnits(minorUnits) / getMinorUnitFactor(currency)
+}
+
+export function getCurrencyMinorUnit(
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+): number {
+  return AccountCurrencyMinorUnit[currency]
+}
+
+export function getMoneyAmountInputPattern(
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
+  const minorUnit = getCurrencyMinorUnit(currency)
+
+  if (minorUnit === 0) {
+    return '[0-9]+'
+  }
+
+  return `[0-9]+[.][0-9]{${minorUnit}}`
+}
+
+export function getMoneyAmountInputPlaceholder(
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+) {
+  const minorUnit = getCurrencyMinorUnit(currency)
+
+  if (minorUnit === 0) {
+    return '0'
+  }
+
+  return `0.${'0'.repeat(minorUnit)}`
+}
+
+function getMinorUnitFactor(currency: AccountCurrencyValue) {
+  return 10 ** getCurrencyMinorUnit(currency)
+}
+
+function getMoneyAmountPattern(minorUnit: number) {
+  if (minorUnit === 0) {
+    return /^\d+$/
+  }
+
+  return new RegExp(`^\\d+(?:[,.]\\d{0,${minorUnit}})?$`)
 }

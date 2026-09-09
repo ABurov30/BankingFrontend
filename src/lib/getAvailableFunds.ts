@@ -2,14 +2,16 @@ import type { GetAccountResponseDto } from '@/shared/api/types'
 
 type AccountBalance = Pick<
   GetAccountResponseDto,
-  'availableBalance' | 'reservedBalance'
+  'availableBalanceMinorUnits' | 'reservedBalanceMinorUnits'
 >
 
-/** Returns the amount currently available to use on an account. */
+/** Returns available account funds in minor units. */
 export function getAvailableFunds(account?: AccountBalance | null) {
-  if (account?.availableBalance == null) {
+  if (account?.availableBalanceMinorUnits == null) {
     return undefined
   }
 
-  return account.availableBalance - (account.reservedBalance ?? 0)
+  return (
+    account.availableBalanceMinorUnits - (account.reservedBalanceMinorUnits ?? 0)
+  )
 }

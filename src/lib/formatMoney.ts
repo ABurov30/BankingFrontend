@@ -1,5 +1,6 @@
 import {
   AccountCurrency,
+  AccountCurrencyMinorUnit,
   type AccountCurrency as AccountCurrencyValue,
 } from '@/shared/api/enums'
 
@@ -12,11 +13,13 @@ const currencySymbols = {
 } as const satisfies Record<AccountCurrencyValue, string>
 
 export function formatMoney(
-  value = 0,
+  minorUnits = 0,
   currency: AccountCurrencyValue = AccountCurrency.USD,
 ) {
   const formatter = getNumberFormatter(currency)
-  return `${formatCurrencySymbol(currency)} ${formatter.format(value)}`
+  const amount = minorUnits / 10 ** getCurrencyMinorUnit(currency)
+
+  return `${formatCurrencySymbol(currency)} ${formatter.format(amount)}`
 }
 
 export function formatCurrencySymbol(
@@ -32,11 +35,18 @@ function getNumberFormatter(currency: AccountCurrencyValue) {
     return cachedFormatter
   }
 
+  const minorUnit = getCurrencyMinorUnit(currency)
   const formatter = new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
+    maximumFractionDigits: minorUnit,
+    minimumFractionDigits: minorUnit,
   })
   numberFormatters.set(currency, formatter)
 
   return formatter
+}
+
+export function getCurrencyMinorUnit(
+  currency: AccountCurrencyValue = AccountCurrency.USD,
+): number {
+  return AccountCurrencyMinorUnit[currency]
 }
