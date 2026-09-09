@@ -16,11 +16,11 @@ import {
 import { AccountStatus, CardStatus } from '@/shared/api/enums'
 import { getApiErrorMessage } from '@/shared/api/error'
 import type {
-  GetAccountWithCardsResponseDto,
-  GetUserInfoResponseDto,
+  AccountResponseWithoutSensitiveInfo,
+  UserInfoWithoutIds,
 } from '@/shared/api/types'
 import { useCreateTransactionMutation } from '@/shared/api/transactionApi'
-import { useGetUserInfoWithAccountsByEmailMutation } from '@/shared/api/userApi'
+import { useGetRecipientInfoMutation } from '@/shared/api/userApi'
 import { useI18n } from '@/shared/i18n/useI18n'
 import {
   AccountPicker,
@@ -54,9 +54,9 @@ export function TransferForm() {
   const [operation, setOperation] = useState<PanelOperation | null>(null)
   const [transferStage, setTransferStage] = useState<TransferStage>('TARGET')
   const [openAccountMenu, setOpenAccountMenu] = useState<AccountMenu>(null)
-  const [recipient, setRecipient] = useState<GetUserInfoResponseDto>()
+  const [recipient, setRecipient] = useState<UserInfoWithoutIds>()
   const [recipientAccounts, setRecipientAccounts] = useState<
-    GetAccountWithCardsResponseDto[]
+    AccountResponseWithoutSensitiveInfo[]
   >([])
   const [confirmation, setConfirmation] = useState<TransferConfirmation>()
   const [topUpAccount, { isLoading: isToppingUp }] = useTopUpAccountMutation()
@@ -64,8 +64,8 @@ export function TransferForm() {
     useWithdrawAccountMutation()
   const [createTransaction, { isLoading: isCreatingTransaction }] =
     useCreateTransactionMutation()
-  const [getUserInfoWithAccountsByEmail, { isLoading: isLookingUpRecipient }] =
-    useGetUserInfoWithAccountsByEmailMutation()
+  const [getRecipientInfo, { isLoading: isLookingUpRecipient }] =
+    useGetRecipientInfoMutation()
   const {
     clearErrors,
     formState: { errors },
@@ -138,8 +138,8 @@ export function TransferForm() {
   )
   const activeRecipientAccounts = useMemo(
     () =>
-      recipientAccounts.flatMap(({ account }) =>
-        account?.accountId && account.status === AccountStatus.ACTIVE
+      recipientAccounts.flatMap((account) =>
+        account.accountId && account.status === AccountStatus.ACTIVE
           ? [account]
           : [],
       ),
@@ -342,14 +342,14 @@ export function TransferForm() {
     clearErrors('email')
 
     try {
-      const data = await getUserInfoWithAccountsByEmail({ email }).unwrap()
+      const data = await getRecipientInfo({ email }).unwrap()
 
       if (!data.userInfo) {
         setError('email', { message: t('recipientLookupFailed') })
         return
       }
 
-      if (data.userInfo.userProfileId === user?.userProfileId) {
+      if (data.userInfo.email === user?.email) {
         setError('email', { message: t('recipientCannotBeYourself') })
         return
       }

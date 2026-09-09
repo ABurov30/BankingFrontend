@@ -21,13 +21,10 @@ const brokerURL =
 
 async function refreshAccounts(
   dispatch: typeof import('@/app/store').store.dispatch,
-  ownerUserId?: string,
 ) {
-  if (!ownerUserId) return
-
   dispatch(invalidateAccounts())
   const request = dispatch(
-    accountApi.endpoints.getAccountsWithCardsByOwnerId.initiate(ownerUserId, {
+    accountApi.endpoints.getOwnAccountsWithCards.initiate(undefined, {
       forceRefetch: true,
     }),
   )
@@ -43,12 +40,9 @@ async function refreshAccounts(
 
 async function refreshTransactions(
   dispatch: typeof import('@/app/store').store.dispatch,
-  userProfileId?: string,
 ) {
-  if (!userProfileId) return
-
   const request = dispatch(
-    transactionApi.endpoints.getTransactionsByUserId.initiate(userProfileId, {
+    transactionApi.endpoints.getMyTransactions.initiate(undefined, {
       forceRefetch: true,
     }),
   )
@@ -121,12 +115,12 @@ export function useNotificationsWebSocket() {
 
           if (shouldRefreshAccounts) {
             dispatch(baseApi.util.invalidateTags(['Account', 'Card']))
-            void refreshAccounts(dispatch, currentUser.userProfileId)
+            void refreshAccounts(dispatch)
           }
 
           if (shouldRefreshTransactions) {
             dispatch(baseApi.util.invalidateTags(['Transaction']))
-            void refreshTransactions(dispatch, currentUser.userProfileId)
+            void refreshTransactions(dispatch)
           }
 
           dispatch(addLiveNotificationToCache(notification))

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { selectAccountsInitialized } from './accountsSlice'
 import { selectCardsInitialized } from '@/features/cards/cardsSlice'
-import { useGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
+import { useGetOwnAccountsWithCardsQuery } from '@/shared/api/accountApi'
 import { syncAccountsSnapshot } from './syncAccounts'
 
 /** Loads the shared accounts/cards snapshot once per authenticated session. */
@@ -14,9 +14,7 @@ export function useEnsureAccountsLoaded(ownerUserId?: string) {
   const areCardsInitialized = useAppSelector(selectCardsInitialized)
   const shouldLoad =
     Boolean(ownerUserId) && (!areAccountsInitialized || !areCardsInitialized)
-  const query = useGetAccountsWithCardsByOwnerIdQuery(
-    shouldLoad ? ownerUserId! : skipToken,
-  )
+  const query = useGetOwnAccountsWithCardsQuery(shouldLoad ? undefined : skipToken)
 
   // A cached RTK Query response may be reused after the Redux slices are reset.
   // Synchronize it explicitly so the slices remain the page data source.

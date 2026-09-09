@@ -84,14 +84,16 @@ Current frontend enum domains:
   current `UserInfo` model.
 - Manager all-users list.
 - Manager single-user details.
-- User lookup by email with accounts-with-cards for external transfers.
+- Recipient lookup by email returns a privacy-safe recipient profile and
+  account identifiers for external transfers.
 - Normalization from backend auth/user response shape into `UserInfo`.
 
 `accountApi.ts` owns account operations:
 
 - Create account.
 - Top up and withdraw.
-- Freeze and unfreeze.
+- Freeze and unfreeze for the current user, with separate manager endpoints
+  for managed accounts.
 - Get current user's accounts with cards.
 - Get all accounts with cards for manager flows.
 
@@ -102,7 +104,7 @@ Current frontend enum domains:
 
 `transactionApi.ts` owns transaction operations:
 
-- Get transactions by user ID.
+- Get the current user's transactions.
 - Create transfer transaction.
 
 `CreateTransactionRequestDto` requires `sourceAccountId`, `sourceCardId`,

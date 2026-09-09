@@ -2,7 +2,7 @@ import type { useI18n } from '@/shared/i18n/useI18n'
 import type {
   GetAccountResponseDto,
   GetCardByAccountIdResponseDto,
-  GetUserInfoResponseDto,
+  UserInfoWithoutIds,
 } from '@/shared/api/types'
 
 export type PanelOperation =
@@ -26,7 +26,7 @@ export type TransferConfirmation = {
   destinationAccount: GetAccountResponseDto
   idempotencyKey: string
   minorUnits: number
-  recipient?: GetUserInfoResponseDto
+  recipient?: UserInfoWithoutIds
   sourceAccount: GetAccountResponseDto
   sourceCard: GetCardByAccountIdResponseDto
   sourceCardId: string

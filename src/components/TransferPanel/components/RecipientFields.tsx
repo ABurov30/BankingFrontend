@@ -3,8 +3,8 @@ import type { ChangeEventHandler } from 'react'
 import type { FieldError, UseFormRegisterReturn } from 'react-hook-form'
 
 import type {
-  GetAccountResponseDto,
-  GetUserInfoResponseDto,
+  AccountResponseWithoutSensitiveInfo,
+  UserInfoWithoutIds,
 } from '@/shared/api/types'
 import type { TranslationFunction } from '../types'
 import { getInitials, getUserName } from '../utils'
@@ -28,7 +28,7 @@ export function RecipientFields({
   recipientEmailField,
   t,
 }: {
-  activeRecipientAccounts: GetAccountResponseDto[]
+  activeRecipientAccounts: AccountResponseWithoutSensitiveInfo[]
   emailError?: FieldError
   isLookingUpRecipient: boolean
   isRecipientMenuOpen: boolean
@@ -36,8 +36,8 @@ export function RecipientFields({
   onRecipientAccountSelect: (accountId: string) => void
   onRecipientMenuToggle: () => void
   onSearchRecipient: () => void
-  recipient?: GetUserInfoResponseDto
-  recipientAccount?: GetAccountResponseDto
+  recipient?: UserInfoWithoutIds
+  recipientAccount?: AccountResponseWithoutSensitiveInfo
   recipientAccountError?: FieldError
   recipientAccountId: string
   recipientEmailField: UseFormRegisterReturn<'email'>
@@ -106,7 +106,7 @@ export function RecipientFields({
 function RecipientSummary({
   recipient,
 }: {
-  recipient: GetUserInfoResponseDto
+  recipient: UserInfoWithoutIds
 }) {
   return (
     <div className={styles['transfer-panel__recipient']}>

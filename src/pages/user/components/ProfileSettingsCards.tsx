@@ -5,12 +5,10 @@ import { PreferencesCard, SecurityCard, SignInMethodsCard } from './settings'
 import type { PersonalInfoItem } from './types'
 
 export function ProfileSettingsCards({
-  authUserId,
   isLoading = false,
   personalInfo,
   socialAccounts,
 }: {
-  authUserId?: string
   isLoading?: boolean
   personalInfo: PersonalInfoItem[]
   socialAccounts?: SocialAccountResponse[]
@@ -22,7 +20,7 @@ export function ProfileSettingsCards({
           isLoading={isLoading}
           personalInfo={personalInfo}
         />
-        <SecurityCard authUserId={authUserId} />
+        <SecurityCard />
       </div>
 
       <div className={styles['user__stat-card']}>

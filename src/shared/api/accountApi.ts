@@ -5,7 +5,6 @@ import {
 } from '@/features/accounts/syncAccounts'
 
 import { baseApi } from './baseApi'
-import type { RootState } from '@/app/store'
 import type {
   CreateAccountRequest,
   CreateAccountResponse,
@@ -17,20 +16,15 @@ import type {
 
 type AccountActionArgs = {
   accountId: string
-  ownerUserId?: string
 }
 
-async function refreshAccounts({
+async function refreshOwnAccounts({
   dispatch,
-  ownerUserId,
 }: {
   dispatch: typeof import('@/app/store').store.dispatch
-  ownerUserId?: string
 }) {
-  if (!ownerUserId) return
-
   const request = dispatch(
-    accountApi.endpoints.getAccountsWithCardsByOwnerId.initiate(ownerUserId, {
+    accountApi.endpoints.getOwnAccountsWithCards.initiate(undefined, {
       forceRefetch: true,
     }),
   )
@@ -48,15 +42,11 @@ export const accountApi = baseApi.injectEndpoints({
       CreateAccountResponse,
       CreateAccountRequest
     >({
-      async onQueryStarted(_, { dispatch, getState, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
           dispatch(invalidateAccounts())
-          await refreshAccounts({
-            dispatch,
-            ownerUserId: (getState() as RootState).user.currentUser
-              ?.userProfileId,
-          })
+          await refreshOwnAccounts({ dispatch })
         } catch {
           // The mutation error is exposed to the caller.
         }
@@ -107,11 +97,11 @@ export const accountApi = baseApi.injectEndpoints({
       invalidatesTags: ['Account', 'Card'],
     }),
     freezeAccount: builder.mutation<void, AccountActionArgs>({
-      async onQueryStarted({ ownerUserId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
           dispatch(invalidateAccounts())
-          await refreshAccounts({ dispatch, ownerUserId })
+          await refreshOwnAccounts({ dispatch })
         } catch {
           // The mutation error is exposed to the caller.
         }
@@ -123,11 +113,11 @@ export const accountApi = baseApi.injectEndpoints({
       invalidatesTags: ['Account', 'Card'],
     }),
     unfreezeAccount: builder.mutation<void, AccountActionArgs>({
-      async onQueryStarted({ ownerUserId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
           dispatch(invalidateAccounts())
-          await refreshAccounts({ dispatch, ownerUserId })
+          await refreshOwnAccounts({ dispatch })
         } catch {
           // The mutation error is exposed to the caller.
         }
@@ -138,26 +128,40 @@ export const accountApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Account', 'Card'],
     }),
-    getAccountsWithCardsByOwnerId: builder.query<
+    freezeAccountByManager: builder.mutation<void, AccountActionArgs>({
+      query: ({ accountId }) => ({
+        method: 'PUT',
+        url: `/account/manager/freeze/${accountId}`,
+      }),
+      invalidatesTags: ['Account', 'Card'],
+    }),
+    unfreezeAccountByManager: builder.mutation<void, AccountActionArgs>({
+      query: ({ accountId }) => ({
+        method: 'PUT',
+        url: `/account/manager/unfreeze/${accountId}`,
+      }),
+      invalidatesTags: ['Account', 'Card'],
+    }),
+    getOwnAccountsWithCards: builder.query<
       GetAccountsWithCardsByOwnerIdResponse,
-      string
+      void
     >({
-      async onQueryStarted(
-        ownerUserId,
-        { dispatch, getState, queryFulfilled },
-      ) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
-          const currentUser = (getState() as RootState).user.currentUser
-
-          if (currentUser?.userProfileId === ownerUserId) {
-            syncAccountsSnapshot(dispatch, data)
-          }
+          syncAccountsSnapshot(dispatch, data)
         } catch {
           // Keep the previous redux state until a successful refetch replaces it.
         }
       },
-      query: (ownerUserId) => `/account/accounts/${ownerUserId}`,
+      query: () => '/account/accounts/me',
+      providesTags: ['Account', 'Card'],
+    }),
+    getAccountsWithCardsByOwnerId: builder.query<
+      GetAccountsWithCardsByOwnerIdResponse,
+      string
+    >({
+      query: (ownerUserId) => `/account/manager/accounts/${ownerUserId}`,
       providesTags: ['Account', 'Card'],
     }),
     getAllAccountsWithCards: builder.query<
@@ -181,10 +185,13 @@ export const accountApi = baseApi.injectEndpoints({
 export const {
   useCreateAccountMutation,
   useFreezeAccountMutation,
+  useFreezeAccountByManagerMutation,
+  useGetOwnAccountsWithCardsQuery,
   useGetAccountsWithCardsByOwnerIdQuery,
   useGetAllAccountsWithCardsQuery,
   useLazyGetAccountsWithCardsByOwnerIdQuery,
   useTopUpAccountMutation,
   useUnfreezeAccountMutation,
+  useUnfreezeAccountByManagerMutation,
   useWithdrawAccountMutation,
 } = accountApi

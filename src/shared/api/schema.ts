@@ -148,6 +148,38 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/account/manager/unfreeze/{accountId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['unfreezeAccountByManager']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/account/manager/freeze/{accountId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['freezeAccountByManager']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/account/freeze/{accountId}': {
     parameters: {
       query?: never
@@ -164,16 +196,32 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/user/user-info': {
+  '/user/recipient-info': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    get: operations['getUserInfo']
+    get?: never
     put?: never
-    post: operations['getUserInfoWithAccountsByEmail']
+    post: operations['getRecipientInfo']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/user/manager/user-info': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['getUserInfoByManager']
     delete?: never
     options?: never
     head?: never
@@ -317,7 +365,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    post: operations['postCreateAccount']
+    post: operations['createAccount']
     delete?: never
     options?: never
     head?: never
@@ -340,14 +388,14 @@ export interface paths {
     patch: operations['markAsReaded']
     trace?: never
   }
-  '/user/manager/user-info/{userId}': {
+  '/user/user-info': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    get: operations['getUserInfoByManager']
+    get: operations['getUserInfo']
     put?: never
     post?: never
     delete?: never
@@ -388,14 +436,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/transaction/user/{userId}': {
+  '/transaction/user/me': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    get: operations['getTransactionsByUserId']
+    get: operations['getTransactionsByMe']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/transaction/manager/user/{userId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getTransactionsByUserIdByManager']
     put?: never
     post?: never
     delete?: never
@@ -532,6 +596,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/account/manager/accounts/{ownerUserId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getAccountsWithCardsByOwnerIdByManager']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/account/health': {
     parameters: {
       query?: never
@@ -548,14 +628,14 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/account/accounts/{ownerUserId}': {
+  '/account/accounts/me': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    get: operations['getAccountsWithCardsByOwnerId']
+    get: operations['getAccountsWithCardsByAuthUserId']
     put?: never
     post?: never
     delete?: never
@@ -623,8 +703,7 @@ export interface components {
       verificationCode: string
     }
     ResetPasswordRequestDto: {
-      /** Format: uuid */
-      authUserId: string
+      resetPasswordToken: string
       newPassword: string
     }
     UnlockAuthUserRequestDto: {
@@ -636,7 +715,6 @@ export interface components {
       authUserId?: string
     }
     ChangePasswordRequestDto: {
-      authUserId: string
       oldPassword: string
       newPassword: string
     }
@@ -646,37 +724,14 @@ export interface components {
       /** @enum {string} */
       role: 'USER' | 'MANAGER' | 'ADMIN'
     }
-    GetUserInfoByEmailRequestDto: {
+    GetRecipientRequestDto: {
       /** Format: email */
       email: string
     }
-    GetCardByAccountIdResponseDto: {
-      /** Format: uuid */
-      cardId?: string
+    AccountResponseWithoutSensitiveInfo: {
       /** Format: uuid */
       accountId?: string
-      pan?: string
-      /** @enum {string} */
-      status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
-      /** Format: int64 */
-      dailyLimitMinorUnits?: number
-      /** Format: int64 */
-      monthlyLimitMinorUnits?: number
-      /** Format: date-time */
-      expiresAt?: string
-      /** Format: int64 */
-      spendDailyLimitMinorUnits?: number
-      /** Format: int64 */
-      spendMonthlyLimitMinorUnits?: number
-      /** @enum {string} */
-      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
-    }
-    GetUserInfoAccountResponseDto: {
-      /** Format: uuid */
-      accountId?: string
-      /** Format: uuid */
-      ownerUserId?: string
-      accountNumber?: string
+      accountNumberLast4Chars?: string
       /** @enum {string} */
       type?: 'CHECKING' | 'SAVINGS'
       /** @enum {string} */
@@ -684,9 +739,18 @@ export interface components {
       /** @enum {string} */
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
-    GetUserInfoAccountWithCardsResponseDto: {
-      account?: components['schemas']['GetUserInfoAccountResponseDto']
-      cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
+    GetRecipientInfoResponseDto: {
+      userInfo?: components['schemas']['UserInfoWithoutIds']
+      accounts?: components['schemas']['AccountResponseWithoutSensitiveInfo'][]
+    }
+    UserInfoWithoutIds: {
+      email?: string
+      firstName?: string
+      lastName?: string
+    }
+    GetUserInfoByManagerRequestDto: {
+      /** Format: uuid */
+      userId: string
     }
     GetUserInfoResponseDto: {
       /** Format: uuid */
@@ -699,9 +763,18 @@ export interface components {
       /** @enum {string} */
       status?: 'ACTIVE' | 'BLOCKED' | 'PENDING'
     }
-    GetUserInfoWithAccountResponseDto: {
+    GetUserInfoWithAuthInfoResponseDto: {
       userInfo?: components['schemas']['GetUserInfoResponseDto']
-      accounts?: components['schemas']['GetUserInfoAccountWithCardsResponseDto'][]
+      /** @enum {string} */
+      role?: 'USER' | 'MANAGER' | 'ADMIN'
+      /** @enum {string} */
+      status?: 'ACTIVE' | 'BLOCKED' | 'PENDING' | 'FORGET_PASSWORD'
+      socialAccounts?: components['schemas']['SocialAccountResponse'][]
+    }
+    SocialAccountResponse: {
+      /** @enum {string} */
+      provider?: 'GOOGLE'
+      email?: string
     }
     CreateTransactionRequestDto: {
       /** Format: uuid */
@@ -716,6 +789,21 @@ export interface components {
       currency: 'USD' | 'EUR' | 'CNY' | 'GBP'
       /** Format: uuid */
       idempotencyKey: string
+    }
+    CreateTransactionResponseDto: {
+      /** Format: uuid */
+      transactionId?: string
+      /** Format: int64 */
+      minorUnits?: number
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
+      /** @enum {string} */
+      status?:
+        | 'FUNDS_RESERVED'
+        | 'FUNDS_REQUESTED'
+        | 'COMPLETED'
+        | 'FAILED'
+        | 'COMPENSATED'
     }
     CreateCardRequestDto: {
       /** Format: uuid */
@@ -782,8 +870,6 @@ export interface components {
       currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
     CreateAccountRequestDto: {
-      /** Format: uuid */
-      ownerUserId: string
       /** @enum {string} */
       type: 'CHECKING' | 'SAVINGS'
       /** @enum {string} */
@@ -809,18 +895,16 @@ export interface components {
     MarkNotificationsAsReadedRequestDto: {
       ids: string[]
     }
-    GetUserInfoWithAuthInfoResponseDto: {
-      userInfo?: components['schemas']['GetUserInfoResponseDto']
+    GetRecipientResponseDto: {
+      /** Format: uuid */
+      accountId?: string
+      accountNumberLast4Chars?: string
       /** @enum {string} */
-      role?: 'USER' | 'MANAGER' | 'ADMIN'
+      type?: 'CHECKING' | 'SAVINGS'
       /** @enum {string} */
-      status?: 'ACTIVE' | 'BLOCKED' | 'PENDING' | 'FORGET_PASSWORD'
-      socialAccounts?: components['schemas']['SocialAccountResponse'][]
-    }
-    SocialAccountResponse: {
+      status?: 'ACTIVE' | 'FROZEN' | 'CLOSED'
       /** @enum {string} */
-      provider?: 'GOOGLE'
-      email?: string
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
     TransactionResponseDto: {
       /** Format: uuid */
@@ -840,8 +924,8 @@ export interface components {
       createdAt?: string
       /** Format: date-time */
       completedAt?: string
-      sourceAccount?: components['schemas']['GetAccountResponseDto']
-      targetAccount?: components['schemas']['GetAccountResponseDto']
+      sourceAccount?: components['schemas']['GetRecipientResponseDto']
+      targetAccount?: components['schemas']['GetRecipientResponseDto']
     }
     NotificationResponseDto: {
       title?: string
@@ -851,6 +935,27 @@ export interface components {
     GetAccountWithCardsResponseDto: {
       account?: components['schemas']['GetAccountResponseDto']
       cards?: components['schemas']['GetCardByAccountIdResponseDto'][]
+    }
+    GetCardByAccountIdResponseDto: {
+      /** Format: uuid */
+      cardId?: string
+      /** Format: uuid */
+      accountId?: string
+      pan?: string
+      /** @enum {string} */
+      status?: 'ACTIVE' | 'BLOCKED' | 'FROZEN' | 'EXPIRED'
+      /** Format: int64 */
+      dailyLimitMinorUnits?: number
+      /** Format: int64 */
+      monthlyLimitMinorUnits?: number
+      /** Format: date-time */
+      expiresAt?: string
+      /** Format: int64 */
+      spendDailyLimitMinorUnits?: number
+      /** Format: int64 */
+      spendMonthlyLimitMinorUnits?: number
+      /** @enum {string} */
+      currency?: 'USD' | 'EUR' | 'CNY' | 'GBP'
     }
   }
   responses: never
@@ -1057,6 +1162,46 @@ export interface operations {
       }
     }
   }
+  unfreezeAccountByManager: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        accountId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  freezeAccountByManager: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        accountId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   freezeAccount: {
     parameters: {
       query?: never
@@ -1077,27 +1222,7 @@ export interface operations {
       }
     }
   }
-  getUserInfo: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['GetUserInfoWithAuthInfoResponseDto']
-        }
-      }
-    }
-  }
-  getUserInfoWithAccountsByEmail: {
+  getRecipientInfo: {
     parameters: {
       query?: never
       header?: never
@@ -1106,7 +1231,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['GetUserInfoByEmailRequestDto']
+        'application/json': components['schemas']['GetRecipientRequestDto']
       }
     }
     responses: {
@@ -1116,7 +1241,31 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['GetUserInfoWithAccountResponseDto']
+          '*/*': components['schemas']['GetRecipientInfoResponseDto']
+        }
+      }
+    }
+  }
+  getUserInfoByManager: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GetUserInfoByManagerRequestDto']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['GetUserInfoWithAuthInfoResponseDto']
         }
       }
     }
@@ -1139,7 +1288,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          '*/*': components['schemas']['CreateTransactionResponseDto']
+        }
       }
     }
   }
@@ -1242,8 +1393,8 @@ export interface operations {
       }
     }
     responses: {
-      /** @description OK */
-      200: {
+      /** @description Accepted */
+      202: {
         headers: {
           [name: string]: unknown
         }
@@ -1299,7 +1450,7 @@ export interface operations {
       }
     }
   }
-  postCreateAccount: {
+  createAccount: {
     parameters: {
       query?: never
       header?: never
@@ -1345,13 +1496,11 @@ export interface operations {
       }
     }
   }
-  getUserInfoByManager: {
+  getUserInfo: {
     parameters: {
       query?: never
       header?: never
-      path: {
-        userId: string
-      }
+      path?: never
       cookie?: never
     }
     requestBody?: never
@@ -1407,7 +1556,27 @@ export interface operations {
       }
     }
   }
-  getTransactionsByUserId: {
+  getTransactionsByMe: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TransactionResponseDto'][]
+        }
+      }
+    }
+  }
+  getTransactionsByUserIdByManager: {
     parameters: {
       query?: never
       header?: never
@@ -1587,6 +1756,28 @@ export interface operations {
       }
     }
   }
+  getAccountsWithCardsByOwnerIdByManager: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        ownerUserId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['GetAccountWithCardsResponseDto'][]
+        }
+      }
+    }
+  }
   getAccountHealth: {
     parameters: {
       query?: never
@@ -1607,13 +1798,11 @@ export interface operations {
       }
     }
   }
-  getAccountsWithCardsByOwnerId: {
+  getAccountsWithCardsByAuthUserId: {
     parameters: {
       query?: never
       header?: never
-      path: {
-        ownerUserId: string
-      }
+      path?: never
       cookie?: never
     }
     requestBody?: never

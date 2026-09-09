@@ -17,7 +17,7 @@ type ChangePasswordFormValues = {
   oldPassword: string
 }
 
-export function SecurityCard({ authUserId }: { authUserId?: string }) {
+export function SecurityCard() {
   const dispatch = useAppDispatch()
   const { t } = useI18n()
   const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false)
@@ -52,20 +52,8 @@ export function SecurityCard({ authUserId }: { authUserId?: string }) {
     newPassword,
     oldPassword,
   }: ChangePasswordFormValues) => {
-    if (!authUserId) {
-      dispatch(
-        showToast({
-          message: t('userIdUnavailable'),
-          title: t('passwordUpdateFailed'),
-          variant: 'error',
-        }),
-      )
-      return
-    }
-
     try {
       await changePassword({
-        authUserId,
         newPassword,
         oldPassword,
       }).unwrap()
@@ -137,7 +125,7 @@ export function SecurityCard({ authUserId }: { authUserId?: string }) {
         <div className={styles['user__password-actions']}>
           <button
             className={styles['user__password-submit']}
-            disabled={isSubmitting || isLoading || !authUserId}
+            disabled={isSubmitting || isLoading}
             type="submit"
           >
             {isLoading ? t('saving') : t('changePassword')}

@@ -2,8 +2,8 @@ import { baseApi } from './baseApi'
 import type {
   GetAllUserInfoWithAuthInfoResponse,
   GetUserInfoByManagerResponse,
-  GetUserInfoWithAccountsByEmailRequest,
-  GetUserInfoWithAccountsByEmailResponse,
+  GetRecipientInfoRequest,
+  GetRecipientInfoResponse,
   GetUserInfoWithAuthInfoResponse,
   UserInfo,
 } from './types'
@@ -33,18 +33,22 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ['User'],
       transformResponse: normalizeUser,
     }),
-    getUserInfoWithAccountsByEmail: builder.mutation<
-      GetUserInfoWithAccountsByEmailResponse,
-      GetUserInfoWithAccountsByEmailRequest
+    getRecipientInfo: builder.mutation<
+      GetRecipientInfoResponse,
+      GetRecipientInfoRequest
     >({
       query: (body) => ({
         body,
         method: 'POST',
-        url: '/user/user-info',
+        url: '/user/recipient-info',
       }),
     }),
-    getUserInfoByManager: builder.query<UserInfo, { authUserId: string }>({
-      query: ({ authUserId }) => `/user/manager/user-info/${authUserId}`,
+    getUserInfoByManager: builder.query<UserInfo, { userId: string }>({
+      query: (body) => ({
+        body,
+        method: 'POST',
+        url: '/user/manager/user-info',
+      }),
       providesTags: ['User'],
       transformResponse: (response: GetUserInfoByManagerResponse) =>
         normalizeUser(response),
@@ -56,5 +60,5 @@ export const {
   useGetAllUserInfoQuery,
   useGetUserInfoByManagerQuery,
   useGetUserInfoQuery,
-  useGetUserInfoWithAccountsByEmailMutation,
+  useGetRecipientInfoMutation,
 } = userApi

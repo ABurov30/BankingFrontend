@@ -87,11 +87,7 @@ function AccountsPage() {
     }
 
     try {
-      await createAccount({
-        currency: values.currency,
-        ownerUserId,
-        type: values.type,
-      }).unwrap()
+      await createAccount({ currency: values.currency, type: values.type }).unwrap()
       setIsCreateFormOpen(false)
     } catch (error) {
       dispatch(
@@ -106,7 +102,7 @@ function AccountsPage() {
 
   const handleFreezeAccount = async (accountId: string) => {
     try {
-      await freezeAccount({ accountId, ownerUserId }).unwrap()
+      await freezeAccount({ accountId }).unwrap()
     } catch (error) {
       dispatch(
         showToast({
@@ -120,7 +116,7 @@ function AccountsPage() {
 
   const handleUnfreezeAccount = async (accountId: string) => {
     try {
-      await unfreezeAccount({ accountId, ownerUserId }).unwrap()
+      await unfreezeAccount({ accountId }).unwrap()
     } catch (error) {
       dispatch(
         showToast({

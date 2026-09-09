@@ -10,9 +10,9 @@ import {
   getCardMonthlyLimitMinorUnits,
 } from '@/lib/cardLimits'
 import {
-  useFreezeAccountMutation,
+  useFreezeAccountByManagerMutation,
   useGetAccountsWithCardsByOwnerIdQuery,
-  useUnfreezeAccountMutation,
+  useUnfreezeAccountByManagerMutation,
 } from '@/shared/api/accountApi'
 import { useUpdateCardMutation } from '@/shared/api/cardApi'
 import type { CardStatus as CardStatusValue } from '@/shared/api/enums'
@@ -30,7 +30,7 @@ function UserDetailsPage() {
   const navigate = useNavigate()
   const { authUserId } = useParams<{ authUserId: string }>()
   const { data: user, isLoading } = useGetUserInfoByManagerQuery(
-    authUserId ? { authUserId } : skipToken,
+    authUserId ? { userId: authUserId } : skipToken,
   )
   const {
     data: accountsWithCards,
@@ -38,16 +38,13 @@ function UserDetailsPage() {
     refetch: refetchAccounts,
   } = useGetAccountsWithCardsByOwnerIdQuery(user?.userProfileId ?? skipToken)
   const [freezeAccount, { isLoading: isFreezingAccount }] =
-    useFreezeAccountMutation()
+    useFreezeAccountByManagerMutation()
   const [unfreezeAccount, { isLoading: isUnfreezingAccount }] =
-    useUnfreezeAccountMutation()
+    useUnfreezeAccountByManagerMutation()
   const [updateCard, { isLoading: isUpdatingCard }] = useUpdateCardMutation()
   const handleFreezeAccount = async (accountId: string) => {
     try {
-      await freezeAccount({
-        accountId,
-        ownerUserId: user?.userProfileId,
-      }).unwrap()
+      await freezeAccount({ accountId }).unwrap()
       await refetchAccounts()
     } catch (error) {
       dispatch(
@@ -58,10 +55,7 @@ function UserDetailsPage() {
 
   const handleUnfreezeAccount = async (accountId: string) => {
     try {
-      await unfreezeAccount({
-        accountId,
-        ownerUserId: user?.userProfileId,
-      }).unwrap()
+      await unfreezeAccount({ accountId }).unwrap()
       await refetchAccounts()
     } catch (error) {
       dispatch(
