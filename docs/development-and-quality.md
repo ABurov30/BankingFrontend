@@ -219,6 +219,31 @@ Prefer focused tests around:
 - Form validation and mutation callbacks when behavior is non-trivial.
 - Component rendering for reusable or high-risk UI.
 
+### Playwright E2E
+
+`playwright.config.ts` discovers browser tests in `e2e/`, separately from
+Vitest. Both desktop Chrome and Pixel 7 emulation use Chromium. Tests run
+with one worker to reduce contention when using a shared test backend.
+CI rejects `test.only` and retries failed tests once; tests that mutate
+backend data must provide repeatable setup and cleanup.
+
+```bash
+npx playwright install chromium
+npx playwright test
+npx playwright show-report
+```
+
+Playwright starts Vite at `http://localhost:5173` without opening an extra
+browser window, or reuses an existing server locally. Start the backend
+separately for API-dependent scenarios. This configuration does not add E2E
+test cases or start the backend.
+
+Failures retain traces, screenshots, and videos in `test-results/`; the HTML
+report is written to `playwright-report/`. Both directories and local auth
+state in `playwright/.auth/` are ignored by Git. Visual assertions using
+`toHaveScreenshot()` disable animations. Review screenshot baselines before
+committing them and compare them in a consistent browser/OS environment.
+
 ## Required Agent Session Checklist
 
 Before an agent session is considered complete:
