@@ -23,6 +23,7 @@ export default defineConfig({
       include: ['src/**/*.{ts,tsx}'],
       reporter: ['text', 'json-summary', 'html', 'lcov'],
       reportsDirectory: 'coverage',
+      thresholds: { statements: 80, functions: 80, lines: 80 },
     },
   },
 })

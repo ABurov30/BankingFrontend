@@ -133,7 +133,7 @@ function CardsPage() {
   }
 
   return (
-    <section className={`${styles['cards']} ui-enter`}>
+    <section className={`${styles['cards']} ui-enter`} data-testid="page-cards">
       <div className={styles['cards__layout']}>
         <div className={styles['cards__main']}>
           <CardsPageHeader

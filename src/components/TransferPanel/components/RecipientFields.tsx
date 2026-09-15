@@ -48,6 +48,7 @@ export function RecipientFields({
       <Field label={t('emailAddress')}>
         <div className={styles['transfer-panel__email-row']}>
           <input
+            data-testid="transfer-recipient-email"
             {...recipientEmailField}
             aria-invalid={Boolean(emailError)}
             className={styles['transfer-panel__email-input']}
@@ -58,6 +59,7 @@ export function RecipientFields({
           <button
             className={styles['transfer-panel__search-button']}
             disabled={isLookingUpRecipient}
+            data-testid="transfer-recipient-search"
             onClick={onSearchRecipient}
             type="button"
           >
@@ -66,7 +68,10 @@ export function RecipientFields({
           </button>
         </div>
         {emailError?.message ? (
-          <p className={styles['transfer-panel__error']}>
+          <p
+            data-testid="transfer-recipient-error"
+            className={styles['transfer-panel__error']}
+          >
             {emailError.message}
           </p>
         ) : null}
@@ -77,6 +82,7 @@ export function RecipientFields({
       {recipient ? (
         <Field label={t('recipientAccount')}>
           <AccountPicker
+            testId="transfer-recipient-account"
             accounts={activeRecipientAccounts}
             emptyLabel={t('noActiveRecipientAccounts')}
             isOpen={isRecipientMenuOpen}
@@ -103,11 +109,7 @@ export function RecipientFields({
   )
 }
 
-function RecipientSummary({
-  recipient,
-}: {
-  recipient: UserInfoWithoutIds
-}) {
+function RecipientSummary({ recipient }: { recipient: UserInfoWithoutIds }) {
   return (
     <div className={styles['transfer-panel__recipient']}>
       <span className={styles['transfer-panel__recipient-avatar']}>

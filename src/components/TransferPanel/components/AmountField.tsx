@@ -51,6 +51,7 @@ export function AmountField({
       <div className={styles['transfer-panel__amount-card']}>
         <div className={styles['transfer-panel__amount-row']}>
           <input
+            data-testid="transfer-amount"
             aria-invalid={Boolean(amountError)}
             aria-label={t('amount')}
             className={styles['transfer-panel__amount-input']}
@@ -69,7 +70,12 @@ export function AmountField({
         </div>
       </div>
       {amountError?.message ? (
-        <p className={styles['transfer-panel__error']}>{amountError.message}</p>
+        <p
+          data-testid="transfer-amount-error"
+          className={styles['transfer-panel__error']}
+        >
+          {amountError.message}
+        </p>
       ) : null}
     </Field>
   )

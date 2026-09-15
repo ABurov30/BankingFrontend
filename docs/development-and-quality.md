@@ -33,6 +33,13 @@ Important variables:
 - `VITE_TRANSACTIONS_WS_URL`: optional websocket URL override for transaction
   status tracking. Falls back to `VITE_NOTIFICATIONS_WS_URL`, then
   `ws(s)://<current-host>/api/ws`.
+- `E2E_USER_EMAIL`: email of the test user used by Playwright scenarios.
+- `E2E_USER_PASSWORD`: password of the test user used by Playwright scenarios.
+
+Playwright loads these values from the local `.env` file through
+`playwright.config.ts`. Keep the real credentials out of `.env.example` and
+the repository. E2E tests can access them with `process.env.E2E_USER_EMAIL`
+and `process.env.E2E_USER_PASSWORD`.
 
 ## Local Development
 
@@ -211,6 +218,13 @@ Test helper:
 - `src/test/renderWithProviders.tsx` renders components with the Redux store
   and router/provider setup required by app components.
 
+Run `npm run test:coverage` for the full source coverage report. Vitest enforces
+80% minimum statements, functions, and lines; branch coverage is reported
+separately. The report includes untested source files. Open `coverage/index.html`
+for uncovered lines. Workflow tests cover money amounts, source card selection,
+transfer confirmation/retries, manager actions, verification, route guards,
+logout state clearing, and live transaction updates.
+
 Prefer focused tests around:
 
 - State reducers and synchronization behavior.
@@ -233,16 +247,42 @@ npx playwright test
 npx playwright show-report
 ```
 
+Browser runs are headed by default with a 150 ms action delay so clicks are
+visible. Credentials are loaded from `.env`: use `E2E_USER_EMAIL` and
+`E2E_USER_PASSWORD`, falling back to `AUTH_BOOTSTRAP_ADMIN_EMAIL` and
+`AUTH_BOOTSTRAP_ADMIN_PASSWORD`. Missing credentials fail the run rather than
+silently skipping authentication scenarios.
+
 Playwright starts Vite at `http://localhost:5173` without opening an extra
 browser window, or reuses an existing server locally. Start the backend
 separately for API-dependent scenarios. This configuration does not add E2E
-test cases or start the backend.
+test backend or start the backend. The `e2e/auth.spec.ts` smoke test verifies
+that the configured test user can sign in and reach the dashboard.
+
+`e2e/navigation.spec.ts` checks protected routes, desktop/mobile navigation,
+logout, and opening/closing forms. `e2e/transfers.spec.ts` checks operation
+selection and recipient validation. Successful money mutations and account/card
+creation are currently covered by Vitest workflow tests, not full browser E2E.
+Backend `503` responses can block authenticated browser scenarios; inspect the
+retained network trace rather than treating those failures as passing tests.
 
 Failures retain traces, screenshots, and videos in `test-results/`; the HTML
 report is written to `playwright-report/`. Both directories and local auth
 state in `playwright/.auth/` are ignored by Git. Visual assertions using
 `toHaveScreenshot()` disable animations. Review screenshot baselines before
 committing them and compare them in a consistent browser/OS environment.
+
+#### E2E Selectors
+
+Add a stable `data-testid` to elements used by Playwright. E2E DOM selectors
+must use only `data-testid`; do not locate elements by role, text, label,
+placeholder, tag name, CSS class, `href`, or form field name. URL assertions are
+allowed for route checks. Use semantic values such as `login-submit`,
+`page-dashboard`, and `accounts-create-button`.
+
+ESLint rejects role/text/label/placeholder/CSS locator calls in `e2e/`. Use
+`getByTestId`, `or`, and `filter({ visible: true })` for responsive elements.
+Unit/component tests may use semantic Testing Library selectors.
 
 ## Required Agent Session Checklist
 

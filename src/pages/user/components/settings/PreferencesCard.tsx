@@ -15,7 +15,10 @@ export function PreferencesCard() {
   }
 
   return (
-    <section className={`${styles['user__settings-card']} ui-lift`}>
+    <section
+      data-testid="profile-preferences"
+      className={`${styles['user__settings-card']} ui-lift`}
+    >
       <CardTitle>{t('preferences')}</CardTitle>
 
       <div className={styles['user__preference-list']}>

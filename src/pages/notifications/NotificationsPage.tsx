@@ -9,7 +9,10 @@ function NotificationsPage() {
   const notifications = notificationHistory ?? []
 
   return (
-    <section className={`${styles['notifications']} ui-enter`}>
+    <section
+      className={`${styles['notifications']} ui-enter`}
+      data-testid="page-notifications"
+    >
       <div className={styles['notifications__layout']}>
         <div className={styles['notifications__main']}>
           <header className={styles['notifications__header']}>

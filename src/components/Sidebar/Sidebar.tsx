@@ -53,6 +53,7 @@ export function Sidebar({
                     : styles['sidebar__nav-link--idle'],
                 )
               }
+              data-testid={`sidebar-nav-${labelKey}`}
               end={to === '/'}
               key={labelKey}
               onClick={onClose}

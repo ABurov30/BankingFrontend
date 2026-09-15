@@ -586,6 +586,7 @@ export function TransferForm() {
           {!isTransfer ? (
             <Field label={t('selectAccount')}>
               <AccountPicker
+                testId="transfer-source-account"
                 accounts={eligibleAccounts}
                 disabled={isInitialLoading || eligibleAccounts.length === 0}
                 emptyLabel={t('noActiveAccounts')}
@@ -642,6 +643,7 @@ export function TransferForm() {
             <Field label={t('toAccount')}>
               <input type="hidden" {...register('destinationAccountId')} />
               <AccountPicker
+                testId="transfer-destination-account"
                 accounts={ownDestinationAccounts}
                 disabled={
                   isInitialLoading || ownDestinationAccounts.length === 0

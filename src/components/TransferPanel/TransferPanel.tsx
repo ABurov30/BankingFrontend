@@ -34,6 +34,7 @@ export function TransferPanel() {
       <button
         aria-label={t('closeTransferPanel')}
         className={styles['transfer-panel-drawer__backdrop']}
+        data-testid="transfer-panel-close"
         onClick={() => dispatch(closeRightPanel())}
         type="button"
       />
@@ -41,6 +42,7 @@ export function TransferPanel() {
         aria-label={`${t('transfer')} panel`}
         aria-modal="true"
         className={styles['transfer-panel-drawer']}
+        data-testid="transfer-panel"
         role="dialog"
       >
         <TransferForm />

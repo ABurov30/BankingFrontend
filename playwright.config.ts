@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
@@ -14,6 +15,8 @@ export default defineConfig({
 
   use: {
     baseURL: 'http://localhost:5173',
+    headless: false,
+    launchOptions: { slowMo: 150 },
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

@@ -101,3 +101,21 @@ Current frontend enums:
 - The worktree may already be dirty.
 - Never revert user changes unless explicitly asked.
 - Keep edits scoped to the user request.
+
+## E2E Selector Rules
+
+- Run Playwright headed so browser actions remain visible.
+- Prefer `getByTestId`; combine responsive navigation with `or` and
+  `filter({ visible: true })`. ESLint checks selectors in `e2e/`.
+- Run `npm run test:coverage`; statements, functions, and lines must remain
+  at or above 80%. Report branch coverage separately.
+
+- Add a stable `data-testid` to every application element that Playwright must
+  interact with or assert.
+- E2E DOM selectors must use only `data-testid` values. Do not select elements
+  by role, visible text, label, placeholder, tag name, CSS class, `href`, or
+  form field name.
+- URL assertions are allowed for route verification; they do not replace
+  element selectors.
+- Keep `data-testid` values semantic and stable, such as
+  `login-submit`, `page-dashboard`, and `accounts-create-button`.

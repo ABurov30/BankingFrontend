@@ -18,6 +18,7 @@ export function PreferenceSegment({
       <div className={styles['user__preference-control']}>
         {options.map((option) => (
           <button
+            data-testid={`profile-preference-${String(option.value)}`}
             className={cn(
               styles['user__preference-option'],
               option.value === value &&

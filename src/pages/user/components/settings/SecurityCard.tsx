@@ -76,7 +76,10 @@ export function SecurityCard() {
   }
 
   return (
-    <section className={`${styles['user__settings-card']} ui-lift`}>
+    <section
+      data-testid="profile-security"
+      className={`${styles['user__settings-card']} ui-lift`}
+    >
       <CardTitle>{t('security')}</CardTitle>
 
       <form
@@ -124,6 +127,7 @@ export function SecurityCard() {
 
         <div className={styles['user__password-actions']}>
           <button
+            data-testid="profile-change-password"
             className={styles['user__password-submit']}
             disabled={isSubmitting || isLoading}
             type="submit"

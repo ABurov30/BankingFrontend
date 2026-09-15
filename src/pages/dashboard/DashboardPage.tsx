@@ -47,7 +47,10 @@ function DashboardPage() {
   const userName = [user?.firstName, user?.lastName].filter(Boolean).join(' ')
 
   return (
-    <section className={`${styles['dashboard']} ui-enter`}>
+    <section
+      className={`${styles['dashboard']} ui-enter`}
+      data-testid="page-dashboard"
+    >
       <Topbar userName={userName} />
 
       <div className={styles['dashboard__layout']}>

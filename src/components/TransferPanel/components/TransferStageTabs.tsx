@@ -22,12 +22,14 @@ export function TransferTargetTabs({
       <OperationTab
         active={false}
         icon={<Landmark className={styles['transfer-panel__tab-icon']} />}
+        testId="transfer-operation-own"
         label={t('toYourAccount')}
         onClick={() => onSelectTarget('OWN_ACCOUNT')}
       />
       <OperationTab
         active={false}
         icon={<Send className={styles['transfer-panel__tab-icon']} />}
+        testId="transfer-operation-recipient"
         label={t('toAnotherPerson')}
         onClick={() => onSelectTarget('ANOTHER_PERSON')}
       />
@@ -51,18 +53,21 @@ export function OwnAccountOperationTabs({
       <OperationTab
         active={false}
         icon={<ArrowDownLeft className={styles['transfer-panel__tab-icon']} />}
+        testId="transfer-operation-top-up"
         label={t('topUp')}
         onClick={() => onSelectOperation('TOP_UP')}
       />
       <OperationTab
         active={false}
         icon={<ArrowUpRight className={styles['transfer-panel__tab-icon']} />}
+        testId="transfer-operation-withdraw"
         label={t('withdraw')}
         onClick={() => onSelectOperation('WITHDRAW')}
       />
       <OperationTab
         active={false}
         icon={<ArrowLeftRight className={styles['transfer-panel__tab-icon']} />}
+        testId="transfer-operation-between"
         label={t('betweenMyAccounts')}
         onClick={() => onSelectOperation('BETWEEN_OWN_ACCOUNTS')}
       />

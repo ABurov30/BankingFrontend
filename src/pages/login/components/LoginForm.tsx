@@ -34,8 +34,12 @@ export function LoginForm({
   })
 
   return (
-    <div className={styles['login__form-panel']}>
-      <form className={styles['login__form']} onSubmit={handleSubmit(onSubmit)}>
+    <div className={styles['login__form-panel']} data-testid="login-form-panel">
+      <form
+        className={styles['login__form']}
+        data-testid="login-form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <header className={styles['login__form-header']}>
           <h1 className={styles['login__title']}>{t('welcomeBack')}</h1>
           <p className={styles['login__subtitle']}>{t('signInToBuro')}</p>
@@ -46,6 +50,7 @@ export function LoginForm({
             <span className={styles['login__label']}>{t('email')}</span>
             <input
               className={styles['login__input']}
+              data-testid="login-email"
               type="email"
               {...register('email')}
             />
@@ -64,6 +69,7 @@ export function LoginForm({
             <span className={styles['login__password-control']}>
               <input
                 className={styles['login__password-input']}
+                data-testid="login-password"
                 type={isPasswordVisible ? 'text' : 'password'}
                 {...register('password')}
               />
@@ -95,6 +101,7 @@ export function LoginForm({
 
         <button
           className={`${styles['login__submit']} ui-lift`}
+          data-testid="login-submit"
           disabled={isSubmitting || isLoading || isGoogleLoginLoading}
           type="submit"
         >

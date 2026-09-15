@@ -87,7 +87,10 @@ function AccountsPage() {
     }
 
     try {
-      await createAccount({ currency: values.currency, type: values.type }).unwrap()
+      await createAccount({
+        currency: values.currency,
+        type: values.type,
+      }).unwrap()
       setIsCreateFormOpen(false)
     } catch (error) {
       dispatch(
@@ -129,7 +132,10 @@ function AccountsPage() {
   }
 
   return (
-    <section className={`${styles['accounts']} ui-enter`}>
+    <section
+      className={`${styles['accounts']} ui-enter`}
+      data-testid="page-accounts"
+    >
       <AccountsPageHeader
         isCreateDisabled={!ownerUserId}
         isCreatingAccount={isCreatingAccount}

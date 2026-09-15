@@ -54,6 +54,7 @@ export function CreateAccountDialog({
     <div className={styles['accounts__dialog-backdrop']}>
       <form
         className={`${styles['accounts__dialog']} ui-lift`}
+        data-testid="create-account-dialog"
         onSubmit={handleSubmit(onSubmit)}
       >
         <input type="hidden" {...register('type')} />
@@ -71,6 +72,7 @@ export function CreateAccountDialog({
           <button
             aria-label="Close account form"
             className={styles['accounts__dialog-close']}
+            data-testid="create-account-close"
             onClick={onClose}
             type="button"
           >
@@ -113,6 +115,7 @@ export function CreateAccountDialog({
           </button>
           <button
             className={styles['accounts__dialog-primary']}
+            data-testid="create-account-submit"
             disabled={isCreatingAccount}
             type="submit"
           >

@@ -96,6 +96,7 @@ export function TransactionStatusDialog({
             </p>
           </div>
           <button
+            data-testid="transaction-dialog-close"
             aria-label={t('closeDialog')}
             className={styles['transactions__dialog-close']}
             onClick={onClose}

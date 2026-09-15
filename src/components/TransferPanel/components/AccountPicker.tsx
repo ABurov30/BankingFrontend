@@ -11,6 +11,7 @@ import styles from '../styles.module.css'
 type AccountPickerMetaVariant = 'balance' | 'currency'
 
 export function AccountPicker({
+  testId = 'transfer-account-picker',
   accounts,
   disabled = false,
   emptyLabel,
@@ -23,6 +24,7 @@ export function AccountPicker({
   selectedAccountId,
   t,
 }: {
+  testId?: string
   accounts: GetAccountResponseDto[]
   disabled?: boolean
   emptyLabel: string
@@ -38,6 +40,7 @@ export function AccountPicker({
   return (
     <div className={styles['transfer-panel__account-picker']}>
       <button
+        data-testid={testId}
         aria-expanded={isOpen}
         className={styles['transfer-panel__account-select']}
         disabled={disabled}
@@ -58,6 +61,7 @@ export function AccountPicker({
         <div className={styles['transfer-panel__account-menu']} role="listbox">
           {accounts.map((account) => (
             <button
+              data-testid={`transfer-account-option-${account.accountId}`}
               aria-selected={account.accountId === selectedAccountId}
               className={styles['transfer-panel__account-option']}
               key={account.accountId}

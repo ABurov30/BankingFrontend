@@ -3,11 +3,13 @@ import type { ReactNode } from 'react'
 import styles from '../styles.module.css'
 
 export function OperationTab({
+  testId,
   active,
   icon,
   label,
   onClick,
 }: {
+  testId?: string
   active: boolean
   icon: ReactNode
   label: string
@@ -15,6 +17,7 @@ export function OperationTab({
 }) {
   return (
     <button
+      data-testid={testId}
       aria-pressed={active}
       className={
         active

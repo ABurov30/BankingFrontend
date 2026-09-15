@@ -81,4 +81,17 @@ describe('money amount helpers', () => {
     expect(normalizeMinorUnits(20222)).toBe(20222)
     expect(minorUnitsToAmount(202.22)).toBe(202.22)
   })
+
+  it('handles invalid numeric values and whitespace', () => {
+    expect(formatMinorUnitInput('abc')).toBe('')
+    expect(formatMinorUnitInput('9'.repeat(30))).toBe('9'.repeat(30))
+    expect(parseMoneyAmountInput(' 12.30 ')).toEqual({
+      amount: 12.3,
+      minorUnits: 1230,
+    })
+    expect(parseMoneyAmountInput('999999999999999999999999.99')).toBeNull()
+    expect(amountToMinorUnits(Number.NaN)).toBe(0)
+    expect(amountToMinorUnits(Infinity)).toBe(0)
+    expect(normalizeMinorUnits(Infinity)).toBe(0)
+  })
 })

@@ -31,6 +31,7 @@ export function CardsPageHeader({
         <div className={styles['cards__status-filters']}>
           {statusFilters.map((filter) => (
             <button
+              data-testid={`cards-status-filter-${filter.toLowerCase()}`}
               className={cn(
                 styles['cards__status-filter-button'],
                 filter === statusFilter &&
@@ -46,6 +47,7 @@ export function CardsPageHeader({
         </div>
 
         <button
+          data-testid="cards-issue-button"
           className={`${styles['cards__title']} ui-lift`}
           disabled={isCreatingCard}
           onClick={onCreateCard}

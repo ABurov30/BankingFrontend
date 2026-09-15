@@ -32,6 +32,7 @@ export function CardPicker({
   return (
     <div className={styles['transfer-panel__account-picker']}>
       <button
+        data-testid="transfer-source-card"
         aria-expanded={isOpen}
         className={styles['transfer-panel__account-select']}
         disabled={disabled}
@@ -46,6 +47,7 @@ export function CardPicker({
         <div className={styles['transfer-panel__account-menu']} role="listbox">
           {options.map((option) => (
             <button
+              data-testid={`transfer-card-option-${option.card.cardId}`}
               aria-selected={option.card.cardId === selectedCardId}
               className={styles['transfer-panel__account-option']}
               key={option.card.cardId}
@@ -92,9 +94,8 @@ function CardSummary({
         </p>
         {card ? (
           <p className={styles['transfer-panel__account-meta']}>
-            {t('dailyLimit')}{' '}
-            {formatMoney(getCardDailyLimit(card), currency)}{' '}
-            · {t('monthlyLimit')}{' '}
+            {t('dailyLimit')} {formatMoney(getCardDailyLimit(card), currency)} ·{' '}
+            {t('monthlyLimit')}{' '}
             {formatMoney(getCardMonthlyLimit(card), currency)}
           </p>
         ) : null}

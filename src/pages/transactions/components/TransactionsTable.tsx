@@ -73,12 +73,10 @@ export function TransactionsTable({
                 <strong
                   className={`${styles['transactions__amount']} ${styles['transactions__amount--negative']}`}
                 >
-                  {formatMoney(
-                    transaction.minorUnits,
-                    transaction.currency,
-                  )}
+                  {formatMoney(transaction.minorUnits, transaction.currency)}
                 </strong>
                 <button
+                  data-testid={`transaction-track-${transaction.transactionId ?? index}`}
                   className={styles['transactions__track-button']}
                   disabled={!transaction.transactionId}
                   onClick={() => onTrackTransaction?.(transaction)}

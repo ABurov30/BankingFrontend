@@ -21,15 +21,17 @@ function TransactionsPage() {
   const { t } = useI18n()
   const [trackedTransaction, setTrackedTransaction] =
     useState<TransactionResponseDto | null>(null)
-  const { data: transactions = [], isFetching } =
-    useGetMyTransactionsQuery()
+  const { data: transactions = [], isFetching } = useGetMyTransactionsQuery()
 
   useEffect(() => {
     dispatch(closeRightPanel())
   }, [dispatch])
 
   return (
-    <section className={`${styles['transactions']} ui-enter`}>
+    <section
+      className={`${styles['transactions']} ui-enter`}
+      data-testid="page-transactions"
+    >
       <div className={styles['transactions__inner']}>
         <div className={styles['transactions__stack']}>
           <header className={styles['transactions__header']}>
@@ -38,6 +40,7 @@ function TransactionsPage() {
             </h1>
 
             <button
+              data-testid="transactions-new-transfer"
               className={`${styles['transactions__export-button']} ui-lift`}
               onClick={() => dispatch(openRightPanel('transfer'))}
               type="button"

@@ -43,6 +43,7 @@ export function Topbar({ userName }: { userName: string }) {
             aria-expanded={isProfileMenuOpen}
             aria-haspopup="menu"
             className={`${styles['dashboard__profile-button']} ui-lift`}
+            data-testid="profile-menu-button"
             onClick={() => setIsProfileMenuOpen((isOpen) => !isOpen)}
             type="button"
           >
@@ -59,6 +60,7 @@ export function Topbar({ userName }: { userName: string }) {
             <div className={styles['dashboard__profile-dropdown']} role="menu">
               <button
                 className={styles['dashboard__profile-dropdown-button']}
+                data-testid="logout-menu-item"
                 disabled={isLoggingOut}
                 onClick={handleLogout}
                 role="menuitem"

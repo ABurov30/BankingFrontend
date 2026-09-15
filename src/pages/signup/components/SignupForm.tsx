@@ -59,6 +59,7 @@ export function SignupForm({
           <label className={styles['signup__field']}>
             <span className={styles['signup__input']}>{t('firstName')}</span>
             <input
+              data-testid="signup-first-name"
               className={styles['signup__field-full']}
               type="text"
               {...register('firstName')}
@@ -68,6 +69,7 @@ export function SignupForm({
           <label className={styles['signup__field']}>
             <span className={styles['signup__input']}>{t('lastName')}</span>
             <input
+              data-testid="signup-last-name"
               className={styles['signup__field-full']}
               type="text"
               {...register('lastName')}
@@ -78,6 +80,7 @@ export function SignupForm({
         <label className={styles['signup__label']}>
           <span className={styles['signup__input']}>{t('email')}</span>
           <input
+            data-testid="signup-email"
             className={styles['signup__email-input']}
             type="email"
             {...register('email')}
@@ -88,11 +91,13 @@ export function SignupForm({
           <span className={styles['signup__input']}>{t('password')}</span>
           <span className={styles['signup__password-control']}>
             <input
+              data-testid="signup-password"
               className={styles['signup__password-input']}
               type={isPasswordVisible ? 'text' : 'password'}
               {...register('password')}
             />
             <button
+              data-testid="signup-password-toggle"
               aria-label={
                 isPasswordVisible ? t('hidePassword') : t('showPassword')
               }
@@ -148,11 +153,15 @@ export function SignupForm({
 
         <label className={styles['signup__terms-field']}>
           <input
+            data-testid="signup-terms"
             className={styles['signup__terms-input']}
             type="checkbox"
             {...register('termsAccepted', { required: true })}
           />
-          <span className={styles['signup__terms-box']}>
+          <span
+            data-testid="signup-terms-toggle"
+            className={styles['signup__terms-box']}
+          >
             <Check
               aria-hidden="true"
               className={styles['signup__checkbox']}
@@ -163,6 +172,7 @@ export function SignupForm({
         </label>
 
         <button
+          data-testid="signup-submit"
           className={`${styles['signup__submit']} ui-lift`}
           disabled={isSubmitting || isLoading}
           type="submit"

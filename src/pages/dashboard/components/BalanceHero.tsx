@@ -86,6 +86,7 @@ function ActionButton({
           ? styles['dashboard__action-button--primary']
           : styles['dashboard__action-button--secondary'],
       )}
+      data-testid="dashboard-transfer-button"
       onClick={onClick}
       type="button"
     >

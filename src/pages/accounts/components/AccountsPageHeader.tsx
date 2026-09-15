@@ -28,6 +28,7 @@ export function AccountsPageHeader({
       <div className={styles['accounts__header-actions']}>
         <button
           className={`${styles['accounts__transfer-button']} ui-lift`}
+          data-testid="accounts-transfer-button"
           disabled={isCreateDisabled}
           onClick={onOpenTransfer}
           type="button"
@@ -37,6 +38,7 @@ export function AccountsPageHeader({
         </button>
         <button
           className={`${styles['accounts__add-button']} ui-lift`}
+          data-testid="accounts-create-button"
           disabled={isCreateDisabled || isCreatingAccount}
           onClick={onCreateAccount}
           type="button"

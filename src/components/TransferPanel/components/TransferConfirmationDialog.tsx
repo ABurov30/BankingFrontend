@@ -43,6 +43,7 @@ export function TransferConfirmationDialog({
         aria-labelledby="transfer-confirmation-title"
         aria-modal="true"
         className={styles['transfer-panel__dialog']}
+        data-testid="transfer-confirmation"
         role="dialog"
       >
         <button
@@ -105,6 +106,7 @@ export function TransferConfirmationDialog({
           <button
             className={styles['transfer-panel__dialog-confirm']}
             disabled={isSubmitting}
+            data-testid="transfer-confirm"
             onClick={onConfirm}
             type="button"
           >

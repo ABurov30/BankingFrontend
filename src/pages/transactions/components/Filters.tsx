@@ -25,6 +25,7 @@ export function Filters() {
           const active = filter === 'all'
           return (
             <button
+              data-testid={`transaction-filter-${filter}`}
               className={cn(
                 styles['transactions__filter-button'],
                 active
@@ -41,7 +42,11 @@ export function Filters() {
       </div>
 
       <div className={styles['transactions__date-filter']}>
-        <button className={styles['transactions__date-button']} type="button">
+        <button
+          data-testid="transactions-date-filter"
+          className={styles['transactions__date-button']}
+          type="button"
+        >
           <CalendarDays className={styles['transactions__date-icon']} />
           {t('dateRange')}
         </button>

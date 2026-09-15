@@ -29,7 +29,10 @@ export function VerificationPanel({
   })
 
   return (
-    <section className={`${styles['user-verify__panel']} ui-lift`}>
+    <section
+      data-testid="user-verify-panel"
+      className={`${styles['user-verify__panel']} ui-lift`}
+    >
       <div
         className={cn(
           styles['user-verify__icon-wrap'],

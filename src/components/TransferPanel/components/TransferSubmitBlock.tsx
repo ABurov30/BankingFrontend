@@ -25,6 +25,7 @@ export function TransferSubmitBlock({
       <button
         className={`${styles['transfer-panel__submit']} ui-lift`}
         disabled={disabled}
+        data-testid="transfer-submit"
         type="submit"
       >
         {isSubmitting

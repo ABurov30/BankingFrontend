@@ -73,6 +73,7 @@ export function IssueCardDialog({
             </p>
           </div>
           <button
+            data-testid="issue-card-close"
             aria-label={t('closeCardIssueForm')}
             className={styles['cards__issue-close']}
             onClick={onClose}
@@ -86,6 +87,7 @@ export function IssueCardDialog({
           <span className={styles['cards__issue-label']}>{t('account')}</span>
           <div className={styles['cards__issue-dropdown']}>
             <button
+              data-testid="issue-card-account-picker"
               aria-expanded={isAccountMenuOpen}
               className={styles['cards__issue-dropdown-trigger']}
               onClick={() => setIsAccountMenuOpen((isOpen) => !isOpen)}
@@ -113,6 +115,7 @@ export function IssueCardDialog({
 
                   return (
                     <button
+                      data-testid={`issue-card-account-${accountId}`}
                       aria-selected={accountId === selectedAccountId}
                       className={cn(
                         styles['cards__issue-dropdown-option'],
@@ -141,6 +144,7 @@ export function IssueCardDialog({
 
         <div className={styles['cards__issue-actions']}>
           <button
+            data-testid="issue-card-cancel"
             className={styles['cards__issue-secondary']}
             onClick={onClose}
             type="button"
@@ -148,6 +152,7 @@ export function IssueCardDialog({
             {t('cancel')}
           </button>
           <button
+            data-testid="issue-card-submit"
             className={styles['cards__issue-primary']}
             disabled={isCreatingCard || !selectedAccountId}
             type="submit"

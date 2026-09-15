@@ -22,6 +22,7 @@ export function TransferPanelHeader({
       <div className={styles['transfer-panel__header-start']}>
         {canGoBack ? (
           <button
+            data-testid="transfer-back"
             aria-label={backLabel}
             className={styles['transfer-panel__back-button']}
             onClick={onBack}
@@ -33,6 +34,7 @@ export function TransferPanelHeader({
         <h2 className={styles['transfer-panel__title']}>{title}</h2>
       </div>
       <button
+        data-testid="transfer-header-close"
         aria-label={closeLabel}
         className={styles['transfer-panel__close-button']}
         onClick={onClose}

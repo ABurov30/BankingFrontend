@@ -21,7 +21,10 @@ function UserPage() {
   ]
 
   return (
-    <section className={`${styles['user']} ui-enter`}>
+    <section
+      className={`${styles['user']} ui-enter`}
+      data-testid="page-profile"
+    >
       <ProfileHeader
         displayName={displayName}
         email={user?.email}

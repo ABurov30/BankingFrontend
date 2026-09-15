@@ -21,6 +21,7 @@ export function BottomNavigation() {
                 : styles['bottom-nav__link--idle'],
             )
           }
+          data-testid={`bottom-nav-${labelKey}`}
           end={to === '/'}
           key={labelKey}
           to={to}
