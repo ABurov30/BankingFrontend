@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { selectAccounts } from '@/features/accounts/accountsSlice'
+import { useEnsureAccountsLoaded } from '@/features/accounts/useEnsureAccountsLoaded'
 import { selectCards } from '@/features/cards/cardsSlice'
 import { showToast } from '@/features/toast/toastSlice'
 import { selectCurrentUser } from '@/features/user/userSlice'
@@ -9,7 +10,6 @@ import {
   getCardDailyLimitMinorUnits,
   getCardMonthlyLimitMinorUnits,
 } from '@/lib/cardLimits'
-import { useLazyGetAccountsWithCardsByOwnerIdQuery } from '@/shared/api/accountApi'
 import {
   useCreateCardMutation,
   useUpdateCardMutation,
@@ -38,14 +38,7 @@ function CardsPage() {
   const user = useAppSelector(selectCurrentUser)
   const accounts = useAppSelector(selectAccounts)
   const cards = useAppSelector(selectCards)
-  const [loadAccounts, { isFetching }] =
-    useLazyGetAccountsWithCardsByOwnerIdQuery()
-
-  useEffect(() => {
-    if (user?.userProfileId) {
-      void loadAccounts(user.userProfileId)
-    }
-  }, [loadAccounts, user?.userProfileId])
+  const { isFetching } = useEnsureAccountsLoaded(user?.userProfileId)
   const [statusFilter, setStatusFilter] = useState<CardStatusValue>(
     CardStatus.ACTIVE,
   )

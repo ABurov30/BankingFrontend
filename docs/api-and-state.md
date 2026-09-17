@@ -19,6 +19,11 @@ application/json`.
 - Tag types are `Auth`, `User`, `Account`, `Card`, `Transaction`,
   `Notification`, and `Health`.
 
+After the browser returns from Google OAuth, `ProtectedRoute` waits 5 seconds
+before requesting `GET /user/user-info`. The login page records this pending
+state in session storage immediately before leaving for Google, giving the
+backend time to establish the browser session after its redirect.
+
 ## Unauthorized Recovery
 
 The base query wraps `fetchBaseQuery` with authentication recovery.
@@ -34,6 +39,9 @@ When a request returns `401`:
    - `cards/clearCards`
    - `user/clearCurrentUser`
 5. The browser redirects to `/login` unless it is already there.
+
+When any request returns `403`, the app performs the same cleanup and redirects
+to `/login` immediately. It does not try token refresh for a `403` response.
 
 When the current user profile request `GET /user/user-info` returns any
 non-`2xx` response, the same session-expired cleanup and `/login` redirect run.
@@ -160,6 +168,10 @@ account and card projections.
 Account queries should synchronize both `accounts` and `cards` after successful
 fetches. Card updates should synchronize both the `cards` slice and nested
 cards inside the `accounts` slice.
+
+The user-facing `/cards` page uses the same current-user account snapshot as
+`/accounts` (`GET /account/accounts/me`). Manager account endpoints are used
+only by manager user-detail flows.
 
 ## Mutation Refresh Rules
 

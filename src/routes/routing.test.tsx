@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { Route, Routes } from 'react-router-dom'
 import { store } from '@/app/store'
@@ -6,7 +6,7 @@ import { clearCurrentUser, setCurrentUser } from '@/features/user/userSlice'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import App from '@/App'
 import { RoleRoute } from './RoleRoute'
-import { ProtectedRoute } from './ProtectedRoute'
+import { googleLoginPendingStorageKey, ProtectedRoute } from './ProtectedRoute'
 import { Sidebar } from '@/components/Sidebar'
 import { BottomNavigation } from '@/components/BottomNavigation'
 import type { UserInfo } from '@/shared/api/types'
@@ -17,18 +17,21 @@ const query = vi.hoisted(() => ({
 }))
 vi.mock('@/shared/api/userApi', async (original) => ({
   ...(await original<typeof import('@/shared/api/userApi')>()),
-  useGetUserInfoQuery: () => query,
+  useGetUserInfoQuery: vi.fn(() => query),
 }))
 vi.mock('@/features/notifications/useNotificationsWebSocket', () => ({
   useNotificationsWebSocket: vi.fn(),
 }))
 beforeEach(() => {
+  window.sessionStorage.clear()
   store.dispatch(clearCurrentUser())
   query.data = undefined
   query.error = undefined
   query.isLoading = false
 })
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+})
 it('renders public and unknown routes through the real app router', async () => {
   const view = renderWithProviders(<App />, '/login')
   expect(await screen.findByTestId('login-submit')).toBeTruthy()
@@ -69,6 +72,32 @@ it('shows loader while recovering a session', () => {
   const view = renderWithProviders(<ProtectedRoute />)
   expect(view.container.querySelector('main')).toBeTruthy()
   expect(screen.getByText('buro')).toBeTruthy()
+})
+it('waits five seconds before loading user info after Google login', async () => {
+  vi.useFakeTimers()
+  window.sessionStorage.setItem(googleLoginPendingStorageKey, 'true')
+  const userInfoQuery = await import('@/shared/api/userApi')
+
+  renderWithProviders(<ProtectedRoute />)
+
+  expect(userInfoQuery.useGetUserInfoQuery).toHaveBeenLastCalledWith(
+    undefined,
+    { skip: true },
+  )
+  expect(screen.getByText('buro')).toBeTruthy()
+
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(5_000)
+  })
+
+  expect(userInfoQuery.useGetUserInfoQuery).toHaveBeenLastCalledWith(
+    undefined,
+    { skip: false },
+  )
+  expect(
+    window.sessionStorage.getItem(googleLoginPendingStorageKey),
+  ).toBeNull()
+  vi.useRealTimers()
 })
 it('only renders role-protected content for an allowed role', () => {
   const ui = (

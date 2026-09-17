@@ -1,5 +1,5 @@
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
@@ -11,15 +11,34 @@ import {
 } from '@/features/user/userSlice'
 import { useGetUserInfoQuery } from '@/shared/api/userApi'
 
+export const googleLoginPendingStorageKey = 'google-login-pending'
+const googleUserInfoDelayMs = 5_000
+
 export function ProtectedRoute() {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const currentUser = useAppSelector(selectCurrentUser)
+  const [isGoogleLoginPending, setIsGoogleLoginPending] = useState(() =>
+    window.sessionStorage.getItem(googleLoginPendingStorageKey) === 'true',
+  )
   const {
     data: user,
     error,
     isLoading,
-  } = useGetUserInfoQuery(undefined, { skip: Boolean(currentUser) })
+  } = useGetUserInfoQuery(undefined, {
+    skip: Boolean(currentUser) || isGoogleLoginPending,
+  })
+
+  useEffect(() => {
+    if (!isGoogleLoginPending) return
+
+    const timeoutId = window.setTimeout(() => {
+      window.sessionStorage.removeItem(googleLoginPendingStorageKey)
+      setIsGoogleLoginPending(false)
+    }, googleUserInfoDelayMs)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [isGoogleLoginPending])
 
   useEffect(() => {
     if (user) {
@@ -33,7 +52,7 @@ export function ProtectedRoute() {
     }
   }, [dispatch, error])
 
-  if (!currentUser && isLoading) {
+  if (!currentUser && (isLoading || isGoogleLoginPending)) {
     return <PageLoader />
   }
 

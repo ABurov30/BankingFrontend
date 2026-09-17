@@ -57,6 +57,8 @@ function redirectToLogin(api: BaseQueryApi) {
 /**
  * Creates a query wrapper that lets concurrent 401 responses share one refresh
  * request. Each original request is retried once after a successful refresh.
+ * A 403 response ends the session immediately because the backend denied the
+ * current credentials.
  */
 export function createBaseQueryWithAuthRecovery(
   query: ApiBaseQuery,
@@ -122,7 +124,7 @@ export function createBaseQueryWithAuthRecovery(
 
     if (result.error && isCurrentUserInfoRequest(args)) {
       handleSessionExpired(api)
-    } else if (result.error?.status === 401) {
+    } else if (result.error?.status === 401 || result.error?.status === 403) {
       handleSessionExpired(api)
     }
 

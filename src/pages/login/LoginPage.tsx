@@ -7,6 +7,7 @@ import { useLoginMutation } from '@/shared/api/authApi'
 import { getApiEndpointUrl } from '@/shared/api/baseApi'
 import { getApiErrorMessage } from '@/shared/api/error'
 import { useI18n } from '@/shared/i18n/useI18n'
+import { googleLoginPendingStorageKey } from '@/routes/ProtectedRoute'
 import { LoginForm, LoginHero, type LoginFormValues } from './components'
 import styles from './styles.module.css'
 
@@ -34,6 +35,7 @@ function LoginPage() {
 
   const onGoogleLogin = () => {
     setIsGoogleLoginLoading(true)
+    window.sessionStorage.setItem(googleLoginPendingStorageKey, 'true')
     window.location.assign(getApiEndpointUrl('/auth/oauth/google'))
   }
 

@@ -30,6 +30,10 @@ function unauthorizedResult() {
   return { error: { status: 401 } as FetchBaseQueryError }
 }
 
+function forbiddenResult() {
+  return { error: { status: 403 } as FetchBaseQueryError }
+}
+
 function serverErrorResult() {
   return { error: { status: 500 } as FetchBaseQueryError }
 }
@@ -107,6 +111,27 @@ describe('createBaseQueryWithAuthRecovery', () => {
 
     await recoveredQuery('/auth/refresh', api, {})
 
+    expect(onSessionExpired).toHaveBeenCalledTimes(1)
+  })
+
+  it('expires the session immediately for a forbidden response', async () => {
+    let refreshCalls = 0
+    const query: Query = async (request) => {
+      if (getUrl(request) === '/auth/refresh') {
+        refreshCalls += 1
+      }
+
+      return forbiddenResult()
+    }
+    const onSessionExpired = vi.fn()
+    const recoveredQuery = createBaseQueryWithAuthRecovery(
+      query,
+      onSessionExpired,
+    )
+
+    await recoveredQuery('/account/create', api, {})
+
+    expect(refreshCalls).toBe(0)
     expect(onSessionExpired).toHaveBeenCalledTimes(1)
   })
 
