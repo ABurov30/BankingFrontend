@@ -44,8 +44,7 @@ export function UserCardItem({
       </div>
       <div className={styles['user-details__limits']}>
         <span>
-          {t('dailyLimit')}:{' '}
-          {formatMoney(getCardDailyLimit(card), currency)}
+          {t('dailyLimit')}: {formatMoney(getCardDailyLimit(card), currency)}
         </span>
         <span>
           {t('monthlyLimit')}:{' '}

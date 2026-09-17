@@ -18,8 +18,9 @@ export function ProtectedRoute() {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const currentUser = useAppSelector(selectCurrentUser)
-  const [isGoogleLoginPending, setIsGoogleLoginPending] = useState(() =>
-    window.sessionStorage.getItem(googleLoginPendingStorageKey) === 'true',
+  const [isGoogleLoginPending, setIsGoogleLoginPending] = useState(
+    () =>
+      window.sessionStorage.getItem(googleLoginPendingStorageKey) === 'true',
   )
   const {
     data: user,

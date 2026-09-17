@@ -112,10 +112,30 @@ describe('profile components', () => {
       </>,
     )
 
-    expect(getPasswordStrength('', { empty: 'Empty', fair: 'Fair', good: 'Good', strong: 'Strong', weak: 'Weak' }).score).toBe(0)
-    expect(getPasswordStrength('a', { empty: 'Empty', fair: 'Fair', good: 'Good', strong: 'Strong', weak: 'Weak' }).score).toBe(1)
-    expect(screen.getAllByRole('button', { name: 'Show password' }).length).toBeGreaterThan(0)
-    fireEvent.click(screen.getAllByRole('button', { name: 'Change password' })[0])
+    expect(
+      getPasswordStrength('', {
+        empty: 'Empty',
+        fair: 'Fair',
+        good: 'Good',
+        strong: 'Strong',
+        weak: 'Weak',
+      }).score,
+    ).toBe(0)
+    expect(
+      getPasswordStrength('a', {
+        empty: 'Empty',
+        fair: 'Fair',
+        good: 'Good',
+        strong: 'Strong',
+        weak: 'Weak',
+      }).score,
+    ).toBe(1)
+    expect(
+      screen.getAllByRole('button', { name: 'Show password' }).length,
+    ).toBeGreaterThan(0)
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'Change password' })[0],
+    )
     await waitFor(() =>
       expect(screen.getByText('Current password is required.')).toBeTruthy(),
     )

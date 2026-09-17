@@ -12,6 +12,7 @@ export function getAvailableFunds(account?: AccountBalance | null) {
   }
 
   return (
-    account.availableBalanceMinorUnits - (account.reservedBalanceMinorUnits ?? 0)
+    account.availableBalanceMinorUnits -
+    (account.reservedBalanceMinorUnits ?? 0)
   )
 }

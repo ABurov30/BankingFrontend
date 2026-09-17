@@ -25,9 +25,24 @@ describe('additional page components', () => {
     renderWithProviders(
       <>
         <HealthCard icon={Activity} isLoading name="Auth" />
-        <HealthCard icon={Activity} isLoading={false} name="Card" result={{ data: 'UP' }} />
-        <HealthCard icon={Activity} isLoading={false} name="User" result={{ error: 'DOWN' }} />
-        <HealthCard icon={Activity} isLoading={false} name="Account" result={{ data: { status: 'UP' } }} />
+        <HealthCard
+          icon={Activity}
+          isLoading={false}
+          name="Card"
+          result={{ data: 'UP' }}
+        />
+        <HealthCard
+          icon={Activity}
+          isLoading={false}
+          name="User"
+          result={{ error: 'DOWN' }}
+        />
+        <HealthCard
+          icon={Activity}
+          isLoading={false}
+          name="Account"
+          result={{ data: { status: 'UP' } }}
+        />
       </>,
     )
 
@@ -45,12 +60,18 @@ describe('additional page components', () => {
     fireEvent.change(inputs[0], { target: { value: 'Ada' } })
     fireEvent.change(inputs[1], { target: { value: 'Lovelace' } })
     fireEvent.change(inputs[2], { target: { value: 'ada@example.com' } })
-    const password = document.querySelector('input[type="password"]') as HTMLInputElement
+    const password = document.querySelector(
+      'input[type="password"]',
+    ) as HTMLInputElement
     fireEvent.change(password, { target: { value: 'StrongPassword1!' } })
     fireEvent.click(screen.getByRole('button', { name: 'Show password' }))
     expect(password.type).toBe('text')
     fireEvent.click(screen.getByRole('checkbox'))
-    fireEvent.submit(screen.getByRole('button', { name: 'Create account' }).closest('form') as HTMLFormElement)
+    fireEvent.submit(
+      screen
+        .getByRole('button', { name: 'Create account' })
+        .closest('form') as HTMLFormElement,
+    )
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalled())
     expect(onSubmit.mock.calls[0][0]).toEqual(
@@ -66,9 +87,27 @@ describe('additional page components', () => {
   it('renders verification states and API error', () => {
     renderWithProviders(
       <>
-        <VerificationPanel error={undefined} hasRequiredParams={false} isError={false} isLoading={false} isSuccess={false} />
-        <VerificationPanel error={{ data: { message: 'Invalid code' } }} hasRequiredParams isError isLoading={false} isSuccess={false} />
-        <VerificationPanel error={undefined} hasRequiredParams isError={false} isLoading={false} isSuccess />
+        <VerificationPanel
+          error={undefined}
+          hasRequiredParams={false}
+          isError={false}
+          isLoading={false}
+          isSuccess={false}
+        />
+        <VerificationPanel
+          error={{ data: { message: 'Invalid code' } }}
+          hasRequiredParams
+          isError
+          isLoading={false}
+          isSuccess={false}
+        />
+        <VerificationPanel
+          error={undefined}
+          hasRequiredParams
+          isError={false}
+          isLoading={false}
+          isSuccess
+        />
       </>,
     )
 
@@ -83,9 +122,43 @@ describe('additional page components', () => {
     const onUpdateCardStatus = vi.fn()
     renderWithProviders(
       <>
-        <UserDetailsHeader onBack={vi.fn()} user={{ email: 'ada@example.com', firstName: 'Ada', lastName: 'Lovelace', role: 'USER', status: 'ACTIVE' }} />
-        <UserCardItem accountStatus={AccountStatus.ACTIVE} card={card} currency={AccountCurrency.USD} isUpdating={false} onUpdateStatus={onUpdateCardStatus} />
-        <UserAccountsSection accounts={[{ account: { accountId: 'account-1', accountNumber: '123', currency: AccountCurrency.USD, status: AccountStatus.ACTIVE, type: 'CHECKING' }, cards: [card] }]} isLoading={false} isUpdatingAccount={false} isUpdatingCard={false} onFreezeAccount={onFreezeAccount} onUnfreezeAccount={onUnfreezeAccount} onUpdateCardStatus={onUpdateCardStatus} />
+        <UserDetailsHeader
+          onBack={vi.fn()}
+          user={{
+            email: 'ada@example.com',
+            firstName: 'Ada',
+            lastName: 'Lovelace',
+            role: 'USER',
+            status: 'ACTIVE',
+          }}
+        />
+        <UserCardItem
+          accountStatus={AccountStatus.ACTIVE}
+          card={card}
+          currency={AccountCurrency.USD}
+          isUpdating={false}
+          onUpdateStatus={onUpdateCardStatus}
+        />
+        <UserAccountsSection
+          accounts={[
+            {
+              account: {
+                accountId: 'account-1',
+                accountNumber: '123',
+                currency: AccountCurrency.USD,
+                status: AccountStatus.ACTIVE,
+                type: 'CHECKING',
+              },
+              cards: [card],
+            },
+          ]}
+          isLoading={false}
+          isUpdatingAccount={false}
+          isUpdatingCard={false}
+          onFreezeAccount={onFreezeAccount}
+          onUnfreezeAccount={onUnfreezeAccount}
+          onUpdateCardStatus={onUpdateCardStatus}
+        />
       </>,
     )
 

@@ -1,4 +1,10 @@
-import { act, cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
+import {
+  act,
+  cleanup,
+  fireEvent,
+  screen,
+  waitFor,
+} from '@testing-library/react'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { Route, Routes } from 'react-router-dom'
 import { store } from '@/app/store'
@@ -94,9 +100,7 @@ it('waits five seconds before loading user info after Google login', async () =>
     undefined,
     { skip: false },
   )
-  expect(
-    window.sessionStorage.getItem(googleLoginPendingStorageKey),
-  ).toBeNull()
+  expect(window.sessionStorage.getItem(googleLoginPendingStorageKey)).toBeNull()
   vi.useRealTimers()
 })
 it('only renders role-protected content for an allowed role', () => {

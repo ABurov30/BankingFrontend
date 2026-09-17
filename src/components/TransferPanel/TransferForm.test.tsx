@@ -5,7 +5,12 @@ import { store } from '@/app/store'
 import { setAccounts } from '@/features/accounts/accountsSlice'
 import { setCardsFromAccounts } from '@/features/cards/cardsSlice'
 import { setCurrentUser } from '@/features/user/userSlice'
-import { AccountCurrency, AccountStatus, AccountType, CardStatus } from '@/shared/api/enums'
+import {
+  AccountCurrency,
+  AccountStatus,
+  AccountType,
+  CardStatus,
+} from '@/shared/api/enums'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import { TransferForm } from './TransferForm'
 
@@ -36,9 +41,9 @@ const card = {
 beforeEach(() => {
   cleanup()
   const accounts = [
-      { account: sourceAccount, cards: [card] },
-      { account: destinationAccount, cards: [] },
-    ]
+    { account: sourceAccount, cards: [card] },
+    { account: destinationAccount, cards: [] },
+  ]
   store.dispatch(setAccounts(accounts))
   store.dispatch(setCardsFromAccounts(accounts))
   store.dispatch(
@@ -60,7 +65,9 @@ describe('TransferForm', () => {
 
     expect(screen.getByText('Select account')).toBeTruthy()
     fireEvent.submit(document.querySelector('form') as HTMLFormElement)
-    await waitFor(() => expect(screen.getByText('Enter a valid amount.')).toBeTruthy())
+    await waitFor(() =>
+      expect(screen.getByText('Enter a valid amount.')).toBeTruthy(),
+    )
   })
 
   it('renders withdrawal and between-account forms and navigates back', () => {

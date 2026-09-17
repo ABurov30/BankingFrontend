@@ -47,8 +47,8 @@ export function DropdownField<Value extends string>({
                 key={option}
                 onClick={() => onSelect(option)}
                 role="option"
-              type="button"
-            >
+                type="button"
+              >
                 {renderOption(option)}
               </button>
             ))}

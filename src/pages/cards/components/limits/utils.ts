@@ -1,8 +1,11 @@
 import { formatMinorUnitInput } from '@/lib/moneyAmount'
-import { AccountCurrency, type AccountCurrency as AccountCurrencyValue } from '@/shared/api/enums'
+import {
+  AccountCurrency,
+  type AccountCurrency as AccountCurrencyValue,
+} from '@/shared/api/enums'
 
 export function getLimitValue(value?: number) {
-  return Number.isFinite(value) ? value ?? 0 : 0
+  return Number.isFinite(value) ? (value ?? 0) : 0
 }
 
 export function getLimitInputValue(

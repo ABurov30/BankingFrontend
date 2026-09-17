@@ -8,7 +8,9 @@ import type {
   GetTransactionsByMeResponse,
 } from './types'
 
-async function refreshOwnAccounts({ dispatch }: {
+async function refreshOwnAccounts({
+  dispatch,
+}: {
   dispatch: typeof import('@/app/store').store.dispatch
 }) {
   const request = dispatch(

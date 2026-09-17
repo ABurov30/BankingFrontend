@@ -18,7 +18,11 @@ describe('user management controls', () => {
     renderWithProviders(
       <>
         <RoleSelect disabled={false} onChange={onRole} value={Role.USER} />
-        <UserStatusSelect disabled={false} onChange={onStatus} value={AuthUserStatus.ACTIVE} />
+        <UserStatusSelect
+          disabled={false}
+          onChange={onStatus}
+          value={AuthUserStatus.ACTIVE}
+        />
       </>,
     )
     fireEvent.click(screen.getByRole('button', { name: 'USER' }))
@@ -33,8 +37,20 @@ describe('user management controls', () => {
     const onVerify = vi.fn().mockResolvedValue(undefined)
     renderWithProviders(
       <>
-        <UserVerificationSelect disabled={false} isPending onVerify={onVerify} />
-        <UsersTable currentRole={Role.USER} isLoading={false} isMutating={false} onChangeRole={vi.fn()} onStatusChange={vi.fn()} onVerify={vi.fn()} users={[]} />
+        <UserVerificationSelect
+          disabled={false}
+          isPending
+          onVerify={onVerify}
+        />
+        <UsersTable
+          currentRole={Role.USER}
+          isLoading={false}
+          isMutating={false}
+          onChangeRole={vi.fn()}
+          onStatusChange={vi.fn()}
+          onVerify={vi.fn()}
+          users={[]}
+        />
       </>,
     )
     fireEvent.click(screen.getByRole('button', { name: 'Pending' }))
@@ -51,7 +67,13 @@ describe('user management controls', () => {
         isBlocking={false}
         onClose={onClose}
         onConfirm={onConfirm}
-        user={{ email: 'ada@example.com', firstName: 'Ada', lastName: 'Lovelace' } as never}
+        user={
+          {
+            email: 'ada@example.com',
+            firstName: 'Ada',
+            lastName: 'Lovelace',
+          } as never
+        }
       />,
     )
     fireEvent.click(screen.getByRole('button', { name: 'Block user' }))

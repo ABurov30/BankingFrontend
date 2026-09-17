@@ -74,13 +74,13 @@ describe('page states', () => {
     )
     expect(screen.getByTestId('page-accounts')).toBeTruthy()
     expect(screen.getByTestId('page-cards')).toBeTruthy()
-    expect(screen.getAllByText('No card data available.').length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText('No card data available.').length,
+    ).toBeGreaterThan(0)
   })
 
   it('loads the signed-in user account snapshot for the cards page', () => {
-    store.dispatch(
-      setCurrentUser({ userProfileId: 'profile-1', role: 'USER' }),
-    )
+    store.dispatch(setCurrentUser({ userProfileId: 'profile-1', role: 'USER' }))
 
     renderWithProviders(<CardsPage />)
 
